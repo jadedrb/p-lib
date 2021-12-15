@@ -19,7 +19,7 @@ const Toolbar = () => {
     let viewEntryField = viewNewEntry ? <NewEntryField /> : ''
 
     return (
-        <div>
+        <div className="toolbar">
             <div>
                 <button onClick={handleClick}>New</button>
                 <button onClick={handleResults}>Results (Temp)</button>

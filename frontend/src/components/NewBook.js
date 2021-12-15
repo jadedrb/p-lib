@@ -1,8 +1,8 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Context } from '../context'
+import React, { useState, useEffect } from 'react';
+// import { Context } from '../context'
 
 const NewEntryField = (props) => {
-    const context = useContext(Context)
+    // const context = useContext(Context)
     
     let [inputs, setInputs] = useState({ 
         title: props.book ? 'book' : '',

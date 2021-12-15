@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Context } from '../context'
 import RoomService from '../services/RoomService';
 
@@ -6,15 +6,15 @@ let RoomServe = new RoomService();
 
 const BookList = () => {
     const { books, user } = useContext(Context)
-    let [bookz, setBookz] = useState([])
+   // let [bookz, setBookz] = useState([])
 
     useEffect(() => {
-        if (user) {
+        if (!user) { // change later
             RoomServe
                 .getRooms()
                 .then(res => console.log(res.data))
         }
-    }, [])
+    }, [user])
 
     let renderedBooks = books.map((b,i) => {
         return (
@@ -38,7 +38,7 @@ const BookList = () => {
     })
 
     return (
-        <table>
+        <table className='booklist'>
             {renderedBooks}
         </table>
     )

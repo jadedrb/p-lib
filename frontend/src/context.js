@@ -13,7 +13,7 @@ export class Provider extends Component {
     render() {
 
         return (
-            <Context.Provider value={ { books: this.state.books, user: 'bob' }}>
+            <Context.Provider value={{ books: this.state.books, user: 'bob' }}>
                 {this.props.children}
             </Context.Provider>
         )

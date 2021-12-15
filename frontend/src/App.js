@@ -2,6 +2,7 @@ import './App.css';
 import { Provider } from './context';
 import BookList from './components/BookList';
 import Toolbar from './components/Toolbar';
+import Rooms from './components/Rooms';
 
 function App() {
 
@@ -10,6 +11,7 @@ function App() {
   return (
     <Provider>
       Personal Library
+        <Rooms />
         <Toolbar/>
         <BookList/>
     </Provider>
