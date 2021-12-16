@@ -26,5 +26,46 @@ td {
 
 .box {
     border: 1px solid black;
+}
 
+.room-sec {
+    display: flex;
+    justify-content: center;
+    border: 3px solid orange;
+}
+
+.arrw {
+    display: flex;
+    font-size: 2rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid blue;
+    width: 50px;
+}
+
+.arrw:hover {
+    cursor: pointer;
+}
+
+.hde {
+    display: none;
+}
+
+.newroom {
+    position: relative;
+}
+
+.pm-r {
+    position: absolute;
+    top: 0;
+}
+
+.pl-room {
+    right: 100px;
+    font-size: 2rem;
+}
+
+.min-room {
+    right: 10px;
+    font-size: 2rem;
 }

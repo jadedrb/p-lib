@@ -1,22 +1,28 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
+import { Context } from '../context'
 
 const NewRoom = () => {
-  let [height, setHeight] = useState(10);
-  let [width, setWidth] = useState(10);
-  let [tile, setTile] = useState(25);
-  let [roomName, setRoomName] = useState("New Room");
+
+  const { rooms, addRoom, updateRoom } = useContext(Context)
+
+  const defaultRoom = { height: 10, width: 10, tile: 25, roomName: "New Room", bookcases: [] }
+  const currentRoom = rooms.length ? rooms[0] : defaultRoom
+
+  let [rIndex, setRIndex] = useState(0)
+
+  let [height, setHeight] = useState(currentRoom.height);
+  let [width, setWidth] = useState(currentRoom.width);
+  let [tile, setTile] = useState(currentRoom.tile);
+  let [roomName, setRoomName] = useState(currentRoom.roomName);
 
   let [bcStart, setBcStart] = useState("");
   let [bcEnd, setBcEnd] = useState("");
 
-  let [bookcases, setBookcases] = useState([])
+  let [bookcases, setBookcases] = useState(currentRoom.bookcases)
 
   let mapRef = useRef();
 
-  let temp = {
-    display: "flex",
-    flexDirection: "column",
-  };
+
 
   useEffect(() => {
     let map = mapRef.current;
@@ -50,12 +56,10 @@ const NewRoom = () => {
             div.style.backgroundColor = currentBookcase.color
         }
 
-        console.log(bookcases)
-
         map.appendChild(div);
       }
     }
-  }, [height, width, tile, bcStart, bcEnd]);
+  }, [height, width, tile, bcStart, bcEnd, bookcases]);
 
   const randomNum = () => Math.floor(Math.random() * 255)
 
@@ -69,42 +73,91 @@ const NewRoom = () => {
     row = Number(row)
     column = Number(column)
 
-    let overlap = bookcases.some(b => (row >= b.rowLow && row <= b.rowHigh) && (column >= b.colLow && column <= b.colHigh))
-    if (overlap) return
+    let currentBookcase;
+
+    let overlap = bookcases.some(b => {
+      let result = (row >= b.rowLow && row <= b.rowHigh) && (column >= b.colLow && column <= b.colHigh)
+      if (result) currentBookcase = b
+      return result
+    })
+
+    if (overlap) {
+      console.log("clicked on: " + currentBookcase.id)
+      setBcStart('')
+      setBcEnd('')
+      return 
+    }
 
     if (!bcStart) {
-      setBcStart([row, column]);
+      setBcStart([row, column])
     } else if (bcStart && !bcEnd) {
-      setBcEnd([row, column]);
+      setBcEnd([row, column])
     } else {
-
-        console.log(bcEnd, bcStart)
-        let test = Math.min(bcStart[0], bcEnd[0])
-        let test2 = Math.min(bcStart[1], bcEnd[1])
-        console.log(test, 'rows')
-        console.log(test2, 'columns')
 
         let newBc = {
             rowLow: Math.min(bcStart[0], bcEnd[0]),
             colLow: Math.min(bcStart[1], bcEnd[1]),
             rowHigh: Math.max(bcStart[0], bcEnd[0]),
             colHigh: Math.max(bcStart[1], bcEnd[1]),
-            color: `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`
+            color: `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`,
+            id: randomNum() + randomNum() + randomNum()
         }
         setBookcases([...bookcases, newBc])
 
       setBcStart("");
       setBcEnd("");
     }
-    console.log(row, column);
-    console.log(e.target);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    let room = {
+      height,
+      width,
+      roomName,
+      tile,
+      bookcases
+    }
+
+    if (currentRoom.id) {
+      room.id = currentRoom.id
+      updateRoom(room)
+    }
+    else {
+      room.id = randomNum() + randomNum() + randomNum()
+      addRoom(room)
+    }
+  }
+
+  const switchRoom = (prevOrNex) => {
+    let newIndex = rIndex + prevOrNex
+    if (newIndex < 0 || newIndex > rooms.length - 1) return
+
+    let newRoom = rooms[newIndex]
+
+    setRIndex(rIndex + prevOrNex)
+    setHeight(newRoom.height)
+    setWidth(newRoom.width)
+    setTile(newRoom.tile)
+    setBookcases(newRoom.bookcases)
+  }
+console.log(rooms)
   return (
-    <div style={temp} className="newroom">
+    <div className="newroom">
       <h3>{roomName}</h3>
-      <div className="room-map" ref={mapRef} onClick={handleBoxClick}></div>
-      <form>
+      <div className="pm-r pl-room">+</div>
+      <div className="pm-r min-room">-</div>
+      <div className="room-sec">
+        <div className={`arrw ${!rIndex ? 'hde' : ''}`} id="lft" onClick={() => switchRoom(-1)}>
+          <span>{'<'}</span>
+        </div>
+        <div className="room-map" ref={mapRef} onClick={handleBoxClick}></div>
+        <div className={`arrw ${!rooms.length || rIndex + 1 === rooms.length ? 'hde' : ''}`} id="rit" onClick={() => switchRoom(1)}>
+          <span>{'>'}</span>
+        </div>
+      </div>
+      <form onSubmit={handleSubmit}>
         <input
           onChange={(e) => setHeight(e.target.value)}
           placeholder="height"
@@ -125,6 +178,7 @@ const NewRoom = () => {
           placeholder="room name"
           value={roomName}
         />
+        <button>Save</button>
       </form>
     </div>
   );
