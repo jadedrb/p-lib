@@ -12,12 +12,16 @@ export class Provider extends Component {
         }
     }
 
-    addRoom = (room) => {
+    addRoom = (room, cb) => {
         console.log(this.state.rooms.concat([room]), "<---")
-        this.setState({ rooms: this.state.rooms.concat([room]) })
+        this.setState({ rooms: this.state.rooms.concat([room]) }, () => {
+            console.log('in...')
+            cb(0, this.state.rooms)
+        })
     }
 
     updateRoom = (room) => {
+        console.log(room.id, ' : room to be updated')
         this.setState({ rooms: this.state.rooms.map(r => r.id === room.id ? room : r) })
     }
 

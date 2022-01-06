@@ -58,14 +58,26 @@ td {
 .pm-r {
     position: absolute;
     top: 0;
+    font-size: 2rem;
+}
+
+.pm-r:hover {
+    cursor: pointer;
+    color: rgb(155, 155, 155);
 }
 
 .pl-room {
     right: 100px;
-    font-size: 2rem;
+}
+
+.pl-room:active {
+    color: lime;
 }
 
 .min-room {
     right: 10px;
-    font-size: 2rem;
+}
+
+.min-room:active {
+    color: red;
 }

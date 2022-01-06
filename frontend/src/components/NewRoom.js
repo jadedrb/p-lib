@@ -6,9 +6,10 @@ const NewRoom = () => {
   const { rooms, addRoom, updateRoom } = useContext(Context)
 
   const defaultRoom = { height: 10, width: 10, tile: 25, roomName: "New Room", bookcases: [] }
-  const currentRoom = rooms.length ? rooms[0] : defaultRoom
 
   let [rIndex, setRIndex] = useState(0)
+
+  const currentRoom = rooms.length ? rooms[rIndex] : defaultRoom
 
   let [height, setHeight] = useState(currentRoom.height);
   let [width, setWidth] = useState(currentRoom.width);
@@ -21,7 +22,6 @@ const NewRoom = () => {
   let [bookcases, setBookcases] = useState(currentRoom.bookcases)
 
   let mapRef = useRef();
-
 
 
   useEffect(() => {
@@ -39,7 +39,6 @@ const NewRoom = () => {
           (bcStart[0] === r && bcStart[1] === c) ||
           (bcEnd[0] === r && bcEnd[1] === c)
         ) {
-          console.log("OK");
           div.style.backgroundColor = "blue";
         }
 
@@ -109,16 +108,36 @@ const NewRoom = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const roomConstruct = (h, w, rn, ti, bc) => {
+    return {
+      height: h ? h : height,
+      width: w ? w : width,
+      roomName: rn ? rn : roomName,
+      tile: ti ? ti : tile,
+      bookcases: bc ? bc : bookcases,
+    }
+  }
+
+  function switchRoom (prevOrNex, currentRooms) {
+    let newIndex = rIndex + prevOrNex
+    if (!prevOrNex) newIndex = currentRooms.length - 1
+    console.log(newIndex, currentRooms.length)
+    if (newIndex < 0 || newIndex > currentRooms.length - 1) return
+console.log('... ok')
+    let newRoom = currentRooms[newIndex]
+
+    setRIndex(newIndex)
+    setHeight(newRoom.height)
+    setWidth(newRoom.width)
+    setTile(newRoom.tile)
+    setRoomName(newRoom.roomName)
+    setBookcases(newRoom.bookcases)
+  }
+
+  function handleSubmit (e) {
     e.preventDefault()
 
-    let room = {
-      height,
-      width,
-      roomName,
-      tile,
-      bookcases
-    }
+    let room = roomConstruct()
 
     if (currentRoom.id) {
       room.id = currentRoom.id
@@ -130,30 +149,25 @@ const NewRoom = () => {
     }
   }
 
-  const switchRoom = (prevOrNex) => {
-    let newIndex = rIndex + prevOrNex
-    if (newIndex < 0 || newIndex > rooms.length - 1) return
-
-    let newRoom = rooms[newIndex]
-
-    setRIndex(rIndex + prevOrNex)
-    setHeight(newRoom.height)
-    setWidth(newRoom.width)
-    setTile(newRoom.tile)
-    setBookcases(newRoom.bookcases)
+  const newBlankRoom = () => {
+    alert('newblank')
+    let room = roomConstruct(10, 10, "New Room", 25, [])
+    room.id = randomNum() + randomNum() + randomNum()
+    addRoom(room, switchRoom)
   }
-console.log(rooms)
+
+
   return (
     <div className="newroom">
-      <h3>{roomName}</h3>
-      <div className="pm-r pl-room">+</div>
+      <h3>{roomName} ({rIndex})</h3>
+      <div className="pm-r pl-room" onClick={newBlankRoom}>+</div>
       <div className="pm-r min-room">-</div>
       <div className="room-sec">
-        <div className={`arrw ${!rIndex ? 'hde' : ''}`} id="lft" onClick={() => switchRoom(-1)}>
+        <div className={`arrw ${!rIndex ? 'hde' : ''}`} id="lft" onClick={() => switchRoom(-1, rooms)}>
           <span>{'<'}</span>
         </div>
         <div className="room-map" ref={mapRef} onClick={handleBoxClick}></div>
-        <div className={`arrw ${!rooms.length || rIndex + 1 === rooms.length ? 'hde' : ''}`} id="rit" onClick={() => switchRoom(1)}>
+        <div className={`arrw ${!rooms.length || rIndex + 1 === rooms.length ? 'hde' : ''}`} id="rit" onClick={() => switchRoom(1, rooms)}>
           <span>{'>'}</span>
         </div>
       </div>
