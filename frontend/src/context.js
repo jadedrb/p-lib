@@ -25,13 +25,21 @@ export class Provider extends Component {
         this.setState({ rooms: this.state.rooms.map(r => r.id === room.id ? room : r) })
     }
 
+    removeRoom = (room, cb) => {
+        console.log(room.id, ' : room to be deleted')
+        this.setState({ rooms: this.state.rooms.filter(r => r.id !== room.id) }, () => {
+            console.log('in...')
+            cb(0, this.state.rooms)
+        })
+    }
+
     render() {
 
         let { books, rooms, user } = this.state
-        let { addRoom, updateRoom } = this
+        let { addRoom, updateRoom, removeRoom } = this
 
         return (
-            <Context.Provider value={{ books, rooms, user, addRoom, updateRoom }}>
+            <Context.Provider value={{ books, rooms, user, addRoom, updateRoom, removeRoom }}>
                 {this.props.children}
             </Context.Provider>
         )

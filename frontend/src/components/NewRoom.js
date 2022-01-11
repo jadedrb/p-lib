@@ -3,13 +3,13 @@ import { Context } from '../context'
 
 const NewRoom = () => {
 
-  const { rooms, addRoom, updateRoom } = useContext(Context)
+  const { rooms, addRoom, updateRoom, removeRoom } = useContext(Context)
 
   const defaultRoom = { height: 10, width: 10, tile: 25, roomName: "New Room", bookcases: [] }
 
   let [rIndex, setRIndex] = useState(0)
 
-  const currentRoom = rooms.length ? rooms[rIndex] : defaultRoom
+  const currentRoom = rooms.length && rooms[rIndex] ? rooms[rIndex] : defaultRoom
 
   let [height, setHeight] = useState(currentRoom.height);
   let [width, setWidth] = useState(currentRoom.width);
@@ -122,10 +122,21 @@ const NewRoom = () => {
     let newIndex = rIndex + prevOrNex
     if (!prevOrNex) newIndex = currentRooms.length - 1
     console.log(newIndex, currentRooms.length)
-    if (newIndex < 0 || newIndex > currentRooms.length - 1) return
-console.log('... ok')
+
+    if (currentRooms.length) {
+      if (newIndex < 0 || newIndex > currentRooms.length - 1) return
+    }
+    
     let newRoom = currentRooms[newIndex]
 
+    // If we deleted the last saved room
+    if (newIndex < 0) {
+      newRoom = roomConstruct(10, 10, "New Room", 25, [])
+      newRoom.id = randomNum() + randomNum() + randomNum()
+      console.log('last deleted: ', newRoom)
+      newIndex = 0
+    }
+    
     setRIndex(newIndex)
     setHeight(newRoom.height)
     setWidth(newRoom.width)
@@ -145,7 +156,7 @@ console.log('... ok')
     }
     else {
       room.id = randomNum() + randomNum() + randomNum()
-      addRoom(room)
+      addRoom(room, switchRoom)
     }
   }
 
@@ -156,12 +167,19 @@ console.log('... ok')
     addRoom(room, switchRoom)
   }
 
+  const removeARoom = () => {
+    alert('removing')
+    let room = roomConstruct()
+    room.id = currentRoom.id
+    removeRoom(room, switchRoom)
+  }
+
 
   return (
     <div className="newroom">
       <h3>{roomName} ({rIndex})</h3>
       <div className="pm-r pl-room" onClick={newBlankRoom}>+</div>
-      <div className="pm-r min-room">-</div>
+      <div className="pm-r min-room" style={rooms.length ? null : { opacity: .2, pointerEvents: 'none' }} onClick={removeARoom}>-</div>
       <div className="room-sec">
         <div className={`arrw ${!rIndex ? 'hde' : ''}`} id="lft" onClick={() => switchRoom(-1, rooms)}>
           <span>{'<'}</span>
