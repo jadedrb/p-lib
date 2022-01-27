@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect, useContext } from "react";
-import { ADD_ROOM, Context, REMOVE_ROOM, UPDATE_ROOM } from '../context'
+import { ADD_ROOM, Context, REMOVE_ROOM, SET_CURRENT, UPDATE_ROOM } from '../context'
 
 const NewRoom = () => {
 
-  const { rooms, addRoom, updateRoom, removeRoom, dispatch } = useContext(Context)
+  const { rooms, dispatch } = useContext(Context)
 
   const defaultRoom = { height: 10, width: 10, tile: 25, roomName: "New Room", bookcases: [] }
 
@@ -22,7 +22,14 @@ const NewRoom = () => {
   let [bookcases, setBookcases] = useState(currentRoom.bookcases)
 
   let mapRef = useRef();
+  let mount = useRef()
 
+  useEffect(() => { 
+    if (mount.current) 
+      switchRoom(0, rooms)
+    else
+      mount.current = true
+  }, [rooms.length])
 
   useEffect(() => {
     let map = mapRef.current;
@@ -84,6 +91,8 @@ const NewRoom = () => {
       console.log("clicked on: " + currentBookcase.id)
       setBcStart('')
       setBcEnd('')
+      dispatch({ type: SET_CURRENT, payload: { rm: currentRoom.id, bc: currentBookcase.id }})
+      //setCurrent({ rm: currentRoom.id, bc: currentBookcase.id })
       return 
     }
 
@@ -136,13 +145,16 @@ const NewRoom = () => {
       console.log('last deleted: ', newRoom)
       newIndex = 0
     }
-    
+
     setRIndex(newIndex)
     setHeight(newRoom.height)
     setWidth(newRoom.width)
     setTile(newRoom.tile)
     setRoomName(newRoom.roomName)
     setBookcases(newRoom.bookcases)
+    // setCurrent({ rm: null, bc: null })
+    dispatch({ type: SET_CURRENT, payload: { rm: null, bc: null }})
+
   }
 
   function handleSubmit (e) {
@@ -156,8 +168,7 @@ const NewRoom = () => {
     }
     else {
       room.id = randomNum() + randomNum() + randomNum()
-      // addRoom(room, switchRoom)
-      dispatch({ type: ADD_ROOM, payload: { room, switchRoom } })
+      dispatch({ type: ADD_ROOM, payload: { room } })
     }
   }
 
@@ -165,15 +176,13 @@ const NewRoom = () => {
     alert('newblank')
     let room = roomConstruct(10, 10, "New Room", 25, [])
     room.id = randomNum() + randomNum() + randomNum()
-    // addRoom(room, switchRoom)
-    dispatch({ type: ADD_ROOM, payload: { room, switchRoom } })
+    dispatch({ type: ADD_ROOM, payload: { room } })
   }
 
   const removeARoom = () => {
     let room = roomConstruct()
     room.id = currentRoom.id
-    // removeRoom(room, switchRoom)
-    dispatch({ type: REMOVE_ROOM, payload: { room, switchRoom } })
+    dispatch({ type: REMOVE_ROOM, payload: { room } })
   }
 
 
