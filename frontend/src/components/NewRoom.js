@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect, useContext } from "react";
-import { Context } from '../context'
+import { ADD_ROOM, Context, REMOVE_ROOM, UPDATE_ROOM } from '../context'
 
 const NewRoom = () => {
 
-  const { rooms, addRoom, updateRoom, removeRoom } = useContext(Context)
+  const { rooms, addRoom, updateRoom, removeRoom, dispatch } = useContext(Context)
 
   const defaultRoom = { height: 10, width: 10, tile: 25, roomName: "New Room", bookcases: [] }
 
@@ -152,11 +152,12 @@ const NewRoom = () => {
 
     if (currentRoom.id) {
       room.id = currentRoom.id
-      updateRoom(room)
+      dispatch({ type: UPDATE_ROOM, payload: room })
     }
     else {
       room.id = randomNum() + randomNum() + randomNum()
-      addRoom(room, switchRoom)
+      // addRoom(room, switchRoom)
+      dispatch({ type: ADD_ROOM, payload: { room, switchRoom } })
     }
   }
 
@@ -164,14 +165,15 @@ const NewRoom = () => {
     alert('newblank')
     let room = roomConstruct(10, 10, "New Room", 25, [])
     room.id = randomNum() + randomNum() + randomNum()
-    addRoom(room, switchRoom)
+    // addRoom(room, switchRoom)
+    dispatch({ type: ADD_ROOM, payload: { room, switchRoom } })
   }
 
   const removeARoom = () => {
-    alert('removing')
     let room = roomConstruct()
     room.id = currentRoom.id
-    removeRoom(room, switchRoom)
+    // removeRoom(room, switchRoom)
+    dispatch({ type: REMOVE_ROOM, payload: { room, switchRoom } })
   }
 
 
