@@ -81,3 +81,11 @@ td {
 .min-room:active {
     color: red;
 }
+
+
+/* New Bookcase */
+
+.bookcase {
+    border: 1px solid black;
+    padding: 5px;
+}
