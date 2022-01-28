@@ -7,6 +7,8 @@ export const REMOVE_ROOM = 'REMOVE_ROOM'
 export const UPDATE_ROOM = 'UPDATE_ROOM'
 export const SET_CURRENT = 'SET_CURRENT'
 
+export const UPDATE_BOOKCASE = 'UPDATE_BOOKCASE'
+
 let initialState = {
     books: [],
     rooms: [],
@@ -39,6 +41,16 @@ function reducer(state, action) {
                 ...state,
                 current: action.payload
             }
+        case UPDATE_BOOKCASE: {
+            let { bcId, rmId, bc } = action.payload
+            let rooms = [ ...state.rooms ]
+            let roomIndex = rooms.findIndex((r) => r.id === rmId)
+            let room = rooms[roomIndex]
+            let bkcaseIndex = room.bookcases.findIndex((b) => b.id === bcId)
+            let bkcase = room.bookcases[bkcaseIndex]
+            rooms[roomIndex].bookcases[bkcaseIndex] = { ...bkcase, ...bc }
+            return { ...state, rooms }
+        }
         default:
             return state
     }

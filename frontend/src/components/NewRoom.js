@@ -108,7 +108,11 @@ const NewRoom = () => {
             rowHigh: Math.max(bcStart[0], bcEnd[0]),
             colHigh: Math.max(bcStart[1], bcEnd[1]),
             color: `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`,
-            id: randomNum() + randomNum() + randomNum()
+            id: randomNum() + randomNum() + randomNum(),
+            location: '',
+            bcWidth: 100,
+            shHeight: 30,
+            shelves: []
         }
         setBookcases([...bookcases, newBc])
 

@@ -89,3 +89,43 @@ td {
     border: 1px solid black;
     padding: 5px;
 }
+
+.new-bookcase {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid blue;
+}
+
+.new-bookcase form {
+    display: flex;
+    flex-direction: column;
+    margin: 30px;
+}
+
+.new-bookcase label {
+    font-size: 15px;
+}
+
+.pm-bc {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    font-size: 2rem;
+}
+
+.pm-bc:hover {
+    cursor: pointer;
+    color: rgb(155, 155, 155);
+}
+
+.pm-bc:active {
+    color: lime;
+}
+
+.shelf {
+    border: 1px solid black;
+    margin: 0;
+}
