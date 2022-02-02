@@ -27,22 +27,25 @@ const NewRoom = ({ rooms, dispatch }) => {
   let { pathname } = useLocation()
 
   useEffect(() => { 
-    if (mount.current) 
+    // mount keeps track of the index of the current room between renders
+    // it will either be undefined (unmounted) or a number (mounted)
+    if (typeof mount.current === 'number') {
+      if (mount.current !== rIndex) {
+        mount.current = rIndex
+        navigate(`${pathname.slice(0, 6) + currentRoom.id}`)
+      } else {
+        switchRoom(0, rooms)
+        navigate(currentRoom.id ? `${pathname.slice(0, 6) + currentRoom.id}` : `${pathname.slice(0, 6)}`)
+      }
+    } else {
+      // on mount
       switchRoom(0, rooms)
-  }, [rooms.length])
+      mount.current = rIndex
+      navigate(currentRoom.id ? `${pathname + currentRoom.id}` : `${pathname}`)
+    }
+  }, [rooms.length, rIndex])
 
   useEffect(() => {
-    console.log(pathname)
-    let newPath = pathname.slice(0, 6)
-    if (mount.current) 
-      navigate(`${newPath + currentRoom.id}`)
-  }, [rIndex])
-
-  useEffect(() => {
-    switchRoom(0, rooms)
-    mount.current = true
-    navigate(currentRoom.id ? `${pathname + currentRoom.id}` : `${pathname}`)
-    
     return () => {
       navigate('/room/')
     }
@@ -165,8 +168,11 @@ const NewRoom = ({ rooms, dispatch }) => {
       newRoom.id = randomNum() + randomNum() + randomNum()
       console.log('last deleted: ', newRoom)
       newIndex = 0
+      navigate(`/room/`)
     }
 
+    setBcEnd("")
+    setBcStart("")
     setRIndex(newIndex)
     setHeight(newRoom.height)
     setWidth(newRoom.width)
@@ -191,6 +197,7 @@ const NewRoom = ({ rooms, dispatch }) => {
     }
     else {
       room.id = randomNum() + randomNum() + randomNum()
+      navigate(`${pathname.slice(0, 6) + room.id}`)
       dispatch({ type: ADD_ROOM, payload: { room } })
     }
   }
