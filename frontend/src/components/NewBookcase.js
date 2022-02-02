@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Context, UPDATE_BOOKCASE } from "../context";
 
 const NewBookcase = () => {
@@ -14,15 +14,32 @@ const NewBookcase = () => {
       ];
   }
 
-  let [location, setLocation] = useState(currentBookcase?.location ? currentBookcase.location : "Bookcase Location");
-  let [shelves, setShelves] = useState(currentBookcase?.shelves?.length ? currentBookcase.shelves.length : "");
-  let [width, setWidth] = useState(currentBookcase?.bcWidth ? currentBookcase.bcWidth : 100);
-  let [shelfHeight, setShelfHeight] = useState(currentBookcase?.shHeight ? currentBookcase.shHeight : 30)
+  console.log(currentBookcase)
+
+  let [location, setLocation] = useState("Bookcase Location");
+  let [shelves, setShelves] = useState("");
+  let [width, setWidth] = useState(100);
+  let [shelfHeight, setShelfHeight] = useState(30)
+
+  useEffect(() => {
+    if (current && current.rm) {
+      setLocation(currentBookcase.location ? currentBookcase.location : "Bookcase Location")
+      setShelves(currentBookcase.shelves.length)
+      setWidth(currentBookcase.bcWidth)
+      setShelfHeight(currentBookcase.shHeight)
+    }
+  }, [current, currentBookcase?.location, currentBookcase?.shelves.length, currentBookcase?.bcWidth, currentBookcase?.shHeight])
 
   const handleSubmit = e => {
       e.preventDefault()
-      alert('updating bookcase')
-      dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: { location, bcWidth: width, shHeight: shelfHeight } }})
+      let newShelves;
+      if (currentBookcase.shelves.length) 
+        newShelves = shelves
+      else
+        newShelves = [...Array(Number(shelves)).keys()]
+
+  
+      dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: { location, bcWidth: width, shHeight: shelfHeight, shelves: newShelves } }})
   }
 
   const renderBookcases = () => {
