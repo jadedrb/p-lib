@@ -1,9 +1,8 @@
-import { useState, useRef, useEffect, useContext } from "react";
-import { ADD_ROOM, Context, REMOVE_ROOM, SET_CURRENT, UPDATE_ROOM } from '../context'
+import { useState, useRef, useEffect } from "react";
+import { ADD_ROOM, REMOVE_ROOM, SET_CURRENT, UPDATE_ROOM } from '../context'
+import { useNavigate, useLocation } from "react-router-dom";
 
-const NewRoom = () => {
-
-  const { rooms, dispatch } = useContext(Context)
+const NewRoom = ({ rooms, dispatch }) => {
 
   const defaultRoom = { height: 10, width: 10, tile: 25, roomName: "New Room", bookcases: [] }
 
@@ -24,12 +23,30 @@ const NewRoom = () => {
   let mapRef = useRef();
   let mount = useRef()
 
+  let navigate = useNavigate()
+  let { pathname } = useLocation()
+
   useEffect(() => { 
     if (mount.current) 
       switchRoom(0, rooms)
-    else
-      mount.current = true
   }, [rooms.length])
+
+  useEffect(() => {
+    console.log(pathname)
+    let newPath = pathname.slice(0, 6)
+    if (mount.current) 
+      navigate(`${newPath + currentRoom.id}`)
+  }, [rIndex])
+
+  useEffect(() => {
+    switchRoom(0, rooms)
+    mount.current = true
+    navigate(currentRoom.id ? `${pathname + currentRoom.id}` : `${pathname}`)
+    
+    return () => {
+      navigate('/room/')
+    }
+  }, [])
 
   useEffect(() => {
     let map = mapRef.current;
@@ -156,6 +173,8 @@ const NewRoom = () => {
     setTile(newRoom.tile)
     setRoomName(newRoom.roomName)
     setBookcases(newRoom.bookcases)
+
+   // navigate(`${pathname + newRoom.id}`)
     // setCurrent({ rm: null, bc: null })
     dispatch({ type: SET_CURRENT, payload: { rm: null, bc: null }})
 
