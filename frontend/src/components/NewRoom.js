@@ -22,11 +22,12 @@ const NewRoom = ({ rooms, dispatch }) => {
 
   let mapRef = useRef();
   let mount = useRef()
+  let navAndSwitch = useRef()
 
   let navigate = useNavigate()
   let { pathname } = useLocation()
 
-  useEffect(() => { 
+  const handlePathAndSwitchRoom = () => {
     // mount keeps track of the index of the current room between renders
     // it will either be undefined (unmounted) or a number (mounted)
     if (typeof mount.current === 'number') {
@@ -43,11 +44,20 @@ const NewRoom = ({ rooms, dispatch }) => {
       mount.current = rIndex
       navigate(currentRoom.id ? `${pathname + currentRoom.id}` : `${pathname}`)
     }
+  }
+
+  const handleNavBackToRoom = () => navigate('/room/')
+
+  // adding these functions to a ref to avoid warnings about missing dependencies inside useEffect
+  navAndSwitch.current = { handlePathAndSwitchRoom, handleNavBackToRoom }
+
+  useEffect(() => { 
+    navAndSwitch.current.handlePathAndSwitchRoom()
   }, [rooms.length, rIndex])
 
   useEffect(() => {
     return () => {
-      navigate('/room/')
+      navAndSwitch.current.handleNavBackToRoom()
     }
   }, [])
 
@@ -203,7 +213,6 @@ const NewRoom = ({ rooms, dispatch }) => {
   }
 
   const newBlankRoom = () => {
-    alert('newblank')
     let room = roomConstruct(10, 10, "New Room", 25, [])
     room.id = randomNum() + randomNum() + randomNum()
     dispatch({ type: ADD_ROOM, payload: { room } })

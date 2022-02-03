@@ -1,9 +1,9 @@
 import './App.css';
 import { Provider } from './context';
-import BookList from './components/BookList';
-import Toolbar from './components/Toolbar';
+// import BookList from './components/BookList';
+// import Toolbar from './components/Toolbar';
 import Rooms from './components/Rooms';
-import Bookcases from './components/Bookcases';
+// import Bookcases from './components/Bookcases';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 
 function App() {
