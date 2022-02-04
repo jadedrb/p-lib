@@ -1,20 +1,7 @@
-import { useContext, useState, useEffect } from "react";
-import { Context, UPDATE_BOOKCASE } from "../context";
+import { useState, useEffect } from "react";
+import { UPDATE_BOOKCASE } from "../context";
 
-const NewBookcase = () => {
-  let { rooms, current, dispatch } = useContext(Context);
-
-  let currentRoom, currentBookcase;
-
-  if (current && current.rm) {
-    currentRoom = rooms[rooms.findIndex((r) => r.id === current.rm)];
-    currentBookcase =
-      currentRoom.bookcases[
-        currentRoom.bookcases.findIndex((r) => r.id === current.bc)
-      ];
-  }
-
-  console.log(currentBookcase)
+const NewBookcase = ({ current, dispatch, currentRoom, currentBookcase }) => {
 
   let [location, setLocation] = useState("Bookcase Location");
   let [shelves, setShelves] = useState("");

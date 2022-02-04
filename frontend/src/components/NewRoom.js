@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ADD_ROOM, REMOVE_ROOM, SET_CURRENT, UPDATE_ROOM } from '../context'
+import { ADD_ROOM, REMOVE_ROOM, UPDATE_ROOM } from '../context'
 import { useNavigate, useLocation } from "react-router-dom";
 
 const NewRoom = ({ rooms, dispatch }) => {
@@ -121,7 +121,7 @@ const NewRoom = ({ rooms, dispatch }) => {
       setBcStart('')
       setBcEnd('')
       navigate(`${pathname}/bookcase/${currentBookcase.id}`)
-      dispatch({ type: SET_CURRENT, payload: { rm: currentRoom.id, bc: currentBookcase.id }})
+      // dispatch({ type: SET_CURRENT, payload: { rm: currentRoom.id, bc: currentBookcase.id }})
       //setCurrent({ rm: currentRoom.id, bc: currentBookcase.id })
       return 
     }
@@ -192,7 +192,7 @@ const NewRoom = ({ rooms, dispatch }) => {
 
    // navigate(`${pathname + newRoom.id}`)
     // setCurrent({ rm: null, bc: null })
-    dispatch({ type: SET_CURRENT, payload: { rm: null, bc: null }})
+    // dispatch({ type: SET_CURRENT, payload: { rm: null, bc: null }})
 
   }
 
