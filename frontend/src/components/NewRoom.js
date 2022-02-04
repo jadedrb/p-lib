@@ -46,10 +46,10 @@ const NewRoom = ({ rooms, dispatch }) => {
     }
   }
 
-  const handleNavBackToRoom = () => navigate('/room/')
+  const handlePathBackToRoom = () => navigate('/room/')
 
   // adding these functions to a ref to avoid warnings about missing dependencies inside useEffect
-  navAndSwitch.current = { handlePathAndSwitchRoom, handleNavBackToRoom }
+  navAndSwitch.current = { handlePathAndSwitchRoom, handlePathBackToRoom }
 
   useEffect(() => { 
     navAndSwitch.current.handlePathAndSwitchRoom()
@@ -57,7 +57,7 @@ const NewRoom = ({ rooms, dispatch }) => {
 
   useEffect(() => {
     return () => {
-      navAndSwitch.current.handleNavBackToRoom()
+      navAndSwitch.current.handlePathBackToRoom()
     }
   }, [])
 
@@ -88,7 +88,6 @@ const NewRoom = ({ rooms, dispatch }) => {
         }) : false
 
         if (tiles) {
-            console.log(currentBookcase.color)
             div.style.backgroundColor = currentBookcase.color
         }
 
@@ -121,6 +120,7 @@ const NewRoom = ({ rooms, dispatch }) => {
       console.log("clicked on: " + currentBookcase.id)
       setBcStart('')
       setBcEnd('')
+      navigate(`${pathname}/bookcase/${currentBookcase.id}`)
       dispatch({ type: SET_CURRENT, payload: { rm: currentRoom.id, bc: currentBookcase.id }})
       //setCurrent({ rm: currentRoom.id, bc: currentBookcase.id })
       return 

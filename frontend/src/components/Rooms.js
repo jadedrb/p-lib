@@ -1,6 +1,7 @@
 import { useState, useContext } from "react"
 import NewRoom from "./NewRoom"
 import { Context } from '../context'
+import { Outlet } from "react-router-dom"
 
 const Rooms = () => {
 
@@ -20,6 +21,7 @@ const Rooms = () => {
                     <NewRoom rooms={rooms} dispatch={dispatch} />
                 </div> 
             }
+            <Outlet />
         </div>
     )
 }
