@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import { UPDATE_BOOKCASE } from "../context";
 
-const NewBookcase = ({ current, dispatch, currentRoom, currentBookcase }) => {
+/*
+  CURRENT PROBLEM : 
+  - Changing number of shelves works first time around
+  - Weird side effects when edited a second time for same bookcase
+  - Also, changing other values cause an error of "invalid array length"
+  - This is because on Line 42 shelves is undefined
+*/
+
+const NewBookcase = ({ dispatch, currentRoom, currentBookcase }) => {
 
   let [location, setLocation] = useState("Bookcase Location");
   let [shelves, setShelves] = useState("");
@@ -9,27 +17,35 @@ const NewBookcase = ({ current, dispatch, currentRoom, currentBookcase }) => {
   let [shelfHeight, setShelfHeight] = useState(30)
 
   useEffect(() => {
-    if (current && current.rm) {
+    if (currentRoom && currentBookcase) {
       setLocation(currentBookcase.location ? currentBookcase.location : "Bookcase Location")
       setShelves(currentBookcase.shelves.length)
       setWidth(currentBookcase.bcWidth)
       setShelfHeight(currentBookcase.shHeight)
     }
-  }, [current, currentBookcase?.location, currentBookcase?.shelves.length, currentBookcase?.bcWidth, currentBookcase?.shHeight])
+  }, [currentRoom, currentBookcase, currentBookcase?.location, currentBookcase?.shelves.length, currentBookcase?.bcWidth, currentBookcase?.shHeight])
 
   const handleSubmit = e => {
       e.preventDefault()
+      /*
+      NOTE: 
+        Temporary setup. In the future, you can set the initial amount of shelves,
+        but afterwards you can only add or remove one at a time. The input field
+        for setting a specific number will be disabled. 
+      */
       let newShelves;
-      if (currentBookcase.shelves.length) 
-        newShelves = shelves
+      let cbLength = currentBookcase.shelves.length
+      if (cbLength && cbLength === Number(shelves))
+          newShelves = currentBookcase.shelves
       else
         newShelves = [...Array(Number(shelves)).keys()]
 
-  
+  console.log(newShelves, shelves)
       dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: { location, bcWidth: width, shHeight: shelfHeight, shelves: newShelves } }})
   }
 
   const renderBookcases = () => {
+    console.log(shelves, typeof shelves)
       console.log([...Array(Number(shelves)).keys()])
       let arr = [...Array(Number(shelves)).keys()]
       return arr.map((sh,i) => <p key={i} className="shelf" style={{ height: `${shelfHeight}px` }}></p>)

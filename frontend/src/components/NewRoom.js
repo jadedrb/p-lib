@@ -120,9 +120,8 @@ const NewRoom = ({ rooms, dispatch }) => {
       console.log("clicked on: " + currentBookcase.id)
       setBcStart('')
       setBcEnd('')
-      navigate(`${pathname}/bookcase/${currentBookcase.id}`)
-      // dispatch({ type: SET_CURRENT, payload: { rm: currentRoom.id, bc: currentBookcase.id }})
-      //setCurrent({ rm: currentRoom.id, bc: currentBookcase.id })
+      console.log(pathname.split('/').slice(0,3).join("/"))
+      navigate(`${pathname.split('/').slice(0,3).join("/")}/bookcase/${currentBookcase.id}`)
       return 
     }
 
@@ -164,7 +163,6 @@ const NewRoom = ({ rooms, dispatch }) => {
   function switchRoom (prevOrNex, currentRooms) {
     let newIndex = rIndex + prevOrNex
     if (!prevOrNex) newIndex = currentRooms.length - 1
-    console.log(newIndex, currentRooms.length)
 
     if (currentRooms.length) {
       if (newIndex < 0 || newIndex > currentRooms.length - 1) return
@@ -189,10 +187,6 @@ const NewRoom = ({ rooms, dispatch }) => {
     setTile(newRoom.tile)
     setRoomName(newRoom.roomName)
     setBookcases(newRoom.bookcases)
-
-   // navigate(`${pathname + newRoom.id}`)
-    // setCurrent({ rm: null, bc: null })
-    // dispatch({ type: SET_CURRENT, payload: { rm: null, bc: null }})
 
   }
 
