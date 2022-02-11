@@ -14,3 +14,13 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+
+/*
+
+THINGS TO DO : 
+- Make shelves in a bookcase highlight when selected
+- Adjust the NewEntryField component to work with the current setup
+
+
+*/
