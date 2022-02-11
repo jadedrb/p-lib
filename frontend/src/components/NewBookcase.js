@@ -1,15 +1,7 @@
 import { useState, useEffect } from "react";
 import { UPDATE_BOOKCASE } from "../context";
 
-/*
-  CURRENT PROBLEM : 
-  - Changing number of shelves works first time around
-  - Weird side effects when edited a second time for same bookcase
-  - Also, changing other values cause an error of "invalid array length"
-  - This is because on Line 42 shelves is undefined
-*/
-
-const NewBookcase = ({ dispatch, currentRoom, currentBookcase }) => {
+const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path }) => {
 
   let [location, setLocation] = useState("Bookcase Location");
   let [shelves, setShelves] = useState("");
@@ -38,18 +30,50 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase }) => {
       if (cbLength && cbLength === Number(shelves))
           newShelves = currentBookcase.shelves
       else
-        newShelves = [...Array(Number(shelves)).keys()]
-
+        newShelves = constructShelves(shelves)
+//[...Array(Number(shelves)).keys()]
   console.log(newShelves, shelves)
       dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: { location, bcWidth: width, shHeight: shelfHeight, shelves: newShelves } }})
   }
 
-  const renderBookcases = () => {
-    console.log(shelves, typeof shelves)
-      console.log([...Array(Number(shelves)).keys()])
-      let arr = [...Array(Number(shelves)).keys()]
-      return arr.map((sh,i) => <p key={i} className="shelf" style={{ height: `${shelfHeight}px` }}></p>)
+  const randomNum = () => Math.floor(Math.random() * 255)
+
+  const constructShelves = (amount) => {
+    let shelves = []
+    for (let i = 0; i < amount; i++) {
+      shelves.push(shelfConstruct())
+    }
+    return shelves
   }
+
+  const shelfConstruct = () => {
+    return {
+      shelfId: randomNum() + randomNum() + randomNum(),
+      books: []
+    }
+  }
+
+  const navToShelf = (id) => {
+    // console.log(path)
+    // console.log(path.pathname + '/shelf/' + id)
+    // console.log(path.pathname.split("/").slice(0, 5).join("/"))
+    navigate(path.pathname.split("/").slice(0, 5).join("/") + '/shelf/' + id)
+  }
+
+  const renderBookcases = () => {
+      let arr = currentBookcase.shelves.length ? currentBookcase.shelves : [...Array(Number(shelves)).keys()]
+      return arr.map((sh,i) => 
+        <p 
+          key={i} 
+          className="shelf" 
+          style={{ height: `${shelfHeight}px` }}
+          onClick={() => navToShelf(sh.shelfId)}
+        >
+        </p>
+      )
+  }
+
+console.log(shelves)
 
   if (currentRoom && currentBookcase) {
     return (

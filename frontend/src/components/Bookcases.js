@@ -1,11 +1,14 @@
 import { useState, useContext } from "react"
 import NewBookcase from "./NewBookcase"
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { Context } from "../context";
 
 const Bookcases = () => {
     let { rooms, current, dispatch } = useContext(Context);
+    
     let { rid, bcid } = useParams()
+    let navigate = useNavigate()
+    let path = useLocation()
 
     let [showBookcases, setShowBookcases] = useState(true)
 
@@ -30,9 +33,12 @@ const Bookcases = () => {
                         dispatch={dispatch} 
                         currentRoom={currentRoom}
                         currentBookcase={currentBookcase}
+                        navigate={navigate}
+                        path={path}
                     />
                 </div> 
             }
+            <Outlet />
         </div>
     )
 }

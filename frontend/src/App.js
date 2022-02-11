@@ -2,6 +2,8 @@ import './App.css';
 
 import Rooms from './components/Rooms';
 import Bookcases from './components/Bookcases';
+import CurrentShelf from './components/CurrentShelf';
+
 import { Routes, Route, Navigate, Link } from 'react-router-dom'
 
 function App() {
@@ -16,8 +18,8 @@ function App() {
           <Route path={"/"} element={<Navigate to={"/room/"} />} />
           <Route path={"/room/"} element={<Rooms />} />
           <Route path={"/room/:rid/*"} element={<Rooms />}>
-            <Route path={"bookcase"}>
-              <Route path={":bcid/*"} element={<Bookcases />} />
+            <Route path={"bookcase/:bcid/*"} element={<Bookcases />}>
+              <Route path={"shelf/:shid"} element={<CurrentShelf />}/>
             </Route>
           </Route>
           <Route path={"*"} element={<div>Page not found... whoops!</div>}/>
