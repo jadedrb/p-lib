@@ -6,7 +6,7 @@ import { Context } from "../context";
 const Bookcases = () => {
     let { rooms, current, dispatch } = useContext(Context);
     
-    let { rid, bcid } = useParams()
+    let { rid, bcid, shid } = useParams()
     let navigate = useNavigate()
     let path = useLocation()
 
@@ -35,6 +35,7 @@ const Bookcases = () => {
                         currentBookcase={currentBookcase}
                         navigate={navigate}
                         path={path}
+                        shid={Number(shid)}
                     />
                 </div> 
             }

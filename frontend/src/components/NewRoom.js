@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { ADD_ROOM, REMOVE_ROOM, UPDATE_ROOM } from '../context'
 import { useNavigate, useLocation } from "react-router-dom";
 
-const NewRoom = ({ rooms, dispatch }) => {
+const NewRoom = ({ rooms, dispatch, bcid }) => {
 
   const defaultRoom = { height: 10, width: 10, tile: 25, roomName: "New Room", bookcases: [] }
 
@@ -89,12 +89,15 @@ const NewRoom = ({ rooms, dispatch }) => {
 
         if (tiles) {
             div.style.backgroundColor = currentBookcase.color
+            if (currentBookcase.id === bcid) {
+              div.style.outline = '3px solid black'
+            }
         }
 
         map.appendChild(div);
       }
     }
-  }, [height, width, tile, bcStart, bcEnd, bookcases]);
+  }, [height, width, tile, bcStart, bcEnd, bookcases, bcid]);
 
   const randomNum = () => Math.floor(Math.random() * 255)
 

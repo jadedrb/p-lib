@@ -7,7 +7,7 @@ function CurrentShelf() {
 
     let { rooms } = useContext(Context);
 
-    let [showShelf, setShowShelf] = useState(false)
+    let [showShelf, setShowShelf] = useState(true)
 
     let { rid, bcid, shid } = useParams()
 
@@ -27,7 +27,6 @@ function CurrentShelf() {
         }
     }
 
-console.log(currShelf, currentBookcase, currentRoom)
     return ( 
         <>
             <button onClick={() => setShowShelf(!showShelf)}>Shelf</button>

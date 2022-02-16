@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { UPDATE_BOOKCASE } from "../context";
 
-const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path }) => {
+const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, shid }) => {
 
   let [location, setLocation] = useState("Bookcase Location");
   let [shelves, setShelves] = useState("");
@@ -62,11 +62,12 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path })
 
   const renderBookcases = () => {
       let arr = currentBookcase.shelves.length ? currentBookcase.shelves : [...Array(Number(shelves)).keys()]
+      console.log(shid)
       return arr.map((sh,i) => 
         <p 
           key={i} 
           className="shelf" 
-          style={{ height: `${shelfHeight}px` }}
+          style={{ height: `${shelfHeight}px`, outline: `${sh.shelfId === shid ? '3px solid black' : 'none'}` }}
           onClick={() => navToShelf(sh.shelfId)}
         >
         </p>
