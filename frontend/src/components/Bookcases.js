@@ -16,7 +16,7 @@ const Bookcases = () => {
 
     if (rid) {
         currentRoom = rooms[rooms.findIndex((r) => r.id === Number(rid))]
-        if (bcid) {
+        if (currentRoom && bcid) {
             currentBookcase = currentRoom.bookcases[
                 currentRoom.bookcases.findIndex((r) => r.id === Number(bcid))
             ]; 
@@ -39,7 +39,7 @@ const Bookcases = () => {
                     />
                 </div> 
             }
-            <Outlet />
+            <Outlet rooms={rooms} />
         </div>
     )
 }

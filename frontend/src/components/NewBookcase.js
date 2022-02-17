@@ -62,7 +62,6 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
 
   const renderBookcases = () => {
       let arr = currentBookcase.shelves.length ? currentBookcase.shelves : [...Array(Number(shelves)).keys()]
-      console.log(shid)
       return arr.map((sh,i) => 
         <p 
           key={i} 

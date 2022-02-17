@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
-// import { Context } from '../context'
+import React, { useState, useEffect, useContext } from 'react';
+import { ADD_BOOK, Context } from '../context'
+import { useParams } from 'react-router-dom';
 
-const NewEntryField = (props) => {
-    // const context = useContext(Context)
+const NewEntryField = ({ book, setCurrShelf }) => {
+    const { dispatch } = useContext(Context)
+
+    let { shid, rid, bcid } = useParams()
     
     let [inputs, setInputs] = useState({ 
-        title: props.book ? 'book' : '',
-        author: props.book ? 'book' : '',
-        type: props.book ? 'book' : '',
-        genre: props.book ? 'book' : '',
-        location: props.book ? 'book' : '',
-        shelf: props.book ? 'book' : ''
+        title: book ? 'book' : '',
+        author: book ? 'book' : '',
+        genre: book ? 'book' : '',
+        pcount: book ? 'book' : '',
+        pdate: book ? 'book' : ''
     })
 
     let [currentFocus, setCurrentFocus] = useState(null)
@@ -47,6 +49,9 @@ const NewEntryField = (props) => {
             console.log(inputs)
             // context.postNewBook(inputs);
             // context.getAllBooks()
+            dispatch({ type: ADD_BOOK, payload: { shid, rid, bcid, book: inputs, setCurrShelf } })
+            // let { shelf } = utilitySelector(rid, bcid, shid, rooms)
+            // setCurrShelf({ ...shelf })
         }
     }
 
@@ -55,10 +60,10 @@ const NewEntryField = (props) => {
         <form id='ff'>
             <input autoFocus placeholder='Title' value={inputs.input1} onChange={handleInput} onKeyPress={handleEnter} onClick={handleClick} />
             <input placeholder='Author' value={inputs.input2} onChange={handleInput} onKeyPress={handleEnter} onClick={handleClick} />
-            <input placeholder='Type' value={inputs.input3} onChange={handleInput} onKeyPress={handleEnter} onClick={handleClick} />
-            <input placeholder='Genre' value={inputs.input4} onChange={handleInput} onKeyPress={handleEnter} onClick={handleClick} />
-            <input placeholder='Location' value={inputs.input5} onChange={handleInput} onKeyPress={handleEnter} onClick={handleClick} />
-            <input placeholder='Shelf' value={inputs.input6} onChange={handleInput} onKeyPress={handleEnter} onClick={handleClick} />
+            <input placeholder='Color' value={inputs.input3} onChange={handleInput} onKeyPress={handleEnter} onClick={handleClick} />
+            <input placeholder='Genre/Type' value={inputs.input4} onChange={handleInput} onKeyPress={handleEnter} onClick={handleClick} />
+            <input placeholder='Page Count' value={inputs.input5} onChange={handleInput} onKeyPress={handleEnter} onClick={handleClick} />
+            <input placeholder='Publish Date' value={inputs.input6} onChange={handleInput} onKeyPress={handleEnter} onClick={handleClick} />
         </form>
     )
 }
