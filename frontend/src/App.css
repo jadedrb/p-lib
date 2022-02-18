@@ -134,6 +134,14 @@ tr:hover {
 }
 
 .shelf {
+    display: flex;
+    justify-content: stretch;
     border: 1px solid black;
     margin: 0;
+}
+
+.shelf span {
+    outline: 1px solid black;
+    height: 100%;
+    flex: 1;
 }

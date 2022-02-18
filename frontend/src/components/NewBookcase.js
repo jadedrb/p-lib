@@ -69,6 +69,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
           style={{ height: `${shelfHeight}px`, outline: `${sh.shelfId === shid ? '3px solid black' : 'none'}` }}
           onClick={() => navToShelf(sh.shelfId)}
         >
+          {shid === sh.shelfId && sh.books?.length ? [...Array(Number(sh.books.length)).keys()].map((b,i) => <span key={i} onClick={() => alert(i)}>s</span>) : null}
         </p>
       )
   }
@@ -100,6 +101,7 @@ console.log(shelves)
             onChange={(e) => setShelves(e.target.value)}
             placeholder="number of shelves"
             type='number'
+            min="0"
             value={shelves}
           />
           <label htmlFor="bookcase-w">Bookcase Width</label>
