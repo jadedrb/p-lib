@@ -1,31 +1,30 @@
-import React, { useContext, useEffect } from 'react';
-import { Context } from '../context'
-import RoomService from '../services/RoomService';
+import React from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+// import { Context } from '../context'
+// import RoomService from '../services/RoomService';
 
-let RoomServe = new RoomService();
+// let RoomServe = new RoomService();
 
-const BookList = () => {
-    const { books, user } = useContext(Context)
-   // let [bookz, setBookz] = useState([])
+const BookList = ({ books }) => {
 
-    useEffect(() => {
-        if (!user) { // change later
-            RoomServe
-                .getRooms()
-                .then(res => console.log(res.data))
-        }
-    }, [user])
+    let { pathname } = useLocation()
+    let navigate = useNavigate()
+    let { bid } = useParams()
+    // console.log(pathname.split("/").slice(0, 7).join("/") + '/book/' + 353)
+console.log(bid)
+    const navToBook = (id) => {
+        navigate(pathname.split("/").slice(0, 7).join("/") + '/book/' + id)
+    }
 
-    let renderedBooks = books.map((b,i) => {
+    let renderedBooks = books?.map((b,i) => {
         return (
-            <tr key={i}>
+            <tr key={i} onClick={() => navToBook(b.id)} style={{ outline: Number(bid) === b.id ? '3px solid black' : 'none' }}>
                 <td>{b.title}</td>
                 <td>{b.author}</td>
-                <td>{b.type}</td>
                 <td>{b.genre}</td>
-                <td>{b.location}</td>
-                <td>{b.shelf}</td>
-                <td>{b.user}</td>
+                <td>{b.pcount}</td>
+                <td>{b.pdate}</td>
+                <td>{b.color}</td>
             </tr>
                 // title: String,
                 // author: String,
@@ -38,9 +37,15 @@ const BookList = () => {
     })
 
     return (
-        <table className='booklist'>
-            {renderedBooks}
-        </table>
+        <div className="table-contain">
+            {renderedBooks?.length ? 
+                <table className='booklist'>
+                    <tbody>
+                        {renderedBooks}
+                    </tbody>    
+                </table>
+            : null}
+        </div>
     )
 }
 

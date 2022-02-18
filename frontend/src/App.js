@@ -19,7 +19,9 @@ function App() {
           <Route path={"/room/"} element={<Rooms />} />
           <Route path={"/room/:rid/*"} element={<Rooms />}>
             <Route path={"bookcase/:bcid/*"} element={<Bookcases />}>
-              <Route path={"shelf/:shid"} element={<CurrentShelf />}/>
+              <Route path={"shelf/:shid/*"} element={<CurrentShelf />}>
+                <Route path={"book/:bid"} element={<CurrentShelf />} />
+              </Route>
             </Route>
           </Route>
           <Route path={"*"} element={<div>Page not found... whoops!</div>}/>

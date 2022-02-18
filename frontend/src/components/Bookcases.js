@@ -1,7 +1,7 @@
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import NewBookcase from "./NewBookcase"
 import { useParams, useNavigate, useLocation, Outlet } from 'react-router-dom'
-import { Context } from "../context";
+import { Context, utilitySelector } from "../context";
 
 const Bookcases = () => {
     let { rooms, current, dispatch } = useContext(Context);
@@ -11,17 +11,16 @@ const Bookcases = () => {
     let path = useLocation()
 
     let [showBookcases, setShowBookcases] = useState(true)
+    let [currentRoom, setCurrentRoom] = useState(null)
+    let [currentBookcase, setCurrentBookcase] = useState(null)
+    // let currentRoom, currentBookcase;
 
-    let currentRoom, currentBookcase;
 
-    if (rid) {
-        currentRoom = rooms[rooms.findIndex((r) => r.id === Number(rid))]
-        if (currentRoom && bcid) {
-            currentBookcase = currentRoom.bookcases[
-                currentRoom.bookcases.findIndex((r) => r.id === Number(bcid))
-            ]; 
-        }
-    }
+    useEffect(() => {
+        let { room, bkcase } = utilitySelector(rid, bcid, shid, rooms)
+        setCurrentRoom(room)
+        setCurrentBookcase(bkcase)
+    }, [shid, rid, bcid, rooms])
 
     return (
         <div className="bookcases">
@@ -39,7 +38,7 @@ const Bookcases = () => {
                     />
                 </div> 
             }
-            <Outlet rooms={rooms} />
+            <Outlet />
         </div>
     )
 }

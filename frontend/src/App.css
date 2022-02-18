@@ -13,6 +13,14 @@ td {
     min-width: 10px;
 }
 
+tr:hover {
+    cursor: pointer;
+}
+
+.table-contain {
+    overflow: auto;
+}
+
 /* NewRoom */
 
 .room-map {

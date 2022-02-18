@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { utilitySelector, Context } from '../context';
-import NewEntryField from './NewBook';
+import BookList from './BookList';
+import NewBook from './NewBook';
 
 function CurrentShelf() {
 
@@ -24,8 +25,9 @@ function CurrentShelf() {
             {showShelf && 
             <div>
                 <h5>Shelf ID: {shid}</h5>
-                {currShelf?.books.map((b, i) => <p key={i}>Book {i}</p>)}
-                <NewEntryField setCurrShelf={setCurrShelf} />
+                {/* {currShelf?.books.map((b, i) => <p key={i}>Book {i}</p>)} */}
+                <BookList books={currShelf?.books}/>
+                <NewBook setCurrShelf={setCurrShelf} />
             </div>
             }
         </>
