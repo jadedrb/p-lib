@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { ADD_BOOK, Context } from "../context";
 import { useParams } from "react-router-dom";
+import { pretendId } from "../services/utility";
 
 const NewBook = ({ book, setCurrShelf }) => {
   const { dispatch } = useContext(Context);
@@ -51,7 +52,7 @@ const NewBook = ({ book, setCurrShelf }) => {
       firstInput.current.focus();
       setCurrentFocus(firstInput.current);
       let book = { ...inputs }
-      book.id = randomNum() + randomNum() + randomNum()
+      book.id = pretendId()
       dispatch({
         type: ADD_BOOK,
         payload: { shid, rid, bcid, book, setCurrShelf },

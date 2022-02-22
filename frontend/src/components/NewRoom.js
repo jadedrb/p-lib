@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { ADD_ROOM, REMOVE_ROOM, UPDATE_ROOM } from '../context'
 import { useNavigate, useLocation } from "react-router-dom";
+import { pretendId, randomNum, utilPath } from "../services/utility";
 
 const NewRoom = ({ rooms, dispatch, bcid }) => {
 
@@ -25,7 +26,9 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
   let navAndSwitch = useRef()
 
   let navigate = useNavigate()
-  let { pathname } = useLocation()
+  let path = useLocation()
+  let pathname = path.pathname
+
 
   const handlePathAndSwitchRoom = () => {
     // mount keeps track of the index of the current room between renders
@@ -99,8 +102,6 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
     }
   }, [height, width, tile, bcStart, bcEnd, bookcases, bcid]);
 
-  const randomNum = () => Math.floor(Math.random() * 255)
-
   const handleBoxClick = (e) => {
     if (e.target.className[0] !== "b") return
     let [row, column] = e.target.className
@@ -123,8 +124,7 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
       console.log("clicked on: " + currentBookcase.id)
       setBcStart('')
       setBcEnd('')
-      console.log(pathname.split('/').slice(0,3).join("/"))
-      navigate(`${pathname.split('/').slice(0,3).join("/")}/bookcase/${currentBookcase.id}`)
+      navigate(utilPath(path, 'bookcase', currentBookcase.id))
       return 
     }
 
@@ -140,7 +140,7 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
             rowHigh: Math.max(bcStart[0], bcEnd[0]),
             colHigh: Math.max(bcStart[1], bcEnd[1]),
             color: `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`,
-            id: randomNum() + randomNum() + randomNum(),
+            id: pretendId(),
             location: '',
             bcWidth: 100,
             shHeight: 30,
@@ -176,7 +176,7 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
     // If we deleted the last saved room
     if (newIndex < 0) {
       newRoom = roomConstruct(10, 10, "New Room", 25, [])
-      newRoom.id = randomNum() + randomNum() + randomNum()
+      newRoom.id = pretendId()
       console.log('last deleted: ', newRoom)
       newIndex = 0
       navigate(`/room/`)
@@ -203,7 +203,7 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
       dispatch({ type: UPDATE_ROOM, payload: room })
     }
     else {
-      room.id = randomNum() + randomNum() + randomNum()
+      room.id = pretendId()
       navigate(`${pathname.slice(0, 6) + room.id}`)
       dispatch({ type: ADD_ROOM, payload: { room } })
     }
@@ -211,7 +211,7 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
 
   const newBlankRoom = () => {
     let room = roomConstruct(10, 10, "New Room", 25, [])
-    room.id = randomNum() + randomNum() + randomNum()
+    room.id = pretendId()
     dispatch({ type: ADD_ROOM, payload: { room } })
   }
 

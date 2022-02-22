@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { UPDATE_BOOKCASE } from "../context";
+import { pretendId, utilPath } from "../services/utility";
 
-const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, shid }) => {
+const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, shid, bid }) => {
 
   let [location, setLocation] = useState("Bookcase Location");
   let [shelves, setShelves] = useState("");
@@ -48,28 +49,36 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
 
   const shelfConstruct = () => {
     return {
-      shelfId: randomNum() + randomNum() + randomNum(),
+      shelfId: pretendId(),
       books: []
     }
   }
 
-  const navToShelf = (id) => {
-    // console.log(path)
-    // console.log(path.pathname + '/shelf/' + id)
-    // console.log(path.pathname.split("/").slice(0, 5).join("/"))
-    navigate(path.pathname.split("/").slice(0, 5).join("/") + '/shelf/' + id)
-  }
-
   const renderBookcases = () => {
       let arr = currentBookcase.shelves.length ? currentBookcase.shelves : [...Array(Number(shelves)).keys()]
+      // [...Array(Number(sh.books.length)).keys()]
       return arr.map((sh,i) => 
         <p 
           key={i} 
           className="shelf" 
           style={{ height: `${shelfHeight}px`, outline: `${sh.shelfId === shid ? '3px solid black' : 'none'}` }}
-          onClick={() => navToShelf(sh.shelfId)}
+          onClick={() => {
+            if (!shid || !(shid === sh.shelfId)) 
+              navigate(utilPath(path, 'shelf', sh.shelfId))
+          }}
         >
-          {shid === sh.shelfId && sh.books?.length ? [...Array(Number(sh.books.length)).keys()].map((b,i) => <span key={i} onClick={() => alert(i)}>s</span>) : null}
+          {shid === sh.shelfId && sh.books?.length ? 
+          sh.books
+            .map((b,i) => 
+              <span 
+                key={i} 
+                onClick={() => navigate(utilPath(path, 'book', b.id))}
+                style={{ backgroundColor: bid === b.id ? 'green' : 'white' }}
+              >
+                s
+              </span>
+            ) : 
+            null}
         </p>
       )
   }

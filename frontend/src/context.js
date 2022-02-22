@@ -1,4 +1,5 @@
 import React, { useReducer } from 'react';
+import { utilitySelector } from './services/utility';
 
 export const Context = React.createContext()
 
@@ -63,22 +64,4 @@ export function Provider(props) {
             {props.children}
         </Context.Provider>
     )
-}
-
-export function utilitySelector(rid, bcid, shid, rms) {
-    let rooms = [ ...rms ]
-    let roomIndex, room, bkcase, bkcaseIndex, shelfIndex, shelf;
-    if (rid) {
-        roomIndex = rooms.findIndex((r) => r.id === Number(rid))
-        room = rooms[roomIndex]
-        if (bcid && room) {
-            bkcaseIndex = room.bookcases.findIndex((b) => b.id === Number(bcid))
-            bkcase = room.bookcases[bkcaseIndex]
-            if (shid && bkcase) {
-                shelfIndex = bkcase.shelves.findIndex((sh) => sh.shelfId === Number(shid))
-                shelf = bkcase.shelves[shelfIndex]
-            }
-        }
-    }
-    return { roomIndex, room, rooms, bkcase, bkcaseIndex, shelfIndex, shelf }
 }

@@ -1,12 +1,13 @@
 import { useState, useContext, useEffect } from "react"
 import NewBookcase from "./NewBookcase"
 import { useParams, useNavigate, useLocation, Outlet } from 'react-router-dom'
-import { Context, utilitySelector } from "../context";
+import { Context } from "../context"
+import { utilitySelector } from "../services/utility";
 
 const Bookcases = () => {
     let { rooms, current, dispatch } = useContext(Context);
     
-    let { rid, bcid, shid } = useParams()
+    let { rid, bcid, shid, bid } = useParams()
     let navigate = useNavigate()
     let path = useLocation()
 
@@ -35,6 +36,7 @@ const Bookcases = () => {
                         navigate={navigate}
                         path={path}
                         shid={Number(shid)}
+                        bid={Number(bid)}
                     />
                 </div> 
             }
