@@ -12,15 +12,17 @@ const NewBook = ({ setCurrShelf }) => {
 
   let firstInput = useRef();
 
-  let [colorType, setColorType] = useState(true)
-  let [inputs, setInputs] = useState({
+  let initialInputs = useRef({
     title: "",
     author: "",
     genre: "",
     pcount: "",
     pdate: "",
     color: ""
-  });
+  })
+
+  let [colorType, setColorType] = useState(true)
+  let [inputs, setInputs] = useState(initialInputs.current);
 
   let [currentFocus, setCurrentFocus] = useState(null);
 
@@ -35,6 +37,8 @@ const NewBook = ({ setCurrShelf }) => {
         let { title, author, genre, pcount, pdate, color } = book
         setInputs({ title, author, genre, pcount, pdate, color })
       }
+    } else {
+      setInputs(initialInputs.current)
     }
   }, [rid, bcid, shid, rooms, bid])
 
@@ -51,7 +55,7 @@ const NewBook = ({ setCurrShelf }) => {
 
   const handleEnter = (e) => {
     let nextInput;
-
+console.log(e.key)
     if (e.key === "Enter") {
       nextInput = currentFocus.nextSibling
         ? currentFocus.nextSibling
@@ -65,10 +69,7 @@ const NewBook = ({ setCurrShelf }) => {
       setCurrentFocus(nextInput);
     }
 
-    if (nextInput === currentFocus) {
-      firstInput.current.focus();
-      setCurrentFocus(firstInput.current);
-      
+    if (nextInput && nextInput.name === "new") {
       if (bid) {
         let book = { ...inputs, id: Number(bid) }
         dispatch({
@@ -84,6 +85,12 @@ const NewBook = ({ setCurrShelf }) => {
           payload: { shid, rid, bcid, book, setCurrShelf },
         });
       }
+    }
+
+    if (nextInput === currentFocus || !e.key) {
+      firstInput.current.focus();
+      setCurrentFocus(firstInput.current);
+      navigate(utilPath(path, 'shelf', shid))
     }
   };
 
@@ -145,6 +152,13 @@ const NewBook = ({ setCurrShelf }) => {
         onChange={handleInput}
         onKeyPress={handleEnter}
         onClick={handleClick}
+      />
+      <input 
+        type="button"
+        value="reset"
+        name="new"
+        onClick={handleEnter}
+        onKeyPress={handleEnter}
       />
     </form>
   );
