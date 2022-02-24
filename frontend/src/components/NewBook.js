@@ -1,32 +1,42 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { ADD_BOOK, Context } from "../context";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { pretendId, utilPath } from "../services/utility";
+import { pretendId, utilPath, utilitySelector } from "../services/utility";
 
-const NewBook = ({ book, setCurrShelf }) => {
-  const { dispatch } = useContext(Context);
+const NewBook = ({ setCurrShelf }) => {
+  const { rooms, dispatch } = useContext(Context);
 
-  let { shid, rid, bcid } = useParams();
+  let { shid, rid, bcid, bid } = useParams();
   let navigate = useNavigate()
   let path = useLocation()
 
   let firstInput = useRef();
-  let colorInput = useRef()
 
   let [colorType, setColorType] = useState(true)
   let [inputs, setInputs] = useState({
-    title: book ? "book" : "",
-    author: book ? "book" : "",
-    genre: book ? "book" : "",
-    pcount: book ? "book" : "",
-    pdate: book ? "book" : ""
+    title: "",
+    author: "",
+    genre: "",
+    pcount: "",
+    pdate: "",
+    color: ""
   });
-console.log(book)
+
   let [currentFocus, setCurrentFocus] = useState(null);
 
   useEffect(() => {
     setCurrentFocus(firstInput.current);
   }, []);
+
+  useEffect(() => {
+    if (bid) {
+      let { book } = utilitySelector(rid, bcid, shid, rooms, bid)
+      if (book) { 
+        let { title, author, genre, pcount, pdate, color } = book
+        setInputs({ title, author, genre, pcount, pdate, color })
+      }
+    }
+  }, [rid, bcid, shid, rooms, bid])
 
   const handleInput = (e) => {
     let { name, value } = e.target;
@@ -59,7 +69,7 @@ console.log(book)
       firstInput.current.focus();
       setCurrentFocus(firstInput.current);
       let id = pretendId()
-      let book = { ...inputs, id, color: colorInput.current.value }
+      let book = { ...inputs, id }
       navigate(utilPath(path, 'book', id))
       dispatch({
         type: ADD_BOOK,
@@ -75,7 +85,7 @@ console.log(book)
         placeholder="Title"
         name="title"
         ref={firstInput}
-        value={inputs.input1}
+        value={inputs.title}
         onChange={handleInput}
         onKeyPress={handleEnter}
         onClick={handleClick}
@@ -83,7 +93,7 @@ console.log(book)
       <input
         placeholder="Author"
         name="author"
-        value={inputs.input2}
+        value={inputs.author}
         onChange={handleInput}
         onKeyPress={handleEnter}
         onClick={handleClick}
@@ -92,7 +102,8 @@ console.log(book)
         placeholder="Color"
         name="color"
         type={colorType ? "text" : "color"}
-        ref={colorInput}
+        value={!colorType && inputs.color.slice(0,1) !== "#" ? "#ffffff" : inputs.color}
+        onChange={handleInput}
         onKeyPress={handleEnter}
         onClick={handleClick}
       />
@@ -105,7 +116,7 @@ console.log(book)
       <input
         placeholder="Genre/Type"
         name="genre"
-        value={inputs.input4}
+        value={inputs.genre}
         onChange={handleInput}
         onKeyPress={handleEnter}
         onClick={handleClick}
@@ -113,7 +124,7 @@ console.log(book)
       <input
         placeholder="Page Count"
         name="pcount"
-        value={inputs.input5}
+        value={inputs.pcount}
         onChange={handleInput}
         onKeyPress={handleEnter}
         onClick={handleClick}
@@ -121,7 +132,7 @@ console.log(book)
       <input
         placeholder="Publish Date"
         name="pdate"
-        value={inputs.input6}
+        value={inputs.pdate}
         onChange={handleInput}
         onKeyPress={handleEnter}
         onClick={handleClick}

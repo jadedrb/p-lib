@@ -71,7 +71,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
             .map((b,i) => 
               <span 
                 key={i} 
-                onClick={(e) => { navigate(utilPath(path, 'book', b.id)); console.log(e.target); }}
+                onClick={(e) => navigate(utilPath(path, 'book', b.id)) }
                 style={{ backgroundColor: bid === b.id ? b.color : 'white' }}
               >
                 s
@@ -81,8 +81,6 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
         </p>
       )
   }
-
-console.log(shelves)
 
   if (currentRoom && currentBookcase) {
     return (

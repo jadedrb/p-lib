@@ -1,6 +1,7 @@
-export function utilitySelector(rid, bcid, shid, rms) {
+export function utilitySelector(rid, bcid, shid, rms, bid) {
     let rooms = [ ...rms ]
-    let roomIndex, room, bkcase, bkcaseIndex, shelfIndex, shelf;
+    let roomIndex, room, bkcase, bkcaseIndex, shelfIndex, shelf, bookIndex, book;
+    console.log(bid)
     if (rid) {
         roomIndex = rooms.findIndex((r) => r.id === Number(rid))
         room = rooms[roomIndex]
@@ -11,9 +12,13 @@ export function utilitySelector(rid, bcid, shid, rms) {
                 shelfIndex = bkcase.shelves.findIndex((sh) => sh.shelfId === Number(shid))
                 shelf = bkcase.shelves[shelfIndex]
             }
+            if (bid && shelf) {
+                bookIndex = shelf.books.findIndex((b) => b.id === Number(bid))
+                book = shelf.books[bookIndex]
+            }
         }
     }
-    return { roomIndex, room, rooms, bkcase, bkcaseIndex, shelfIndex, shelf }
+    return { roomIndex, room, rooms, bkcase, bkcaseIndex, shelfIndex, shelf, bookIndex, book }
 }
 
 export function utilPath(path, type, id) {
