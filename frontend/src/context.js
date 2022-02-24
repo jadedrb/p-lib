@@ -10,6 +10,7 @@ export const UPDATE_ROOM = 'UPDATE_ROOM'
 export const UPDATE_BOOKCASE = 'UPDATE_BOOKCASE'
 
 export const ADD_BOOK = "ADD_BOOK"
+export const UPDATE_BOOK = "UPDATE_BOOK"
 
 let initialState = {
     books: [],
@@ -46,7 +47,18 @@ function reducer(state, action) {
             let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
             shelf.books = [ ...shelf.books, book ]
             setCurrShelf({ ...shelf })
-            return state
+            return { ...state, rooms }
+        }
+        case UPDATE_BOOK: {
+            console.log('updating...')
+            let { bcid, rid, shid, book, bid } = action.payload
+            console.log(book)
+            let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms, bid)
+            let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
+            shelf.books = shelf.books.map(b => b.id === Number(bid) ? book : b)
+            console.log(shelf.books)
+            console.log(shelf.books.map(b => b.id === bid ? book : b))
+            return { ...state, rooms }
         }
         default:
             return state

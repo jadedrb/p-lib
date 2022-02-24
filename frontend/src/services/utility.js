@@ -46,3 +46,21 @@ export function randomNum() {
 export function pretendId() {
     return randomNum() + randomNum() + randomNum()
 }
+
+
+
+/*
+
+let newRooms = state.rooms.map(r => {
+                if (rid === r.id)
+                    return r.bookcases.map(bk => {
+                        if (bcid === bk.id)
+                            return null
+                        else 
+                            return bk
+                    })
+                else
+                    return r
+            })
+
+*/

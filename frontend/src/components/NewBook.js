@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { ADD_BOOK, Context } from "../context";
+import { ADD_BOOK, Context, UPDATE_BOOK } from "../context";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { pretendId, utilPath, utilitySelector } from "../services/utility";
 
@@ -68,13 +68,22 @@ const NewBook = ({ setCurrShelf }) => {
     if (nextInput === currentFocus) {
       firstInput.current.focus();
       setCurrentFocus(firstInput.current);
-      let id = pretendId()
-      let book = { ...inputs, id }
-      navigate(utilPath(path, 'book', id))
-      dispatch({
-        type: ADD_BOOK,
-        payload: { shid, rid, bcid, book, setCurrShelf },
-      });
+      
+      if (bid) {
+        let book = { ...inputs, id: Number(bid) }
+        dispatch({
+          type: UPDATE_BOOK,
+          payload: { shid, rid, bcid, book, bid },
+        });
+      } else {
+        let id = pretendId()
+        let book = { ...inputs, id }
+        navigate(utilPath(path, 'book', id))
+        dispatch({
+          type: ADD_BOOK,
+          payload: { shid, rid, bcid, book, setCurrShelf },
+        });
+      }
     }
   };
 
