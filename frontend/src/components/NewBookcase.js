@@ -37,8 +37,6 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
       dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: { location, bcWidth: width, shHeight: shelfHeight, shelves: newShelves } }})
   }
 
-  const randomNum = () => Math.floor(Math.random() * 255)
-
   const constructShelves = (amount) => {
     let shelves = []
     for (let i = 0; i < amount; i++) {
@@ -57,6 +55,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
   const renderBookcases = () => {
       let arr = currentBookcase.shelves.length ? currentBookcase.shelves : [...Array(Number(shelves)).keys()]
       // [...Array(Number(sh.books.length)).keys()]
+      console.log('rendering again...')
       return arr.map((sh,i) => 
         <p 
           key={i} 
@@ -72,8 +71,8 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
             .map((b,i) => 
               <span 
                 key={i} 
-                onClick={() => navigate(utilPath(path, 'book', b.id))}
-                style={{ backgroundColor: bid === b.id ? 'green' : 'white' }}
+                onClick={(e) => { navigate(utilPath(path, 'book', b.id)); console.log(e.target); }}
+                style={{ backgroundColor: bid === b.id ? b.color : 'white' }}
               >
                 s
               </span>

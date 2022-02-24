@@ -28,7 +28,7 @@ function CurrentShelf() {
                 <h5>Shelf ID: {shid}</h5>
                 {/* {currShelf?.books.map((b, i) => <p key={i}>Book {i}</p>)} */}
                 <BookList books={currShelf?.books}/>
-                <NewBook setCurrShelf={setCurrShelf} />
+                <NewBook book={'test'} setCurrShelf={setCurrShelf} />
             </div>
             }
         </>
