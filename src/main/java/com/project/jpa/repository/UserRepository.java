@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.project.jpa.exception.AuthException;
 import com.project.jpa.model.Book;
@@ -26,8 +27,9 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 //	@Query("SELECT u.username, ur.name FROM User u JOIN u.rooms ur")
 //			List<User> joinUserAndRoom();
 	
-	@Query("select u.username, r.name from User u JOIN u.rooms r")
-	List<Object> joinUserAndRoom();
+//	@Query("select u.username, r.name from User u JOIN u.rooms r")
+//	@Query("select u from User u JOIN u.rooms r WHERE u.username = :n")
+//	List<User> joinUserAndRoom(@Param("n") String username);
 	
 	List<User> findByUsername(String name);
 }

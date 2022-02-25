@@ -3,6 +3,10 @@ import { ADD_ROOM, REMOVE_ROOM, UPDATE_ROOM } from '../context'
 import { useNavigate, useLocation } from "react-router-dom";
 import { pretendId, randomNum, utilPath } from "../services/utility";
 
+import RoomService from "../services/RoomService"
+
+let Rooms = new RoomService()
+
 const NewRoom = ({ rooms, dispatch, bcid }) => {
 
   const defaultRoom = { height: 10, width: 10, tile: 25, roomName: "New Room", bookcases: [] }
@@ -177,7 +181,7 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
     if (newIndex < 0) {
       newRoom = roomConstruct(10, 10, "New Room", 25, [])
       newRoom.id = pretendId()
-      console.log('last deleted: ', newRoom)
+      // console.log('last deleted: ', newRoom)
       newIndex = 0
       navigate(`/room/`)
     }
@@ -236,6 +240,7 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
           <span>{'>'}</span>
         </div>
       </div>
+
       <form onSubmit={handleSubmit}>
         <input
           onChange={(e) => setHeight(e.target.value)}
@@ -259,6 +264,41 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
         />
         <button>Save</button>
       </form>
+
+{/* For test purposes... */}
+<br /><br /><br />
+      <button onClick={() => {
+        // Rooms.getRooms()
+        // Rooms.getUser("bob")
+        Rooms.getRoomsForUser("bob")
+        // Rooms.getUserByName("bob")
+      }}>GET Request</button>
+      <br /><br />
+      <button onClick={() => {
+        let room = {
+          name: "laboratory",
+          height: 25,
+          width: 25,
+          tile: 30,
+        }
+        Rooms.addRoomForUser("bob", room)
+      }}>POST Request</button>
+      <br /><br />
+      <button onClick={() => {
+        // Rooms.addRoomForUser("bob", room)
+        Rooms.removeRoomFromUser(3, "bob")
+        // Rooms.removeUser(1)
+      }}>DELETE Request</button>
+      <br /><br />
+      <button onClick={() => {
+        let room = {
+          name: "mud room",
+          height: 1,
+          width: 50,
+          tile: 25,
+        }
+        Rooms.updateRoomForUser(2, "bob", room)
+      }}>UPDATE Request</button>
     </div>
   );
 };

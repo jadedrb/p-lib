@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -22,21 +23,34 @@ public class Room {
 	public String name;
 	public int height;
 	public int width;
-	
+	public int tile;
+
 	@OneToMany
 	private List<Bookcase> bookcases = new ArrayList<>();
 	
+//	@ManyToOne
+//	private User user;
+	
 	public Room() {}
 
-	public Room(String name, int height, int weight) {
+	public Room(String name, int height, int width, int tile) {
 		super();
 		this.name = name;
 		this.height = height;
-		this.width = weight;
+		this.width = width;
+		this.tile = tile;
 	}
 
 	public int getId() {
 		return id;
+	}
+	
+	public int getTile() {
+		return tile;
+	}
+
+	public void setTile(int tile) {
+		this.tile = tile;
 	}
 
 	public void setId(int id) {
@@ -59,12 +73,12 @@ public class Room {
 		this.height = height;
 	}
 
-	public int getWeight() {
+	public int getWidth() {
 		return width;
 	}
 
-	public void setWeight(int weight) {
-		this.width = weight;
+	public void setWidth(int width) {
+		this.width = width;
 	}
 	
 }

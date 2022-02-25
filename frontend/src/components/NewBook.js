@@ -55,13 +55,14 @@ const NewBook = ({ setCurrShelf }) => {
 
   const handleEnter = (e) => {
     let nextInput;
-console.log(e.key)
+
     if (e.key === "Enter") {
       nextInput = currentFocus.nextSibling
         ? currentFocus.nextSibling
         : currentFocus;
 
-      if (nextInput.name === 'skip') 
+      // When pressing enter, skip the color input type button and Save button
+      if (nextInput.name === 'skip' || nextInput.name === 'save') 
         nextInput = nextInput.nextSibling
 
       nextInput.focus();
@@ -69,7 +70,8 @@ console.log(e.key)
       setCurrentFocus(nextInput);
     }
 
-    if (nextInput && nextInput.name === "new") {
+    // If enter press on the last input OR if they click the Save button
+    if (nextInput?.name === "reset" || e.target.name === "save") {
       if (bid) {
         let book = { ...inputs, id: Number(bid) }
         dispatch({
@@ -87,13 +89,14 @@ console.log(e.key)
       }
     }
 
-    if (nextInput === currentFocus || !e.key) {
+    // If enter press leads nowhere OR if Reset button is pressed
+    if (nextInput === currentFocus || e.target.name === "reset") {
       firstInput.current.focus();
       setCurrentFocus(firstInput.current);
       navigate(utilPath(path, 'shelf', shid))
     }
   };
-
+console.log(rooms)
   return (
     <form id="ff">
       <input
@@ -155,8 +158,15 @@ console.log(e.key)
       />
       <input 
         type="button"
-        value="reset"
-        name="new"
+        value="Save"
+        name="save"
+        onClick={handleEnter}
+        onKeyPress={handleEnter}
+      />
+      <input 
+        type="button"
+        value="Reset"
+        name="reset"
         onClick={handleEnter}
         onKeyPress={handleEnter}
       />

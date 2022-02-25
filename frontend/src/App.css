@@ -19,6 +19,7 @@ tr:hover {
 
 .table-contain {
     overflow: auto;
+    border: 3px solid teal;
 }
 
 /* NewRoom */
@@ -149,3 +150,4 @@ tr:hover {
 
 
 /* New Book */
+
