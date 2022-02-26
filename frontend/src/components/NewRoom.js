@@ -4,8 +4,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { pretendId, randomNum, utilPath } from "../services/utility";
 
 import RoomService from "../services/RoomService"
-
-let Rooms = new RoomService()
+import BookcaseService from "../services/BookcaseService"
+import ShelfService from "../services/ShelfService";
 
 const NewRoom = ({ rooms, dispatch, bcid }) => {
 
@@ -267,11 +267,8 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
 
 {/* For test purposes... */}
 <br /><br /><br />
-      <button onClick={() => {
-        // Rooms.getRooms()
-        // Rooms.getUser("bob")
-        Rooms.getRoomsForUser("bob")
-        // Rooms.getUserByName("bob")
+      <button onClick={async () => {
+        
       }}>GET Request</button>
       <br /><br />
       <button onClick={() => {
@@ -281,12 +278,19 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
           width: 25,
           tile: 30,
         }
-        Rooms.addRoomForUser("bob", room)
+        RoomService.addRoomForUser("bob", room)
+        let bookcase = {
+          location: "next to window",
+          height: 25,
+          width: 25
+        }
+        BookcaseService.addBookcaseForRoom(1, bookcase)
       }}>POST Request</button>
       <br /><br />
       <button onClick={() => {
         // Rooms.addRoomForUser("bob", room)
-        Rooms.removeRoomFromUser(3, "bob")
+        // Rooms.removeRoomFromUser(3, "bob")
+        BookcaseService.removeBookcaseFromRoom(1, 1)
         // Rooms.removeUser(1)
       }}>DELETE Request</button>
       <br /><br />
@@ -297,8 +301,50 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
           width: 50,
           tile: 25,
         }
-        Rooms.updateRoomForUser(2, "bob", room)
+        let bookcase = {
+          location: "by the bed",
+          height: 30,
+          width: 60
+        }
+        RoomService.updateRoomForUser(2, "bob", room)
+        BookcaseService.updateBookcaseForRoom(1, bookcase)
       }}>UPDATE Request</button>
+      <button onClick={async () => { 
+        let room = {
+          name: "mud room",
+          height: 1,
+          width: 50,
+          tile: 25,
+        }
+        let bookcase = {
+          location: "by the bed",
+          height: 30,
+          width: 60
+        }
+        let shelf = {}
+        
+        console.log('Room Requests: ')
+        console.log('get...')
+        await RoomService.getRoomsForUser("bob")
+        console.log('add...')
+        await RoomService.addRoomForUser(room, "bob")
+        console.log('update...')
+        await RoomService.updateRoomForUser(1, "bob", room)
+        console.log('remove...')
+        await RoomService.removeRoomFromUser(1, "bob")
+        console.log('Bookcase Requests: ')
+        console.log('get...')
+        await BookcaseService.getBookcasesForRoom(1)
+        console.log('add...')
+        await BookcaseService.addBookcaseForRoom(bookcase, 2)
+        console.log('update...')
+        await BookcaseService.updateBookcaseForRoom(1, bookcase)
+        console.log('remove...')
+        await BookcaseService.removeBookcaseFromRoom(1, 2)
+
+      }}>
+        EVERYTHING!
+      </button>
     </div>
   );
 };
