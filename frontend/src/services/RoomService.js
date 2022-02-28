@@ -24,7 +24,7 @@ export default class RoomService {
         return axios.delete(API + `/rooms/${id}/users/${name}`).then(r => this.format(r))
     }
     
-    static updateRoomOfIdForUserWithName(room, id, name) {
+    static updateRoomOfIdForUser(room, id, name) {
         return axios.put(API + `/rooms/${id}/users/${name}`, room).then(r => this.format(r))
     }
 }
