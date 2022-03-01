@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="rooms")
@@ -25,11 +28,12 @@ public class Room {
 	public int width;
 	public int tile;
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
 	private List<Bookcase> bookcases = new ArrayList<>();
 	
-//	@ManyToOne
-//	private User user;
+	@ManyToOne
+	@JsonIgnore
+	private User user;
 	
 	public Room() {}
 
@@ -39,6 +43,30 @@ public class Room {
 		this.height = height;
 		this.width = width;
 		this.tile = tile;
+	}
+	
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public void addBookcase(Bookcase bookcase) {
+		this.bookcases.add(bookcase);
+	}
+	
+	public void removeBookcase(Bookcase bookcase) {
+		this.bookcases.remove(bookcase);
+	}
+	
+	public List<Bookcase> getBookcases() {
+		return bookcases;
+	}
+
+	public void setBookcases(List<Bookcase> bookcases) {
+		this.bookcases = bookcases;
 	}
 
 	public int getId() {

@@ -27,15 +27,14 @@ public class User {
 	private String password;
 	private String username;
 	
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) // , orphanRemoval = true
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user") // , orphanRemoval = true
 	private List<Room> rooms = new ArrayList<>();
 
-
-	@OneToMany
-	private List<Book> books = new ArrayList<>();
-	
-	public User() {}
-	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user") 		// books is the owning side of relationship
+	private List<Book> books = new ArrayList<>();		   			// which means the book table is in charge 
+														   			// of keeping a column called "user_id"
+	public User() {}									   			// and therefore needs the mappedBy
+															
 	public User(String email, String password, String username) {
 		super();
 		this.email = email;
@@ -43,12 +42,12 @@ public class User {
 		this.username = username;
 	}
 
-	public int getUserId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setUserId(int userId) {
-		this.id = userId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getEmail() {

@@ -56,10 +56,11 @@ public class RoomController {
 	
 // This is used by createRoomForUser from frontend
 	@PostMapping("/rooms/{name}")
-	public User roomForUser(@PathVariable String name, @RequestBody Room room) {
+	public Room roomForUser(@PathVariable String name, @RequestBody Room room) {
 		User user = userRepo.findByUsername(name).get(0);
 		user.addRoom(room);
-		return userRepo.save(user);
+		room.setUser(user);
+		return roomRepo.save(room);
 	}
 
 // This is the removeRoomFromUser from frontend
@@ -79,6 +80,7 @@ public class RoomController {
 		return res;
 	}
 	
+// This is the updateRoomForUser from frontend
 	@PutMapping("/rooms/{id}/users/{name}")
 	public Room updateRoomForUser(@PathVariable int id, @RequestBody Room newRoom) {
 		

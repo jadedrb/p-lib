@@ -32,4 +32,7 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 //	List<User> joinUserAndRoom(@Param("n") String username);
 	
 	List<User> findByUsername(String name);
+	
+	
+	
 }

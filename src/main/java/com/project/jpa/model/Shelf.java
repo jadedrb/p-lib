@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="shelves")
 public class Shelf {
@@ -20,43 +22,46 @@ public class Shelf {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public int id;
-	public String position;
-	public int width;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "shelf")
 	private List<Book> books = new ArrayList<>();
 	
+	@ManyToOne
+	@JsonIgnore
+	private Bookcase bookcase;
+	
 	public Shelf() {}
+	
 
-	public Shelf(String position, int width) {
-		super();
-		this.position = position;
-		this.width = width;
+	public Bookcase getBookcase() {
+		return bookcase;
+	}
+
+	public void setBookcase(Bookcase bookcase) {
+		this.bookcase = bookcase;
 	}
 
 	public int getId() {
 		return id;
 	}
-
-	public void setId(int id) {
-		this.id = id;
+	
+	public List<Book> getBooks() {
+		return this.books;
 	}
 
-	public String getPosition() {
-		return position;
+
+	public void setBooks(List<Book> books) {
+		this.books = books;
 	}
 
-	public void setPosition(String position) {
-		this.position = position;
-	}
 
-	public int getWidth() {
-		return width;
+	public void addBook(Book book) {
+		this.books.add(book);
 	}
-
-	public void setWidth(int width) {
-		this.width = width;
+	
+	public void removeBook(Book book) {
+		this.books.remove(book);
 	}
-
+	
 	
 }

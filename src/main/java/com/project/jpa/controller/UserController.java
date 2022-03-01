@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.jpa.exception.AuthException;
+import com.project.jpa.model.Book;
 import com.project.jpa.model.Room;
 import com.project.jpa.model.Shelf;
 import com.project.jpa.model.User;
@@ -133,6 +134,7 @@ public class UserController implements UserService {
 //		}
 //	
 //	}
+	
 	
 	
 

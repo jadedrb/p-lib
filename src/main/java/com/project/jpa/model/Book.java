@@ -15,6 +15,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="books")
 public class Book {
@@ -24,38 +26,42 @@ public class Book {
 	private int id;
 	private String title;
 	private String author;
-	private String publish_date;
+	private String genre;
 	private int pages;
-	private String type;
+	private int pdate;
+	private String color;
+	private String more;
 	
 	@CreationTimestamp
 	private Date recorded_on;
 	
 	@ManyToOne
-	private Shelf shelf;
+	@JsonIgnore
+	private User user;
 	
 	@ManyToOne
-	private User user;
+	@JsonIgnore
+	private Shelf shelf;
 	
 	public Book() {}
 
-	public Book(int id, String title, String author, String publish_date, int pages, String type, Date recorded_on) {
+	public Book(String title, String author, String genre, int pages, int pdate, String color, String more) {
 		super();
-		this.id = id;
 		this.title = title;
 		this.author = author;
-		this.publish_date = publish_date;
+		this.genre = genre;
 		this.pages = pages;
-		this.type = type;
-		this.recorded_on = recorded_on;
+		this.pdate = pdate;
+		this.color = color;
+		this.more = more;
 	}
 
-	public int getId() {
-		return id;
+	public Shelf getShelf() {
+		return shelf;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setShelf(Shelf shelf) {
+		this.shelf = shelf;
 	}
 
 	public String getTitle() {
@@ -74,12 +80,12 @@ public class Book {
 		this.author = author;
 	}
 
-	public String getPublish_date() {
-		return publish_date;
+	public String getGenre() {
+		return genre;
 	}
 
-	public void setPublish_date(String publish_date) {
-		this.publish_date = publish_date;
+	public void setGenre(String genre) {
+		this.genre = genre;
 	}
 
 	public int getPages() {
@@ -90,12 +96,28 @@ public class Book {
 		this.pages = pages;
 	}
 
-	public String getType() {
-		return type;
+	public int getPdate() {
+		return pdate;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setPdate(int pdate) {
+		this.pdate = pdate;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public String getMore() {
+		return more;
+	}
+
+	public void setMore(String more) {
+		this.more = more;
 	}
 
 	public Date getRecorded_on() {
@@ -105,5 +127,15 @@ public class Book {
 	public void setRecorded_on(Date recorded_on) {
 		this.recorded_on = recorded_on;
 	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	
 	
 }

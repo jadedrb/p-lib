@@ -1,6 +1,9 @@
 package com.project.jpa.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.jpa.exception.ResourceNotFoundException;
 import com.project.jpa.model.Book;
+import com.project.jpa.model.Bookcase;
+import com.project.jpa.model.Shelf;
+import com.project.jpa.model.User;
 import com.project.jpa.repository.BookRepository;
+import com.project.jpa.repository.ShelfRepository;
+import com.project.jpa.repository.UserRepository;
 
 @CrossOrigin//(origins="http://localhost:3000")
 @RestController
@@ -27,6 +35,11 @@ public class BookController {
 	@Autowired
 	private BookRepository bookRepo;
 	
+	@Autowired
+	private ShelfRepository shelfRepo;
+	
+	@Autowired
+	private UserRepository userRepo;
 	
 	
 	@GetMapping("/books")
@@ -39,17 +52,7 @@ public class BookController {
 //		return bookRepo.findByName(name);
 //	}
 	
-	
-	@GetMapping("/books/{id}")
-	public ResponseEntity<Book> getStudentById(@PathVariable int id) {
-		
-		
-		Book stu = bookRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not Found..."));
-	
-		 
-		return ResponseEntity.ok(stu);
-		
-	}
+
 	
 	@GetMapping("/books/search={piece}")
 	public List<Book> getByPiece(@PathVariable String piece) {
@@ -94,41 +97,98 @@ public class BookController {
 	}
 	
 	
+	// New Mappings
 	
-	@PostMapping("/books")
-	public Book newBook(@RequestBody Book stu) {
+	@GetMapping("/books/{book}")
+	public List<Book> booksOfShelf(@PathVariable int book) {
+		try {
+			return shelfRepo.findById(book).orElseThrow().getBooks();
+		}
+		catch (Exception e) {
+			return new ArrayList<>();
+		}
+	}
+	
+
+	@PostMapping("/books/{shelfId}/users/{userId}")
+	public Book bookForShelf(@PathVariable int shelfId, @PathVariable String userId, @RequestBody Book book) {
+		Shelf shelf = shelfRepo.findById(shelfId).orElseThrow();
+		User user = userRepo.findByUsername(userId).get(0);
+		shelf.addBook(book);
+		user.addBook(book);
+		book.setUser(user);
+		book.setShelf(shelf);
+		return bookRepo.save(book);
+	}
+	
+	@DeleteMapping("/books/{bookId}/shelves/{shelfId}/users/{userId}")
+	public Map<String, Boolean> bookFromShelf(@PathVariable Integer bookId, @PathVariable Integer shelfId, @PathVariable String userId) {
+		Map<String, Boolean> res = new HashMap<>();
+		try {
+			User user = userRepo.findByUsername(userId).get(0);
+			Shelf shelf = shelfRepo.findById(shelfId).orElseThrow();
+			Book book = bookRepo.findById(bookId).orElseThrow();
+			shelf.removeBook(book);
+			user.removeBook(book);
+			bookRepo.delete(book);
+			res.put("deleted", Boolean.TRUE);
+		}
+		catch(Exception e) {
+			res.put("deleted", Boolean.FALSE);
+		}
+		return res;
+	}
+
+
+	@PutMapping("/books/{bookId}")
+	public Book updateBookForShelf(@PathVariable int bookId, @RequestBody Book newBook) {
 		
-		return bookRepo.save(stu);
+		Book oldBook = bookRepo.findById(bookId).orElseThrow();
+		
+		oldBook.setTitle(newBook.getTitle());
+		oldBook.setAuthor(newBook.getAuthor());
+		oldBook.setGenre(newBook.getGenre());
+		oldBook.setPages(newBook.getPages());
+		oldBook.setPdate(newBook.getPdate());
+		oldBook.setColor(newBook.getColor());
+		oldBook.setMore(newBook.getMore());
+		
+		return bookRepo.save(oldBook);
 	}
 	
 	
-	
-	@DeleteMapping("/books/{id}")
-	public String deleteBook(@PathVariable int id) {
-		
-		// Student stu = studentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not Found..."));
-		
-		bookRepo.deleteById(id);
-		
-		// studentRepository.deleteById(id);
-		
-		return "deleted item with id: " + id;
+	@GetMapping("/books/{username}/search/title={title}")
+	public List<Book> getByTitle(@PathVariable String username, @PathVariable String title) {
+		System.out.println("search by title");
+		return bookRepo.findTitleForUser(title, username);
 	}
 	
-	
-	
-	
-	@PutMapping("/books/{id}")
-	public ResponseEntity<Book> updateBook(@PathVariable int id, @RequestBody Book stuNew) {
-		
-		Book stuOld = bookRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not Found..."));
-		
-		stuOld.setTitle(stuNew.getTitle());
-		//stuOld.setName(stuNew.getName());
-		
-		final Book stuUpdated = bookRepo.save(stuOld);
-		
-		return ResponseEntity.ok(stuUpdated);
+	@GetMapping("/books/{username}/search/genre={genre}")
+	public List<Book> getByGenre(@PathVariable String username, @PathVariable String genre) {
+		System.out.println("search by genre");
+		return bookRepo.findGenreForUser(genre, username);
 	}
+	
+	@GetMapping("/books/{username}/search/more={more}")
+	public List<Book> getByMore(@PathVariable String username, @PathVariable String more) {
+		System.out.println("search by more");
+		return bookRepo.findMoreForUser(more, username);
+	}
+	
+	@GetMapping("/books/{username}/search/all={all}")
+	public List<Book> getByAll(@PathVariable String username, @PathVariable String all) {
+		System.out.println("search by all");
+		return bookRepo.findAllForUser(all, username);
+	}
+	
 	
 }
+
+
+
+
+
+
+
+
+
