@@ -1,31 +1,31 @@
-import Rooms from "./RoomService"
-import Bookcases from "./BookcaseService"
-import Shelves from "./ShelfService";
+// import Rooms from "./RoomService"
+// import Bookcases from "./BookcaseService"
+// import Shelves from "./ShelfService";
 import Books from "./BookService";
 import Users from "./UserService.js";
 
 export const test0 = async () => { 
-    let room = {
-      name: "mud room",
-      height: 1,
-      width: 50,
-      tile: 25,
-    }
-    let bookcase = {
-      location: "by the bed",
-      height: 30,
-      width: 60
-    }
-    let shelf = {}
-    let book = {
-      title: "DuNe",
-      author: "Herman Melville",
-      genre: "Epic",
-      pages: 500,
-      pdate: 1938,
-      color: "blue",
-      more: ""
-    }
+    // let room = {
+    //   name: "mud room",
+    //   height: 1,
+    //   width: 50,
+    //   tile: 25,
+    // }
+    // let bookcase = {
+    //   location: "by the bed",
+    //   height: 30,
+    //   width: 60
+    // }
+    // let shelf = {}
+    // let book = {
+    //   title: "DuNe",
+    //   author: "Herman Melville",
+    //   genre: "Epic",
+    //   pages: 500,
+    //   pdate: 1938,
+    //   color: "blue",
+    //   more: ""
+    // }
     
     console.log('Room Requests: ')
     console.log('add...')

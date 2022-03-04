@@ -47,7 +47,7 @@ public class RoomController {
 	@GetMapping("/rooms/{user}")
 	public List<Room> roomsOfUser(@PathVariable String user) {
 		try {
-			return userRepo.findByUsername(user).get(0).getRooms();
+			return userRepo.findByUsernameOrderByIdDesc(user).get(0).getRooms();
 		}
 		catch (Exception e) {
 			return new ArrayList<>();

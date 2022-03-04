@@ -14,12 +14,15 @@ class UserService {
     getUserByName(user) {
         return axios.get(API + `/users/${user}`).then(r => this.format(r))
     }
+    addUser(user) {
+        return axios.post(API + `/users`, user).then(r => this.format(r))
+    }   
     removeUser(id) {
         return axios.delete(API + `/users/${id}`).then(r => this.format(r))
     }
 }
 
-export default new UserService
+export default new UserService()
 
 
 /*

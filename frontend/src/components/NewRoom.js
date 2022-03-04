@@ -5,18 +5,18 @@ import { pretendId, randomNum, utilPath } from "../services/utility";
 
 import { test0, test1 } from "../services/tests";
 
-const NewRoom = ({ rooms, dispatch, bcid }) => {
+import Rooms from "../services/RoomService"
 
-  const defaultRoom = { height: 10, width: 10, tile: 25, roomName: "New Room", bookcases: [] }
+const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
 
   let [rIndex, setRIndex] = useState(0)
-
-  const currentRoom = rooms.length && rooms[rIndex] ? rooms[rIndex] : defaultRoom
+// rid ? rooms.findIndex(r => r.id === rid) : 
+  let [currentRoom, setCurrentRoom] = useState({ height: 10, width: 10, tile: 25, name: "New Room", bookcases: [], id: 0 })
 
   let [height, setHeight] = useState(currentRoom.height);
   let [width, setWidth] = useState(currentRoom.width);
   let [tile, setTile] = useState(currentRoom.tile);
-  let [roomName, setRoomName] = useState(currentRoom.roomName);
+  let [name, setName] = useState(currentRoom.name);
 
   let [bcStart, setBcStart] = useState("");
   let [bcEnd, setBcEnd] = useState("");
@@ -38,16 +38,19 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
     if (typeof mount.current === 'number') {
       if (mount.current !== rIndex) {
         mount.current = rIndex
-        navigate(`${pathname.slice(0, 6) + currentRoom.id}`)
+        navigate(`${pathname.slice(0, 6) + rooms[rIndex].id}`)
+        console.log('ye1')
       } else {
         switchRoom(0, rooms)
         navigate(currentRoom.id ? `${pathname.slice(0, 6) + currentRoom.id}` : `${pathname.slice(0, 6)}`)
+        console.log('ye2')
       }
     } else {
       // on mount
       switchRoom(0, rooms)
       mount.current = rIndex
       navigate(currentRoom.id ? `${pathname + currentRoom.id}` : `${pathname}`)
+      console.log('ye3')
     }
   }
 
@@ -57,14 +60,34 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
   navAndSwitch.current = { handlePathAndSwitchRoom, handlePathBackToRoom }
 
   useEffect(() => { 
-    navAndSwitch.current.handlePathAndSwitchRoom()
-  }, [rooms.length, rIndex])
+    console.log('ye')
+      navAndSwitch.current.handlePathAndSwitchRoom()
+  }, [rIndex])
 
   useEffect(() => {
     return () => {
       navAndSwitch.current.handlePathBackToRoom()
     }
   }, [])
+console.log(rooms)
+  useEffect(() => {
+    // const defaultRoom = { height: 10, width: 10, tile: 25, name: "New Room", bookcases: [] }
+    if (typeof mount.current === 'number') {
+      console.log(rooms, rid)
+      let indx = rooms.findIndex(r => r?.id === rid)
+      const cr = rooms.length && rooms[indx] ? rooms[indx] : currentRoom
+
+      if (indx > 0)
+        setRIndex(indx)
+
+      setCurrentRoom(cr)
+      setHeight(cr.height)
+      setWidth(cr.width)
+      setTile(cr.tile)
+      setName(cr.name)
+      setBookcases(cr.bookcases)
+    }
+  }, [rooms, rid])
 
   useEffect(() => {
     let map = mapRef.current;
@@ -159,7 +182,7 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
     return {
       height: h ? h : height,
       width: w ? w : width,
-      roomName: rn ? rn : roomName,
+      name: rn ? rn : name,
       tile: ti ? ti : tile,
       bookcases: bc ? bc : bookcases,
     }
@@ -190,34 +213,39 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
     setHeight(newRoom.height)
     setWidth(newRoom.width)
     setTile(newRoom.tile)
-    setRoomName(newRoom.roomName)
+    setName(newRoom.name)
     setBookcases(newRoom.bookcases)
 
   }
 
-  function handleSubmit (e) {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     let room = roomConstruct()
 
     if (currentRoom.id) {
       room.id = currentRoom.id
-      dispatch({ type: UPDATE_ROOM, payload: room })
+      let payload = await Rooms.updateRoomOfIdForUser(room, currentRoom.id, user)
+      dispatch({ type: UPDATE_ROOM, payload })
     }
     else {
-      room.id = pretendId()
-      navigate(`${pathname.slice(0, 6) + room.id}`)
-      dispatch({ type: ADD_ROOM, payload: { room } })
+      let payload = await Rooms.addRoomForUser(room, user)
+      navigate(`${pathname.slice(0, 6) + payload.id}`)
+      dispatch({ type: ADD_ROOM, payload })
     }
   }
 
-  const newBlankRoom = () => {
-    let room = roomConstruct(10, 10, "New Room", 25, [])
-    room.id = pretendId()
-    dispatch({ type: ADD_ROOM, payload: { room } })
+  const newBlankRoom = async () => {
+    let rm = roomConstruct(10, 10, "New Room", 25, [])
+    let payload = await Rooms.addRoomForUser(rm, user)
+    console.log(`${pathname.slice(0, 6) + payload.id}`)
+    console.log(payload)
+    navigate(`${pathname.slice(0, 6) + payload.id}`)
+    // room.id = pretendId()
+    dispatch({ type: ADD_ROOM, payload })
   }
 
-  const removeARoom = () => {
+  const removeARoom = async () => {
     let room = roomConstruct()
     room.id = currentRoom.id
     dispatch({ type: REMOVE_ROOM, payload: { room } })
@@ -226,7 +254,7 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
 
   return (
     <div className="newroom">
-      <h3>{roomName} ({rIndex})</h3>
+      <h3>{name} ({rIndex})</h3>
       <div className="pm-r pl-room" onClick={newBlankRoom}>+</div>
       <div className="pm-r min-room" style={rooms.length ? null : { opacity: .2, pointerEvents: 'none' }} onClick={removeARoom}>-</div>
       <div className="room-sec">
@@ -256,9 +284,9 @@ const NewRoom = ({ rooms, dispatch, bcid }) => {
           value={tile}
         />
         <input
-          onChange={(e) => setRoomName(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
           placeholder="room name"
-          value={roomName}
+          value={name}
         />
         <button>Save</button>
       </form>

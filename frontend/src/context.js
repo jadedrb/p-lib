@@ -3,6 +3,7 @@ import { utilitySelector } from './services/utility';
 
 export const Context = React.createContext()
 
+export const SET_ROOMS = 'SET_ROOMS'
 export const ADD_ROOM = 'ADD_ROOM'
 export const REMOVE_ROOM = 'REMOVE_ROOM'
 export const UPDATE_ROOM = 'UPDATE_ROOM'
@@ -20,9 +21,12 @@ let initialState = {
 
 function reducer(state, action) {
     switch(action.type) {
+        case SET_ROOMS: {
+            return { ...state, rooms: action.payload }
+        }
         case ADD_ROOM: {
             let newState = { ...state }
-            newState.rooms = [...state.rooms, action.payload.room]
+            newState.rooms = [...state.rooms, action.payload]
             return newState
         }
         case REMOVE_ROOM: {
