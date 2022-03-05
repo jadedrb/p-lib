@@ -30,9 +30,7 @@ function reducer(state, action) {
             return newState
         }
         case REMOVE_ROOM: {
-            let newState = { ...state }
-            newState.rooms = state.rooms.filter(r => r.id !== action.payload.room.id)
-            return newState
+            return { ...state, rooms: state.rooms.filter(r => r?.id !== action.payload) }
         }
         case UPDATE_ROOM:
             return {

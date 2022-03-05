@@ -31,7 +31,6 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 //	@Query("select u from User u JOIN u.rooms r WHERE u.username = :n")
 //	List<User> joinUserAndRoom(@Param("n") String username);
 	List<User> findByUsername(String name);
-	List<User> findByUsernameOrderByIdDesc(String name);
 	
 	
 	

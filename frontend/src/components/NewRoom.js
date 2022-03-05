@@ -25,6 +25,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
 
   let mapRef = useRef();
   let mount = useRef()
+  let waitForSwitch = useRef()
   let navAndSwitch = useRef()
 
   let navigate = useNavigate()
@@ -37,7 +38,8 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
     if (typeof mount.current === 'number') {
       if (mount.current !== rIndex) {
         mount.current = rIndex
-        navigate(`${pathname.slice(0, 6) + rooms[rIndex].id}`)
+        if (rooms[rIndex])
+          navigate(`${pathname.slice(0, 6) + rooms[rIndex].id}`)
         console.log('ye1')
       } else {
         switchRoom(0, rooms)
@@ -47,18 +49,47 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
     } else {
       // on mount
       let rm = switchRoom(0, rooms)
+      console.log(rm)
       mount.current = rIndex
       console.log(rid, currentRoom, currentRoom.id ? `${rid ? pathname + rid : pathname + currentRoom.id}` : `${pathname}`)
       // rm.id ? `${rid ? pathname + rid : pathname + rm.id}` : `${pathname}`
-      navigate(utilPath(path, 'room', rid ? rid : rm.id))
+      navigate(utilPath(path, 'room', rid ? rid : rm.id ? rm.id : ''))
       console.log('ye3')
+    }
+  }
+
+  const handleCurrentRoomSetup = () => {
+    if (typeof mount.current === 'number') {
+      console.log(rooms, rid)
+      if (rid) {
+        console.log(rid)
+        let indx = rooms.findIndex(r => r?.id === rid)
+        const cr = rooms.length && rooms[indx] ? rooms[indx] : currentRoom
+        console.log(cr, rooms.length, rooms[indx])
+
+        // if user enters an invalid room id in url
+        if (!rooms[indx]) {
+          if (rooms.length) 
+            navigate(utilPath(path, 'room', rooms[0].id)) 
+          return
+        }
+        if (indx > 0)
+          setRIndex(indx)
+
+        setCurrentRoom(cr)
+        setHeight(cr.height)
+        setWidth(cr.width)
+        setTile(cr.tile)
+        setName(cr.name)
+        setBookcases(cr.bookcases)
+      }
     }
   }
 
   const handlePathBackToRoom = () => navigate('/room/')
 
   // adding these functions to a ref to avoid warnings about missing dependencies inside useEffect
-  navAndSwitch.current = { handlePathAndSwitchRoom, handlePathBackToRoom }
+  navAndSwitch.current = { handlePathAndSwitchRoom, handlePathBackToRoom, handleCurrentRoomSetup }
 
   useEffect(() => { 
     console.log('ye')
@@ -73,23 +104,17 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
 
   useEffect(() => {
     // const defaultRoom = { height: 10, width: 10, tile: 25, name: "New Room", bookcases: [] }
-    if (typeof mount.current === 'number') {
-      console.log(rooms, rid)
-      if (rid) {
-        console.log(rid)
-        let indx = rooms.findIndex(r => r?.id === rid)
-        const cr = rooms.length && rooms[indx] ? rooms[indx] : currentRoom
-        console.log(cr, rooms.length, rooms[indx])
-        if (indx > 0)
-          setRIndex(indx)
+    navAndSwitch.current.handleCurrentRoomSetup()
 
-        setCurrentRoom(cr)
-        setHeight(cr.height)
-        setWidth(cr.width)
-        setTile(cr.tile)
-        setName(cr.name)
-        setBookcases(cr.bookcases)
-      }
+    // waits for rooms to update before switching to newest room 
+    // if a new room was added recently... or removed
+    if (waitForSwitch.current === 'add') {
+      waitForSwitch.current = false
+      switchRoom((rooms.length - 1) - rIndex, rooms)
+    }
+    else if (waitForSwitch.current === 'remove') {
+      waitForSwitch.current = false
+      switchRoom(-1, rooms)
     }
   }, [rooms, rid])
 
@@ -193,25 +218,23 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
   }
 
   function switchRoom (prevOrNex, currentRooms) {
+
     let newIndex = rIndex + prevOrNex
     if (!prevOrNex) newIndex = currentRooms.length - 1
-
+console.log(currentRooms.length, rIndex)
     if (currentRooms.length) {
       if (newIndex < 0 || newIndex > currentRooms.length - 1) return
     }
     
     let newRoom = currentRooms[newIndex]
-
     // If we deleted the last saved room
     if (newIndex < 0) {
+      console.log('in')
       newRoom = roomConstruct(10, 10, "New Room", 25, [])
-      newRoom.id = pretendId()
-      // console.log('last deleted: ', newRoom)
       newIndex = 0
-      // console.log('do we reach here')
       navigate(`/room/`)
     }
-console.log(newRoom)
+
     setBcEnd("")
     setBcStart("")
     setRIndex(newIndex)
@@ -228,9 +251,8 @@ console.log(newRoom)
 
     let room = roomConstruct()
 
-    if (currentRoom.id) {
-      room.id = currentRoom.id
-      let payload = await Rooms.updateRoomOfIdForUser(room, currentRoom.id, user)
+    if (rid) {
+      let payload = await Rooms.updateRoomOfIdForUser(room, rid, user)
       dispatch({ type: UPDATE_ROOM, payload })
     }
     else {
@@ -243,20 +265,18 @@ console.log(newRoom)
   const newBlankRoom = async () => {
     let rm = roomConstruct(10, 10, "New Room", 25, [])
     let payload = await Rooms.addRoomForUser(rm, user)
-    console.log(`${pathname.slice(0, 6) + payload.id}`)
-    console.log(payload)
-    navigate(`${pathname.slice(0, 6) + payload.id}`)
-    // room.id = pretendId()
+    navigate(utilPath(path, 'room', payload.id))
     dispatch({ type: ADD_ROOM, payload })
+    waitForSwitch.current = 'add'
   }
 
   const removeARoom = async () => {
-    let room = roomConstruct()
-    room.id = currentRoom.id
-    dispatch({ type: REMOVE_ROOM, payload: { room } })
+    await Rooms.removeRoomFromUser(rid, user)
+    dispatch({ type: REMOVE_ROOM, payload: rid })
+    waitForSwitch.current = 'remove'
   }
 
-
+console.log(rIndex + 1, rooms.length)
   return (
     <div className="newroom">
       <h3>{name} ({rIndex})</h3>
@@ -308,3 +328,14 @@ console.log(newRoom)
 };
 
 export default NewRoom;
+
+
+
+/*
+
+THINGS TO WORK ON:
+
+1. Redirect user if they input an incorrect room ID in the URL
+2. Start working on Remove room methods
+
+*/
