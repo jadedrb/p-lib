@@ -31,7 +31,6 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
   let path = useLocation()
   let pathname = path.pathname
 
-
   const handlePathAndSwitchRoom = () => {
     // mount keeps track of the index of the current room between renders
     // it will either be undefined (unmounted) or a number (mounted)
@@ -47,9 +46,11 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
       }
     } else {
       // on mount
-      switchRoom(0, rooms)
+      let rm = switchRoom(0, rooms)
       mount.current = rIndex
-      navigate(currentRoom.id ? `${pathname + currentRoom.id}` : `${pathname}`)
+      console.log(rid, currentRoom, currentRoom.id ? `${rid ? pathname + rid : pathname + currentRoom.id}` : `${pathname}`)
+      // rm.id ? `${rid ? pathname + rid : pathname + rm.id}` : `${pathname}`
+      navigate(utilPath(path, 'room', rid ? rid : rm.id))
       console.log('ye3')
     }
   }
@@ -69,23 +70,26 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
       navAndSwitch.current.handlePathBackToRoom()
     }
   }, [])
-console.log(rooms)
+
   useEffect(() => {
     // const defaultRoom = { height: 10, width: 10, tile: 25, name: "New Room", bookcases: [] }
     if (typeof mount.current === 'number') {
       console.log(rooms, rid)
-      let indx = rooms.findIndex(r => r?.id === rid)
-      const cr = rooms.length && rooms[indx] ? rooms[indx] : currentRoom
+      if (rid) {
+        console.log(rid)
+        let indx = rooms.findIndex(r => r?.id === rid)
+        const cr = rooms.length && rooms[indx] ? rooms[indx] : currentRoom
+        console.log(cr, rooms.length, rooms[indx])
+        if (indx > 0)
+          setRIndex(indx)
 
-      if (indx > 0)
-        setRIndex(indx)
-
-      setCurrentRoom(cr)
-      setHeight(cr.height)
-      setWidth(cr.width)
-      setTile(cr.tile)
-      setName(cr.name)
-      setBookcases(cr.bookcases)
+        setCurrentRoom(cr)
+        setHeight(cr.height)
+        setWidth(cr.width)
+        setTile(cr.tile)
+        setName(cr.name)
+        setBookcases(cr.bookcases)
+      }
     }
   }, [rooms, rid])
 
@@ -204,9 +208,10 @@ console.log(rooms)
       newRoom.id = pretendId()
       // console.log('last deleted: ', newRoom)
       newIndex = 0
+      // console.log('do we reach here')
       navigate(`/room/`)
     }
-
+console.log(newRoom)
     setBcEnd("")
     setBcStart("")
     setRIndex(newIndex)
@@ -215,7 +220,7 @@ console.log(rooms)
     setTile(newRoom.tile)
     setName(newRoom.name)
     setBookcases(newRoom.bookcases)
-
+    return newRoom
   }
 
   const handleSubmit = async (e) => {

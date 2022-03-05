@@ -33,6 +33,9 @@ export function utilPath(path, type, id) {
         case 'bookcase':
             index = 3
             break;
+        case 'room':
+            index = 1
+            break;
         default:
             break;
     }
