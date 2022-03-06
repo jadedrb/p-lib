@@ -41,6 +41,8 @@ function reducer(state, action) {
             let { bcId, rmId, bc } = action.payload
             let { roomIndex, rooms, bkcaseIndex, bkcase } = utilitySelector(rmId, bcId, null, state.rooms)
             rooms[roomIndex].bookcases[bkcaseIndex] = { ...bkcase, ...bc }
+            console.log(rooms[roomIndex].bookcases[bkcaseIndex])
+            console.log(rooms)
             return { ...state, rooms }
         }
         case ADD_BOOK: {

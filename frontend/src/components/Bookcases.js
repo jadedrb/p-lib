@@ -37,6 +37,8 @@ const Bookcases = () => {
                         path={path}
                         shid={Number(shid)}
                         bid={Number(bid)}
+                        bcid={Number(bcid)}
+                        rid={Number(rid)}
                     />
                 </div> 
             }
