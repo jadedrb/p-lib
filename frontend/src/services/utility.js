@@ -9,7 +9,7 @@ export function utilitySelector(rid, bcid, shid, rms, bid) {
             bkcaseIndex = room.bookcases.findIndex((b) => b.id === Number(bcid))
             bkcase = room.bookcases[bkcaseIndex]
             if (shid && bkcase) {
-                shelfIndex = bkcase.shelves.findIndex((sh) => sh.shelfId === Number(shid))
+                shelfIndex = bkcase.shelves.findIndex((sh) => sh.id === Number(shid))
                 shelf = bkcase.shelves[shelfIndex]
             }
             if (bid && shelf) {

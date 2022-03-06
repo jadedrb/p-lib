@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { ADD_BOOK, Context, UPDATE_BOOK } from "../context";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { pretendId, utilPath, utilitySelector } from "../services/utility";
+import { utilPath, utilitySelector } from "../services/utility";
+
+import BookService from "../services/BookService"
 
 const NewBook = ({ setCurrShelf }) => {
-  const { rooms, dispatch } = useContext(Context);
+  const { rooms, dispatch, user } = useContext(Context);
 
   let { shid, rid, bcid, bid } = useParams();
   let navigate = useNavigate()
@@ -16,9 +18,10 @@ const NewBook = ({ setCurrShelf }) => {
     title: "",
     author: "",
     genre: "",
-    pcount: "",
+    pages: "",
     pdate: "",
-    color: ""
+    color: "",
+    more: ""
   })
 
   let [colorType, setColorType] = useState(true)
@@ -34,8 +37,8 @@ const NewBook = ({ setCurrShelf }) => {
     if (bid) {
       let { book } = utilitySelector(rid, bcid, shid, rooms, bid)
       if (book) { 
-        let { title, author, genre, pcount, pdate, color } = book
-        setInputs({ title, author, genre, pcount, pdate, color })
+        let { title, author, genre, pages, pdate, color, more } = book
+        setInputs({ title, author, genre, pages, pdate, color, more })
       }
     } else {
       setInputs(initialInputs.current)
@@ -46,6 +49,7 @@ const NewBook = ({ setCurrShelf }) => {
     let { name, value } = e.target;
     let newInputs = { ...inputs };
     newInputs[name] = value;
+    console.log(newInputs)
     setInputs(newInputs);
   };
 
@@ -53,7 +57,7 @@ const NewBook = ({ setCurrShelf }) => {
     setCurrentFocus(e.target);
   };
 
-  const handleEnter = (e) => {
+  const handleEnter = async (e) => {
     let nextInput;
 
     if (e.key === "Enter") {
@@ -73,18 +77,18 @@ const NewBook = ({ setCurrShelf }) => {
     // If enter press on the last input OR if they click the Save button
     if (nextInput?.name === "reset" || e.target.name === "save") {
       if (bid) {
-        let book = { ...inputs, id: Number(bid) }
+        let book = await BookService.updateBookForShelf(inputs, bid)
+        console.log(book)
         dispatch({
           type: UPDATE_BOOK,
-          payload: { shid, rid, bcid, book, bid },
+          payload: { shid, rid, bcid, bid, book },
         });
       } else {
-        let id = pretendId()
-        let book = { ...inputs, id }
-        navigate(utilPath(path, 'book', id))
+        let book = await BookService.addBookForShelfAndUser(inputs, shid, user)
+        navigate(utilPath(path, 'book', book.id))
         dispatch({
           type: ADD_BOOK,
-          payload: { shid, rid, bcid, book, setCurrShelf },
+          payload: { shid, rid, bcid, setCurrShelf, book },
         });
       }
     }
@@ -96,7 +100,7 @@ const NewBook = ({ setCurrShelf }) => {
       navigate(utilPath(path, 'shelf', shid))
     }
   };
-console.log(rooms)
+
   return (
     <form id="ff">
       <input
@@ -142,8 +146,9 @@ console.log(rooms)
       />
       <input
         placeholder="Page Count"
-        name="pcount"
-        value={inputs.pcount}
+        name="pages"
+        type="number"
+        value={inputs.pages}
         onChange={handleInput}
         onKeyPress={handleEnter}
         onClick={handleClick}
@@ -151,7 +156,16 @@ console.log(rooms)
       <input
         placeholder="Publish Date"
         name="pdate"
+        type="number"
         value={inputs.pdate}
+        onChange={handleInput}
+        onKeyPress={handleEnter}
+        onClick={handleClick}
+      />
+      <input
+        placeholder="More"
+        name="more"
+        value={inputs.more}
         onChange={handleInput}
         onKeyPress={handleEnter}
         onClick={handleClick}
@@ -179,9 +193,9 @@ export default NewBook;
 
 /*
 
-TO DO:
+THINGS TO DO:
 
-Have it so when you click on a book, it's entries populate the input fields.
-You'll need to add another layer to the utility selector.
+1. http://localhost:3000/room/ should render a room, but it doesn't
+2. Going to a complicated route that doesn't exist should redirect back to home
 
 */

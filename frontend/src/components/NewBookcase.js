@@ -25,30 +25,16 @@ console.log('rendered??')
 
   const handleSubmit = async e => {
       e.preventDefault()
-      /*
-      NOTE: 
-        Temporary setup. In the future, you can set the initial amount of shelves,
-        but afterwards you can only add or remove one at a time. The input field
-        for setting a specific number will be disabled. 
-      */
-      // let newShelves;
-      // let cbLength = currentBookcase.shelves.length
-      // if (cbLength && cbLength === Number(shelves))
-      //     newShelves = currentBookcase.shelves
-      // else
-      //   newShelves = constructShelves(shelves)
-//[...Array(Number(shelves)).keys()]
-console.log(bcid, rid, ": here")
 
-    let bkcase = {
-      location, 
-      width,
-      height: shelfHeight
-    }
+      let bkcase = {
+        location, 
+        width,
+        height: shelfHeight
+      }
 
-      // if the bookcase has no prior shelves
-      if (!currentBookcase.shelves.length && shelves) {
-        for (let i = 0; i < shelves; i++) {
+      // if the current number of shelves is lower than the amount set
+      if (currentBookcase.shelves.length !== Number(shelves)) {
+        for (let i = 0; i < Number(shelves) - currentBookcase.shelves.length; i++) {
           await Shelves.addShelfForBookcase({}, bcid)
         }
       }
@@ -56,46 +42,28 @@ console.log(bcid, rid, ": here")
       let nBk = await Bookcases.updateBookcaseForRoom(bkcase, bcid)
       console.log(nBk, ": updated bookcase")
   
-      // let rm = await Rooms.getRoomsForUser(user)
-      // dispatch({ type: SET_ROOMS, payload: rm })
       dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: nBk }})
   }
 
-  // const constructShelves = (amount) => {
-  //   let shelves = []
-  //   for (let i = 0; i < amount; i++) {
-  //     shelves.push(shelfConstruct())
-  //   }
-  //   return shelves
-  // }
-
-  // const shelfConstruct = () => {
-  //   return {
-  //     shelfId: pretendId(),
-  //     books: []
-  //   }
-  // }
-
   const renderBookcases = () => {
       let arr = currentBookcase.shelves.length ? currentBookcase.shelves : [...Array(Number(shelves)).keys()]
-      // [...Array(Number(sh.books.length)).keys()]
-      console.log('rendering again...')
+
       return arr.map((sh,i) => 
         <p 
           key={i} 
           className="shelf" 
-          style={{ height: `${shelfHeight}px`, outline: `${sh.shelfId === shid ? '3px solid black' : 'none'}` }}
+          style={{ height: `${shelfHeight}px`, outline: `${sh.id === shid ? '3px solid black' : 'none'}` }}
           onClick={() => {
-            if (!shid || !(shid === sh.shelfId)) 
-              navigate(utilPath(path, 'shelf', sh.shelfId))
+            if (!shid || !(shid === sh.id)) 
+              navigate(utilPath(path, 'shelf', sh.id))
           }}
         >
-          {shid === sh.shelfId && sh.books?.length ? 
+          {shid === sh.id && sh.books?.length ? 
           sh.books
             .map((b,i) => 
               <span 
                 key={i} 
-                onClick={(e) => navigate(utilPath(path, 'book', b.id)) }
+                onClick={() => navigate(utilPath(path, 'book', b.id)) }
                 style={{ backgroundColor: bid === b.id ? b.color : 'white' }}
               >
                 s
@@ -127,22 +95,13 @@ console.log(bcid, rid, ": here")
             placeholder="bookcase location"
             value={location}
           />
-          {currentBookcase.shelves.length ?
-            <input
-              onChange={(e) => setShelves(e.target.value)}
-              style={{ backgroundColor: "lightgray" }}
-              value={shelves}
-              readOnly
-            />
-            :
-            <input
+          <input
               onChange={(e) => setShelves(e.target.value)}
               placeholder="number of shelves"
               type='number'
-              min="0"
+              min={currentBookcase.shelves.length}
               value={shelves}
-            />
-          }
+          />
           <label htmlFor="bookcase-w">Bookcase Width</label>
           <input
             id="bookcase-w"
@@ -165,3 +124,5 @@ console.log(bcid, rid, ": here")
 };
 
 export default NewBookcase;
+
+
