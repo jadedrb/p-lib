@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect, useRef } from "react"
 import NewRoom from "./NewRoom"
-import { Context, SET_ROOMS } from '../context'
+import { Context, SET_ROOMS, SET_USER } from '../context'
 import { Outlet, useParams } from "react-router-dom"
 
 import Roomz from '../services/RoomService'
@@ -14,19 +14,22 @@ const Rooms = () => {
     let initialRoomSetup = useRef()
 
     initialRoomSetup.current = async () => {
+        let tempUsr = "bob"
         if (!rooms.length) {
-            let usr = await Userz.getUserByName("bob")
+            let usr = await Userz.getUserByName(tempUsr)
             let payload;
 
             if (!usr)
-                usr = await Userz.addUser({ username: "bob", password: "", email: "" })
+                usr = await Userz.addUser({ username: tempUsr, password: "", email: "" })
                 
             payload = await Roomz.getRoomsForUser(user)
+            console.log('start?')
+            dispatch({ type: SET_USER, payload: tempUsr })
             dispatch({ type: SET_ROOMS, payload })
         }
     }
 
-    let [showRooms, setShowRooms] = useState(rid ? true : false)
+    let [showRooms, setShowRooms] = useState(true) // rid ? true : false
 
     useEffect(() => {
         initialRoomSetup.current()

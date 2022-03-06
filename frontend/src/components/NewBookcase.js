@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
-import { SET_ROOMS, UPDATE_BOOKCASE } from "../context";
-import { pretendId, utilPath } from "../services/utility";
+import { UPDATE_BOOKCASE } from "../context";
+import { utilPath } from "../services/utility";
 
 import Bookcases from "../services/BookcaseService"
 import Shelves from "../services/ShelfService"
-import Rooms from "../services/RoomService"
 
 const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, shid, bid, bcid, rid }) => {
-
+console.log('rendered??')
   let [location, setLocation] = useState("Bookcase Location");
   let [shelves, setShelves] = useState("");
   let [width, setWidth] = useState(100);
@@ -62,20 +61,20 @@ console.log(bcid, rid, ": here")
       dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: nBk }})
   }
 
-  const constructShelves = (amount) => {
-    let shelves = []
-    for (let i = 0; i < amount; i++) {
-      shelves.push(shelfConstruct())
-    }
-    return shelves
-  }
+  // const constructShelves = (amount) => {
+  //   let shelves = []
+  //   for (let i = 0; i < amount; i++) {
+  //     shelves.push(shelfConstruct())
+  //   }
+  //   return shelves
+  // }
 
-  const shelfConstruct = () => {
-    return {
-      shelfId: pretendId(),
-      books: []
-    }
-  }
+  // const shelfConstruct = () => {
+  //   return {
+  //     shelfId: pretendId(),
+  //     books: []
+  //   }
+  // }
 
   const renderBookcases = () => {
       let arr = currentBookcase.shelves.length ? currentBookcase.shelves : [...Array(Number(shelves)).keys()]

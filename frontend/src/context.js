@@ -13,10 +13,15 @@ export const UPDATE_BOOKCASE = 'UPDATE_BOOKCASE'
 export const ADD_BOOK = "ADD_BOOK"
 export const UPDATE_BOOK = "UPDATE_BOOK"
 
+export const QUEUE_UPDATE = "QUEUE_UPDATE"
+export const FINISH_UPDATE = "FINISH_UPDATE"
+export const SET_USER = "SET_USER"
+
 let initialState = {
     books: [],
     rooms: [],
-    user: 'bob'
+    user: "bob",
+    updates: 0
 }
 
 function reducer(state, action) {
@@ -63,6 +68,15 @@ function reducer(state, action) {
             console.log(shelf.books)
             console.log(shelf.books.map(b => b.id === bid ? book : b))
             return { ...state, rooms }
+        }
+        case QUEUE_UPDATE: {
+            return { ...state, updates: state.updates + 1 }
+        }
+        case FINISH_UPDATE: {
+            return { ...state, updates: state.updates - 1 }
+        }
+        case SET_USER: {
+            return { ...state, user: action.payload }
         }
         default:
             return state

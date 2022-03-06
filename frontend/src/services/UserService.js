@@ -4,7 +4,7 @@ import { API } from './api'
 class UserService {
 
     format(d) {
-        console.log(d.data)
+        // console.log(d.data)
         return d.data
     }
 
