@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from "react";
-import { ADD_ROOM, REMOVE_ROOM, UPDATE_ROOM } from '../context'
+import { ADD_ROOM, REMOVE_ROOM, SET_ROOMS, UPDATE_ROOM } from '../context'
 import { useNavigate, useLocation } from "react-router-dom";
-import { pretendId, randomNum, utilPath } from "../services/utility";
+import { randomNum, utilPath } from "../services/utility";
 
 import { test0, test1 } from "../services/tests";
 
 import Rooms from "../services/RoomService"
+import Bookcases from "../services/BookcaseService"
 
 const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
 
@@ -26,6 +27,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
   let mapRef = useRef();
   let mount = useRef()
   let waitForSwitch = useRef()
+  let bkcaseSwitch = useRef()
   let navAndSwitch = useRef()
 
   let navigate = useNavigate()
@@ -53,7 +55,10 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
       mount.current = rIndex
       console.log(rid, currentRoom, currentRoom.id ? `${rid ? pathname + rid : pathname + currentRoom.id}` : `${pathname}`)
       // rm.id ? `${rid ? pathname + rid : pathname + rm.id}` : `${pathname}`
-      navigate(utilPath(path, 'room', rid ? rid : rm.id ? rm.id : ''))
+      
+      //if (rooms.length)
+        navigate(utilPath(path, 'room', rid ? rid : rm.id ? rm.id : ''))
+
       console.log('ye3')
     }
   }
@@ -86,10 +91,26 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
     }
   }
 
+  const handleSwitchAfterAddOrRemove = () => {
+    if (waitForSwitch.current === 'add') {
+      waitForSwitch.current = false
+      switchRoom((rooms.length - 1) - rIndex, rooms)
+    }
+    else if (waitForSwitch.current === 'remove') {
+      waitForSwitch.current = false
+      switchRoom(-1, rooms)
+    }
+  }
+
   const handlePathBackToRoom = () => navigate('/room/')
 
   // adding these functions to a ref to avoid warnings about missing dependencies inside useEffect
-  navAndSwitch.current = { handlePathAndSwitchRoom, handlePathBackToRoom, handleCurrentRoomSetup }
+  navAndSwitch.current = { 
+    handlePathAndSwitchRoom, 
+    handlePathBackToRoom, 
+    handleCurrentRoomSetup,
+    handleSwitchAfterAddOrRemove
+  }
 
   useEffect(() => { 
     console.log('ye')
@@ -108,14 +129,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
 
     // waits for rooms to update before switching to newest room 
     // if a new room was added recently... or removed
-    if (waitForSwitch.current === 'add') {
-      waitForSwitch.current = false
-      switchRoom((rooms.length - 1) - rIndex, rooms)
-    }
-    else if (waitForSwitch.current === 'remove') {
-      waitForSwitch.current = false
-      switchRoom(-1, rooms)
-    }
+    navAndSwitch.current.handleSwitchAfterAddOrRemove()
   }, [rooms, rid])
 
   useEffect(() => {
@@ -156,7 +170,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
     }
   }, [height, width, tile, bcStart, bcEnd, bookcases, bcid]);
 
-  const handleBoxClick = (e) => {
+  const handleBoxClick = async (e) => {
     if (e.target.className[0] !== "b") return
     let [row, column] = e.target.className
       .split(" ")[1]
@@ -194,13 +208,12 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
             rowHigh: Math.max(bcStart[0], bcEnd[0]),
             colHigh: Math.max(bcStart[1], bcEnd[1]),
             color: `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`,
-            id: pretendId(),
             location: '',
             bcWidth: 100,
-            shHeight: 30,
-            shelves: []
+            shHeight: 30
         }
         setBookcases([...bookcases, newBc])
+        bkcaseSwitch.current = true
 
       setBcStart("");
       setBcEnd("");
@@ -221,7 +234,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
 
     let newIndex = rIndex + prevOrNex
     if (!prevOrNex) newIndex = currentRooms.length - 1
-console.log(currentRooms.length, rIndex)
+
     if (currentRooms.length) {
       if (newIndex < 0 || newIndex > currentRooms.length - 1) return
     }
@@ -234,6 +247,8 @@ console.log(currentRooms.length, rIndex)
       newIndex = 0
       navigate(`/room/`)
     }
+
+    bkcaseSwitch.current = false
 
     setBcEnd("")
     setBcStart("")
@@ -260,8 +275,18 @@ console.log(currentRooms.length, rIndex)
       navigate(`${pathname.slice(0, 6) + payload.id}`)
       dispatch({ type: ADD_ROOM, payload })
     }
+    if (bkcaseSwitch.current) {
+      for (let i = 0; i < bookcases.length; i++) {
+        let bk = bookcases[i]
+        if (!bk.id) {
+          await Bookcases.addBookcaseForRoom(bk, rid)
+          let rms = await Rooms.getRoomsForUser(user)
+          dispatch({ type: SET_ROOMS, payload: rms })
+        }
+      }
+    }
   }
-
+console.log(rooms, ": rooms")
   const newBlankRoom = async () => {
     let rm = roomConstruct(10, 10, "New Room", 25, [])
     let payload = await Rooms.addRoomForUser(rm, user)
@@ -276,7 +301,6 @@ console.log(currentRooms.length, rIndex)
     waitForSwitch.current = 'remove'
   }
 
-console.log(rIndex + 1, rooms.length)
   return (
     <div className="newroom">
       <h3>{name} ({rIndex})</h3>
@@ -335,7 +359,6 @@ export default NewRoom;
 
 THINGS TO WORK ON:
 
-1. Redirect user if they input an incorrect room ID in the URL
-2. Start working on Remove room methods
+
 
 */

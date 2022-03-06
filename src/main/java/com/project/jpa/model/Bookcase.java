@@ -25,6 +25,12 @@ public class Bookcase {
 	private int height;
 	private int width;
 	
+	private String color;
+	private int rowLow;
+	private int rowHigh;
+	private int colLow;
+	private int colHigh;
+	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "bookcase")
 	private List<Shelf> shelves = new ArrayList<>();
 	
@@ -96,6 +102,58 @@ public class Bookcase {
 	public void setWidth(int width) {
 		this.width = width;
 	}
+
+
+	public String getColor() {
+		return color;
+	}
+
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+
+	public int getRowLow() {
+		return rowLow;
+	}
+
+
+	public void setRowLow(int rowLow) {
+		this.rowLow = rowLow;
+	}
+
+
+	public int getRowHigh() {
+		return rowHigh;
+	}
+
+
+	public void setRowHigh(int rowHigh) {
+		this.rowHigh = rowHigh;
+	}
+
+
+	public int getColLow() {
+		return colLow;
+	}
+
+
+	public void setColLow(int colLow) {
+		this.colLow = colLow;
+	}
+
+
+	public int getColHigh() {
+		return colHigh;
+	}
+
+
+	public void setColHigh(int colHigh) {
+		this.colHigh = colHigh;
+	}
+	
+	
 	
 	
 }
