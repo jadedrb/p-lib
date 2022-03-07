@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Context, REMOVE_SHELF } from "../context"
-import { utilitySelector } from '../services/utility';
+import { utilitySelector, utilMsg } from '../services/utility';
 import BookList from './BookList';
 import NewBook from './NewBook';
 import { utilPath } from '../services/utility';
@@ -28,6 +28,8 @@ function CurrentShelf() {
     }, [shid, rid, bcid, rooms])
 
     const removeShelf = async () => {
+        let confirm = window.confirm(utilMsg({ type: 'shelf', details: { shelf: currShelf } }))
+        if (!confirm) return
         await Shelves.removeShelfFromBookcase(shid, bcid)
         dispatch({ type: REMOVE_SHELF, payload: { shid, bcid, rid } })
         navigate(utilPath(path, 'bookcase', bcid))
@@ -35,10 +37,10 @@ function CurrentShelf() {
 
     return ( 
         <div className='sh-b'>
-            <div className="pm">
+            {showShelf && <div className="pm">
                 <div className="pm-r ed" onClick={() => setEdit(!edit)}>=</div>
-                {edit && <div className="pm-r min-room">-</div>}
-            </div>
+                {edit && <div className="pm-r min-room" onClick={removeShelf}>-</div>}
+            </div>}
             
             <button onClick={() => setShowShelf(!showShelf)}>Shelf</button>
             {showShelf && 

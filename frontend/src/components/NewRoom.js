@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { ADD_ROOM, REMOVE_ROOM, SET_ROOMS, UPDATE_ROOM } from "../context";
 import { useNavigate, useLocation } from "react-router-dom";
-import { randomNum, utilPath } from "../services/utility";
+import { randomNum, utilMsg, utilPath } from "../services/utility";
 
 // import { test0, test1 } from "../services/tests";
 
@@ -321,6 +321,8 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
   };
 
   const removeARoom = async () => {
+    let confirm = window.confirm(utilMsg({ type: 'room', details: { room: currentRoom } }))
+    if (!confirm) return
     await Rooms.removeRoomFromUser(rid, user);
     dispatch({ type: REMOVE_ROOM, payload: rid });
     waitForSwitch.current = "remove";

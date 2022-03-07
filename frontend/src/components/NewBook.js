@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { ADD_BOOK, Context, REMOVE_BOOK, UPDATE_BOOK } from "../context";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { utilPath, utilitySelector } from "../services/utility";
+import { utilPath, utilitySelector, utilMsg } from "../services/utility";
 
 import BookService from "../services/BookService"
 
@@ -102,6 +102,8 @@ const NewBook = ({ setCurrShelf }) => {
   };
 
   const removeBook = async () => {
+    let confirm = window.confirm(utilMsg({ type: 'book', details: { bid, title: inputs.title } }))
+    if (!confirm) return
     await BookService.removeBookFromShelfAndUser(bid, shid, user)
     dispatch({ type: REMOVE_BOOK, payload: { bcid, rid, shid, bid }})
     navigate(utilPath(path, 'shelf', shid))

@@ -49,6 +49,23 @@ export function pretendId() {
     return randomNum() + randomNum() + randomNum()
 }
 
+export function utilMsg(info) {
+    let { type, details } = info
+    switch(type) {
+        case 'room':
+            return `This will remove a Room (id: ${details.room.id}), which has ${details.room.bookcases.length} bookcases with ${details.room.bookcases.reduce((totalShelves,bookcase) => totalShelves + bookcase.shelves.length, 0)} shelves(s) total and ${details.room.bookcases.reduce((totalBooksOverall,bookcase) => {
+                return totalBooksOverall + bookcase.shelves.reduce((totalB, shelf) => totalB + shelf.books.length, 0) 
+            }, 0)} books(s) altogether. Are you sure you want to continue?`
+        case 'bookcase':
+            return `This will remove a Bookcase (id: ${details.bookcase.id}), which has ${details.bookcase.shelves.length} shelves with ${details.bookcase.shelves.reduce((totalBooks,shelf) => totalBooks + shelf.books.length, 0)} book(s) total. Are you sure you want to continue?`
+        case 'shelf':
+            return details.shelf.books.length ? `This will remove a Shelf (id: ${details.shelf.id}), which has ${details.shelf.books.length} book(s). Are you sure you want to continue?` : `This will remove an empty Shelf (id: ${details.shelf.id}). Continue?`
+        case 'book':
+            return `This will remove a Book (id: ${details.bid}, title: ${details.title ? details.title : "Untitled"}). Continue?`
+        default:
+            break;
+    }
+}
 
 
 /*

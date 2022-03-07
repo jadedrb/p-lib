@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { REMOVE_BOOKCASE, UPDATE_BOOKCASE } from "../context";
-import { utilPath } from "../services/utility";
+import { utilMsg, utilPath } from "../services/utility";
 
 import Bookcases from "../services/BookcaseService"
 import Shelves from "../services/ShelfService"
@@ -77,6 +77,8 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
   }
 
   const removeBookcase = async () => {
+    let confirm = window.confirm(utilMsg({ type: 'bookcase', details: { bookcase: currentBookcase } }))
+    if (!confirm) return
     await Bookcases.removeBookcaseFromRoom(bcid, rid)
     dispatch({ type: REMOVE_BOOKCASE, payload: { bcid, rid }})
     navigate(utilPath(path, 'room', rid))
