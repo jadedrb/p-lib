@@ -85,28 +85,18 @@ tr:hover {
     position: relative;
 }
 
-.pm-r {
-    position: absolute;
-    top: 0;
-    font-size: 2rem;
-}
 
 .pm-r:hover {
     cursor: pointer;
     color: rgb(155, 155, 155);
 }
 
-.pl-room {
-    right: 100px;
-}
 
 .pl-room:active {
     color: lime;
 }
 
-.min-room {
-    right: 10px;
-}
+
 
 .min-room:active {
     color: red;
@@ -127,6 +117,7 @@ tr:hover {
     justify-content: center;
     align-items: center;
     border: 3px solid blue;
+  
 }
 
 .new-bookcase form {
@@ -139,22 +130,38 @@ tr:hover {
     font-size: 15px;
 }
 
-.pm-bc {
+/* .pm-bc {
     position: absolute;
     top: 40px;
     right: 10px;
     font-size: 2rem;
+} */
+
+.pm {
+    display: flex;
+    justify-content: space-around;
+    width: 30%;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 
+.pm-r {
+    font-size: 2rem;
+}
 
-.pm-bc:hover {
+.ed:active {
+    color: rgb(197, 197, 184);
+}
+
+/* .pm-bc:hover {
     cursor: pointer;
     color: rgb(155, 155, 155);
 }
 
 .pm-bc:active {
     color: lime;
-}
+} */
 
 .shelf {
     display: flex;
@@ -172,6 +179,10 @@ tr:hover {
 
 
 /* New Book */
+.sh-b {
+    position: relative;
+    border: 3px solid plum;
+}
 
 .ff {
     border: 3px solid purple;
@@ -180,8 +191,8 @@ tr:hover {
 
 .pm-b {
     position: absolute;
-    top: 30px;
-    right: 10px;
+    top: 40px;
+    right: 20px;
     font-size: 2rem;
 }
 
@@ -192,7 +203,7 @@ tr:hover {
 }
 
 .pm-b:active {
-    color: lime;
+    color: red;
 }
 
 .nb-contain {

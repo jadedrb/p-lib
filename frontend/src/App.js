@@ -31,3 +31,13 @@ function App() {
 }
 
 export default App;
+
+
+/*
+
+THINGS TO DO:
+
+1. Add buttons that hide editing abilities for each section (for those who just want to view)
+2. Start implementing search features (search by specific section or in general)
+
+*/

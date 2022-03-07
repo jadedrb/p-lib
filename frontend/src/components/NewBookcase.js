@@ -12,6 +12,8 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
   let [width, setWidth] = useState(100);
   let [shelfHeight, setShelfHeight] = useState(30)
 
+  let [edit, setEdit] = useState(false)
+
   useEffect(() => {
     if (currentRoom && currentBookcase) {
       let { location, shelves, width, height } = currentBookcase
@@ -82,7 +84,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
 
   if (currentRoom && currentBookcase) {
     return (
-      <div className="new-bookcase">
+      <div className="new-bookcase" style={{ paddingBottom: edit ? "none" : "40px"}}>
         <h4>
             <span style={{ color: 'blue' }}>{location}</span> in {currentRoom.name}</h4>
         <h5>
@@ -92,9 +94,12 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
             {renderBookcases()}
         </div>
 
-        <div className="pm-bc" onClick={removeBookcase}>-</div>
-        {/* <div className="pm-r min-room" style={rooms.length ? null : { opacity: .2, pointerEvents: 'none' }} onClick={removeARoom}>-</div> */}
-       
+        <div className="pm">
+          <div className="pm-r ed" onClick={() => setEdit(!edit)}>=</div>
+          {edit && <div className="pm-r min-room" onClick={removeBookcase}>-</div>}
+        </div>
+      
+       {edit &&
         <form onSubmit={handleSubmit}>
           <input
             onChange={(e) => setLocation(e.target.value)}
@@ -123,7 +128,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
             value={shelfHeight}
           />
           <button>Save</button>
-        </form>
+        </form>}
       </div>
     );
   } else return <div>No bookcase selected</div>;

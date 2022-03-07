@@ -1,19 +1,27 @@
 import { useState, useRef, useEffect } from "react";
-import { ADD_ROOM, REMOVE_ROOM, SET_ROOMS, UPDATE_ROOM } from '../context'
+import { ADD_ROOM, REMOVE_ROOM, SET_ROOMS, UPDATE_ROOM } from "../context";
 import { useNavigate, useLocation } from "react-router-dom";
 import { randomNum, utilPath } from "../services/utility";
 
 // import { test0, test1 } from "../services/tests";
 
-import Rooms from "../services/RoomService"
-import Bookcases from "../services/BookcaseService"
+import Rooms from "../services/RoomService";
+import Bookcases from "../services/BookcaseService";
 
 const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
-
-  let [rIndex, setRIndex] = useState(0)
-// rid ? rooms.findIndex(r => r.id === rid) : 
-  let defaultRoom = { height: 10, width: 10, tile: 25, name: "New Room", bookcases: [], id: 0 }
-  let [currentRoom, setCurrentRoom] = useState(!rid && rooms[0] ? rooms[0] : defaultRoom)
+  let [rIndex, setRIndex] = useState(0);
+  // rid ? rooms.findIndex(r => r.id === rid) :
+  let defaultRoom = {
+    height: 10,
+    width: 10,
+    tile: 25,
+    name: "New Room",
+    bookcases: [],
+    id: 0,
+  };
+  let [currentRoom, setCurrentRoom] = useState(
+    !rid && rooms[0] ? rooms[0] : defaultRoom
+  );
 
   let [height, setHeight] = useState(currentRoom.height);
   let [width, setWidth] = useState(currentRoom.width);
@@ -25,119 +33,123 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
 
   let [bookcases, setBookcases] = useState(currentRoom.bookcases)
 
-  let mapRef = useRef();
-  let mount = useRef()
-  let waitForSwitch = useRef()
-  let bkcaseSwitch = useRef()
-  let navAndSwitch = useRef()
+  let [edit, setEdit] = useState(false);
 
-  let navigate = useNavigate()
-  let path = useLocation()
-  let pathname = path.pathname
+  let mapRef = useRef();
+  let mount = useRef();
+  let waitForSwitch = useRef();
+  let bkcaseSwitch = useRef();
+  let navAndSwitch = useRef();
+
+  let navigate = useNavigate();
+  let path = useLocation();
+  let pathname = path.pathname;
 
   const handlePathAndSwitchRoom = () => {
-    
     // mount keeps track of the index of the current room between renders
     // it will either be undefined (unmounted) or a number (mounted)
     //if (!user) return
-    if (typeof mount.current === 'number') {
-      console.log("handlePathAndSwitchRoom")
-      if (mount.current !== rIndex) { // if the index has changed (current here stores former index)
-        mount.current = rIndex
+    if (typeof mount.current === "number") {
+      console.log("handlePathAndSwitchRoom");
+      if (mount.current !== rIndex) {
+        // if the index has changed (current here stores former index)
+        mount.current = rIndex;
         if (rooms[rIndex]) {
-          if (rooms[rIndex].id !== rid) { // only navigate if the room id changed
-            navigate(utilPath(path, 'room', rooms[rIndex].id))
+          if (rooms[rIndex].id !== rid) {
+            // only navigate if the room id changed
+            navigate(utilPath(path, "room", rooms[rIndex].id));
           }
         }
       } else {
-        switchRoom(0, rooms)
-        navigate(currentRoom.id ? utilPath(path, 'room', currentRoom.id) : `${pathname.slice(0, 6)}`)
+        switchRoom(0, rooms);
+        navigate(
+          currentRoom.id
+            ? utilPath(path, "room", currentRoom.id)
+            : `${pathname.slice(0, 6)}`
+        );
         //console.log('ye2')
       }
     } else {
       // on mount
-    //  let rm = switchRoom(0, rooms)
-      mount.current = rIndex
+      //  let rm = switchRoom(0, rooms)
+      mount.current = rIndex;
       if (!bcid)
-        navigate(utilPath(path, 'room', rid ? rid : rooms[0]?.id ? rooms[0].id : ''))
+        navigate(
+          utilPath(path, "room", rid ? rid : rooms[0]?.id ? rooms[0].id : "")
+        );
     }
-  }
+  };
 
   const handleCurrentRoomSetup = () => {
     // if (!user) return
-    if (typeof mount.current === 'number') {
-    //  console.log(rooms, rid)
+    if (typeof mount.current === "number") {
+      //  console.log(rooms, rid)
       if (rid) {
-    //    console.log(rid)
-        let indx = rooms.findIndex(r => r?.id === rid)
-        const cr = rooms.length && rooms[indx] ? rooms[indx] : currentRoom
-       // console.log(cr, rooms.length, rooms[indx])
+        //    console.log(rid)
+        let indx = rooms.findIndex((r) => r?.id === rid);
+        const cr = rooms.length && rooms[indx] ? rooms[indx] : currentRoom;
+        // console.log(cr, rooms.length, rooms[indx])
 
         // if user enters an invalid room id in url
         if (!rooms[indx]) {
-          if (rooms.length) 
-            navigate(utilPath(path, 'room', rooms[0].id)) 
-          return
+          if (rooms.length) navigate(utilPath(path, "room", rooms[0].id));
+          return;
         }
-        if (indx > 0)
-          setRIndex(indx)
+        if (indx > 0) setRIndex(indx);
 
-        setCurrentRoom(cr)
-        setHeight(cr.height)
-        setWidth(cr.width)
-        setTile(cr.tile)
-        setName(cr.name)
-        setBookcases(cr.bookcases)
+        setCurrentRoom(cr);
+        setHeight(cr.height);
+        setWidth(cr.width);
+        setTile(cr.tile);
+        setName(cr.name);
+        setBookcases(cr.bookcases);
       }
     }
-  }
+  };
 
   const handleSwitchAfterAddOrRemove = () => {
     // if (!user) return
-    if (waitForSwitch.current === 'add') {
-      waitForSwitch.current = false
-      switchRoom((rooms.length - 1) - rIndex, rooms)
+    if (waitForSwitch.current === "add") {
+      waitForSwitch.current = false;
+      switchRoom(rooms.length - 1 - rIndex, rooms);
+    } else if (waitForSwitch.current === "remove") {
+      waitForSwitch.current = false;
+      switchRoom(-1, rooms);
     }
-    else if (waitForSwitch.current === 'remove') {
-      waitForSwitch.current = false
-      switchRoom(-1, rooms)
-    }
-  }
+  };
 
-  const handlePathBackToRoom = () => navigate('/room/')
+  const handlePathBackToRoom = () => navigate("/room/");
 
   // adding these functions to a ref to avoid warnings about missing dependencies inside useEffect
-  navAndSwitch.current = { 
-    handlePathAndSwitchRoom, 
-    handlePathBackToRoom, 
+  navAndSwitch.current = {
+    handlePathAndSwitchRoom,
+    handlePathBackToRoom,
     handleCurrentRoomSetup,
-    handleSwitchAfterAddOrRemove
-  }
+    handleSwitchAfterAddOrRemove,
+  };
 
-  useEffect(() => { 
-    console.log("useEffect: rIndex", rIndex)
+  useEffect(() => {
+    console.log("useEffect: rIndex", rIndex);
     //console.log('ye')
-      navAndSwitch.current.handlePathAndSwitchRoom()
-  }, [rIndex])
+    navAndSwitch.current.handlePathAndSwitchRoom();
+  }, [rIndex]);
 
   useEffect(() => {
     return () => {
-      navAndSwitch.current.handlePathBackToRoom()
-    }
-  }, [])
+      navAndSwitch.current.handlePathBackToRoom();
+    };
+  }, []);
 
   useEffect(() => {
     // const defaultRoom = { height: 10, width: 10, tile: 25, name: "New Room", bookcases: [] }
-    navAndSwitch.current.handleCurrentRoomSetup()
+    navAndSwitch.current.handleCurrentRoomSetup();
 
-    // waits for rooms to update before switching to newest room 
+    // waits for rooms to update before switching to newest room
     // if a new room was added recently... or removed
-    navAndSwitch.current.handleSwitchAfterAddOrRemove()
-
-  }, [rooms, rid])
+    navAndSwitch.current.handleSwitchAfterAddOrRemove();
+  }, [rooms, rid]);
 
   useEffect(() => {
-
     let map = mapRef.current;
     map.innerHTML = "";
     map.style.gridTemplateColumns = `repeat(${width}, ${tile}px)`;
@@ -157,17 +169,23 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
 
         let currentBookcase;
 
-        let tiles = bookcases.length ? bookcases.some(b => {
-            let result = (r >= b.rowLow && r <= b.rowHigh) && (c >= b.colLow && c <= b.colHigh)
-            if (result) currentBookcase = b
-            return result
-        }) : false
+        let tiles = bookcases.length
+          ? bookcases.some((b) => {
+              let result =
+                r >= b.rowLow &&
+                r <= b.rowHigh &&
+                c >= b.colLow &&
+                c <= b.colHigh;
+              if (result) currentBookcase = b;
+              return result;
+            })
+          : false;
 
         if (tiles) {
-            div.style.backgroundColor = currentBookcase.color
-            if (currentBookcase.id === bcid) {
-              div.style.outline = '3px solid black'
-            }
+          div.style.backgroundColor = currentBookcase.color;
+          if (currentBookcase.id === bcid) {
+            div.style.outline = "3px solid black";
+          }
         }
 
         map.appendChild(div);
@@ -176,49 +194,52 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
   }, [height, width, tile, bcStart, bcEnd, bookcases, bcid]);
 
   const handleBoxClick = async (e) => {
-    if (e.target.className[0] !== "b") return
+    if (e.target.className[0] !== "b") return;
     let [row, column] = e.target.className
       .split(" ")[1]
       .split("-")
       .filter((c) => c !== "r" && c !== "c");
 
-    row = Number(row)
-    column = Number(column)
+    row = Number(row);
+    column = Number(column);
 
     let currentBookcase;
 
-    let overlap = bookcases.some(b => {
-      let result = (row >= b.rowLow && row <= b.rowHigh) && (column >= b.colLow && column <= b.colHigh)
-      if (result) currentBookcase = b
-      return result
-    })
+    let overlap = bookcases.some((b) => {
+      let result =
+        row >= b.rowLow &&
+        row <= b.rowHigh &&
+        column >= b.colLow &&
+        column <= b.colHigh;
+      if (result) currentBookcase = b;
+      return result;
+    });
 
     if (overlap) {
-    //  console.log("clicked on: " + currentBookcase.id)
-      setBcStart('')
-      setBcEnd('')
-      navigate(utilPath(path, 'bookcase', currentBookcase.id))
-      return 
+      //  console.log("clicked on: " + currentBookcase.id)
+      setBcStart("");
+      setBcEnd("");
+      navigate(utilPath(path, "bookcase", currentBookcase.id));
+      return;
     }
 
     if (!bcStart) {
-      setBcStart([row, column])
+      setBcStart([row, column]);
     } else if (bcStart && !bcEnd) {
-      setBcEnd([row, column])
+      setBcEnd([row, column]);
     } else {
-
-        let newBc = {
-            rowLow: Math.min(bcStart[0], bcEnd[0]),
-            colLow: Math.min(bcStart[1], bcEnd[1]),
-            rowHigh: Math.max(bcStart[0], bcEnd[0]),
-            colHigh: Math.max(bcStart[1], bcEnd[1]),
-            color: `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`,
-            location: '',
-            bcWidth: 100,
-            shHeight: 30
-        }
-        setBookcases([...bookcases, newBc])
-        bkcaseSwitch.current = true
+      let newBc = {
+        rowLow: Math.min(bcStart[0], bcEnd[0]),
+        colLow: Math.min(bcStart[1], bcEnd[1]),
+        rowHigh: Math.max(bcStart[0], bcEnd[0]),
+        colHigh: Math.max(bcStart[1], bcEnd[1]),
+        color: `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`,
+        location: "",
+        bcWidth: 100,
+        shHeight: 30,
+      };
+      setBookcases([...bookcases, newBc]);
+      bkcaseSwitch.current = true;
 
       setBcStart("");
       setBcEnd("");
@@ -232,96 +253,123 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
       name: rn ? rn : name,
       tile: ti ? ti : tile,
       bookcases: bc ? bc : bookcases,
-    }
-  }
+    };
+  };
 
-  function switchRoom (prevOrNex, currentRooms) {
-console.log("switchRoom")
-    let newIndex = rIndex + prevOrNex
-    if (!prevOrNex) newIndex = currentRooms.length - 1
+  function switchRoom(prevOrNex, currentRooms) {
+    let newIndex = rIndex + prevOrNex;
+    if (!prevOrNex) newIndex = currentRooms.length - 1;
 
     if (currentRooms.length) {
-      if (newIndex < 0 || newIndex > currentRooms.length - 1) return
+      if (newIndex < 0 || newIndex > currentRooms.length - 1) return;
     }
-    
-    let newRoom = currentRooms[newIndex]
+
+    let newRoom = currentRooms[newIndex];
     // If we deleted the last saved room
     if (newIndex < 0) {
-    //  console.log('in')
-      newRoom = roomConstruct(10, 10, "New Room", 25, [])
-      newIndex = 0
-      navigate(`/room/`)
+      //  console.log('in')
+      newRoom = roomConstruct(10, 10, "New Room", 25, []);
+      newIndex = 0;
+      navigate(`/room/`);
     }
 
-    bkcaseSwitch.current = false
+    bkcaseSwitch.current = false;
 
-    setBcEnd("")
-    setBcStart("")
-    setRIndex(newIndex)
-    setHeight(newRoom.height)
-    setWidth(newRoom.width)
-    setTile(newRoom.tile)
-    setName(newRoom.name)
-    setBookcases(newRoom.bookcases)
-    return newRoom
+    setBcEnd("");
+    setBcStart("");
+    setRIndex(newIndex);
+    setHeight(newRoom.height);
+    setWidth(newRoom.width);
+    setTile(newRoom.tile);
+    setName(newRoom.name);
+    setBookcases(newRoom.bookcases);
+    return newRoom;
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    let room = roomConstruct()
+    let room = roomConstruct();
 
     if (rid) {
-      let payload = await Rooms.updateRoomOfIdForUser(room, rid, user)
-      dispatch({ type: UPDATE_ROOM, payload })
-    }
-    else {
-      let payload = await Rooms.addRoomForUser(room, user)
-      navigate(`${pathname.slice(0, 6) + payload.id}`)
-      dispatch({ type: ADD_ROOM, payload })
-      room = payload.id
+      let payload = await Rooms.updateRoomOfIdForUser(room, rid, user);
+      dispatch({ type: UPDATE_ROOM, payload });
+    } else {
+      let payload = await Rooms.addRoomForUser(room, user);
+      navigate(`${pathname.slice(0, 6) + payload.id}`);
+      dispatch({ type: ADD_ROOM, payload });
+      room = payload.id;
     }
     if (bkcaseSwitch.current) {
       for (let i = 0; i < bookcases.length; i++) {
-        let bk = bookcases[i]
+        let bk = bookcases[i];
         if (!bk.id) {
-          await Bookcases.addBookcaseForRoom(bk, rid ? rid : room)
-          let rms = await Rooms.getRoomsForUser(user)
-          dispatch({ type: SET_ROOMS, payload: rms })
+          await Bookcases.addBookcaseForRoom(bk, rid ? rid : room);
+          let rms = await Rooms.getRoomsForUser(user);
+          dispatch({ type: SET_ROOMS, payload: rms });
         }
       }
     }
-  }
-//console.log(rooms, ": rooms")
+  };
+
   const newBlankRoom = async () => {
-    let rm = roomConstruct(10, 10, "New Room", 25, [])
-    let payload = await Rooms.addRoomForUser(rm, user)
-    navigate(utilPath(path, 'room', payload.id))
-    dispatch({ type: ADD_ROOM, payload })
-    waitForSwitch.current = 'add'
-  }
+    let rm = roomConstruct(10, 10, "New Room", 25, []);
+    let payload = await Rooms.addRoomForUser(rm, user);
+    navigate(utilPath(path, "room", payload.id));
+    dispatch({ type: ADD_ROOM, payload });
+    waitForSwitch.current = "add";
+  };
 
   const removeARoom = async () => {
-    await Rooms.removeRoomFromUser(rid, user)
-    dispatch({ type: REMOVE_ROOM, payload: rid })
-    waitForSwitch.current = 'remove'
-  }
+    await Rooms.removeRoomFromUser(rid, user);
+    dispatch({ type: REMOVE_ROOM, payload: rid });
+    waitForSwitch.current = "remove";
+  };
 
   return (
     <div className="newroom">
-      <h3>{name} ({rIndex})</h3>
-      <div className="pm-r pl-room" onClick={newBlankRoom}>+</div>
-      <div className="pm-r min-room" style={rooms.length ? null : { opacity: .2, pointerEvents: 'none' }} onClick={removeARoom}>-</div>
+      <h3>
+        {name} ({rIndex})
+      </h3>
+      <div className="pm">
+        <div className="pm-r ed" onClick={() => setEdit(!edit)}>
+          =
+        </div>
+        { edit &&
+        <>
+          <div className="pm-r pl-room" onClick={newBlankRoom}>
+            +
+          </div>
+          <div
+            className="pm-r min-room"
+            style={rooms.length ? null : { opacity: 0.2, pointerEvents: "none" }}
+            onClick={removeARoom}
+          >
+            -
+          </div>
+        </>}
+      </div>
       <div className="room-sec">
-        <div className={`arrw ${!rIndex ? 'hde' : ''}`} id="lft" onClick={() => switchRoom(-1, rooms)}>
-          <span>{'<'}</span>
+        <div
+          className={`arrw ${!rIndex ? "hde" : ""}`}
+          id="lft"
+          onClick={() => switchRoom(-1, rooms)}
+        >
+          <span>{"<"}</span>
         </div>
         <div className="room-map" ref={mapRef} onClick={handleBoxClick}></div>
-        <div className={`arrw ${!rooms.length || rIndex + 1 === rooms.length ? 'hde' : ''}`} id="rit" onClick={() => switchRoom(1, rooms)}>
-          <span>{'>'}</span>
+        <div
+          className={`arrw ${
+            !rooms.length || rIndex + 1 === rooms.length ? "hde" : ""
+          }`}
+          id="rit"
+          onClick={() => switchRoom(1, rooms)}
+        >
+          <span>{">"}</span>
         </div>
       </div>
 
+      {edit &&
       <form onSubmit={handleSubmit}>
         <input
           onChange={(e) => setHeight(e.target.value)}
@@ -344,9 +392,9 @@ console.log("switchRoom")
           value={name}
         />
         <button>Save</button>
-      </form>
-
-{/* For test purposes...
+      </form>}
+      
+      {/* For test purposes...
       <button onClick={test0}>
         TEST EVERYTHING!
       </button>
@@ -358,8 +406,6 @@ console.log("switchRoom")
 };
 
 export default NewRoom;
-
-
 
 /*
 

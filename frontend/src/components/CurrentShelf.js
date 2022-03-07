@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useParams } from 'react-router-dom'
-import { Context } from "../context"
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Context, REMOVE_SHELF } from "../context"
 import { utilitySelector } from '../services/utility';
 import BookList from './BookList';
 import NewBook from './NewBook';
+import { utilPath } from '../services/utility';
+import Shelves from '../services/ShelfService'
 
 function CurrentShelf() {
 
@@ -12,7 +14,12 @@ function CurrentShelf() {
     let [showShelf, setShowShelf] = useState(true)
     let [currShelf, setCurrShelf] = useState(null)
 
-    let { shid, rid, bcid } = useParams()
+    let [edit, setEdit] = useState(false)
+
+    let { shid, rid, bcid, bid } = useParams()
+
+    let path = useLocation()
+    let navigate = useNavigate()
 
     useEffect(() => {
         let { shelf } = utilitySelector(rid, bcid, shid, rooms)
@@ -20,22 +27,37 @@ function CurrentShelf() {
         setCurrShelf(shelf)
     }, [shid, rid, bcid, rooms])
 
+    const removeShelf = async () => {
+        await Shelves.removeShelfFromBookcase(shid, bcid)
+        dispatch({ type: REMOVE_SHELF, payload: { shid, bcid, rid } })
+        navigate(utilPath(path, 'bookcase', bcid))
+    }
+
     return ( 
-        <>
+        <div className='sh-b'>
+            <div className="pm">
+                <div className="pm-r ed" onClick={() => setEdit(!edit)}>=</div>
+                {edit && <div className="pm-r min-room">-</div>}
+            </div>
+            
             <button onClick={() => setShowShelf(!showShelf)}>Shelf</button>
             {showShelf && 
                 currShelf ?
                 <div>
                     <h5>Shelf ID: {shid}</h5>
-                    {/* {currShelf?.books.map((b, i) => <p key={i}>Book {i}</p>)} */}
-                    <BookList books={currShelf?.books} dispatch={dispatch} />
-                    <NewBook book={'test'} setCurrShelf={setCurrShelf} />
+                    <BookList 
+                        books={currShelf?.books} 
+                        path={path}
+                        bid={Number(bid)}
+                        navigate={navigate}
+                    />
+                    {edit && <NewBook book={'test'} setCurrShelf={setCurrShelf} />}
                 </div>
                 : !currShelf ?
                 <div>No shelf selected</div>
                 : null
             }
-        </>
+        </div>
     );
 }
 

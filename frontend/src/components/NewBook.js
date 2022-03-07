@@ -182,7 +182,7 @@ const NewBook = ({ setCurrShelf }) => {
         />
         <input 
           type="button"
-          value="Save"
+          value={bid ? "Save" : "Create"}
           name="save"
           onClick={handleEnter}
           onKeyPress={handleEnter}
