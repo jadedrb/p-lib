@@ -7,7 +7,7 @@ import NewBook from './NewBook';
 
 function CurrentShelf() {
 
-    let { rooms } = useContext(Context)
+    let { rooms, dispatch } = useContext(Context)
 
     let [showShelf, setShowShelf] = useState(true)
     let [currShelf, setCurrShelf] = useState(null)
@@ -24,12 +24,16 @@ function CurrentShelf() {
         <>
             <button onClick={() => setShowShelf(!showShelf)}>Shelf</button>
             {showShelf && 
-            <div>
-                <h5>Shelf ID: {shid}</h5>
-                {/* {currShelf?.books.map((b, i) => <p key={i}>Book {i}</p>)} */}
-                <BookList books={currShelf?.books}/>
-                <NewBook book={'test'} setCurrShelf={setCurrShelf} />
-            </div>
+                currShelf ?
+                <div>
+                    <h5>Shelf ID: {shid}</h5>
+                    {/* {currShelf?.books.map((b, i) => <p key={i}>Book {i}</p>)} */}
+                    <BookList books={currShelf?.books} dispatch={dispatch} />
+                    <NewBook book={'test'} setCurrShelf={setCurrShelf} />
+                </div>
+                : !currShelf ?
+                <div>No shelf selected</div>
+                : null
             }
         </>
     );

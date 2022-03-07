@@ -1,7 +1,6 @@
 export function utilitySelector(rid, bcid, shid, rms, bid) {
     let rooms = [ ...rms ]
     let roomIndex, room, bkcase, bkcaseIndex, shelfIndex, shelf, bookIndex, book;
-    console.log(bid)
     if (rid) {
         roomIndex = rooms.findIndex((r) => r.id === Number(rid))
         room = rooms[roomIndex]

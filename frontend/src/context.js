@@ -9,9 +9,13 @@ export const REMOVE_ROOM = 'REMOVE_ROOM'
 export const UPDATE_ROOM = 'UPDATE_ROOM'
 
 export const UPDATE_BOOKCASE = 'UPDATE_BOOKCASE'
+export const REMOVE_BOOKCASE = 'REMOVE_BOOKCASE'
+
+export const REMOVE_SHELF = 'REMOVE_SHELF'
 
 export const ADD_BOOK = "ADD_BOOK"
 export const UPDATE_BOOK = "UPDATE_BOOK"
+export const REMOVE_BOOK = "REMOVE_BOOK"
 
 export const QUEUE_UPDATE = "QUEUE_UPDATE"
 export const FINISH_UPDATE = "FINISH_UPDATE"
@@ -50,6 +54,20 @@ function reducer(state, action) {
             console.log(rooms)
             return { ...state, rooms }
         }
+        case REMOVE_BOOKCASE: {
+            let { bcid, rid } = action.payload
+            let { roomIndex, rooms } = utilitySelector(rid, bcid, null, state.rooms)
+            let newBookcases = rooms[roomIndex].bookcases.filter(bk => bk.id !== bcid)
+            rooms[roomIndex].bookcases = newBookcases
+            return { ...state, rooms }
+        }
+        case REMOVE_SHELF: {
+            let { bcid, rid, shid } = action.payload
+            let { roomIndex, rooms, bkcaseIndex } = utilitySelector(rid, bcid, shid, state.rooms)
+            let newShelves = rooms[roomIndex].bookcases[bkcaseIndex].shelves.filter(sh => sh.id !== Number(shid))
+            rooms[roomIndex].bookcases[bkcaseIndex].shelves = newShelves
+            return { ...state, rooms }
+        }
         case ADD_BOOK: {
             let { bcid, rid, shid, book, setCurrShelf } = action.payload
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms)
@@ -68,6 +86,13 @@ function reducer(state, action) {
             shelf.books = shelf.books.map(b => b.id === Number(bid) ? book : b)
             console.log(shelf.books)
             console.log(shelf.books.map(b => b.id === bid ? book : b))
+            return { ...state, rooms }
+        }
+        case REMOVE_BOOK: {
+            let { bcid, rid, shid, bid } = action.payload
+            let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms, bid)
+            let newBooks = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books.filter(b => b.id !== Number(bid))
+            rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books = newBooks
             return { ...state, rooms }
         }
         case QUEUE_UPDATE: {

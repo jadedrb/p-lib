@@ -2,24 +2,20 @@ import React from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { utilPath } from '../services/utility';
 
-// import { Context } from '../context'
-// import RoomService from '../services/RoomService';
+import Shelves from '../services/ShelfService'
+import { REMOVE_SHELF } from '../context';
 
-// let RoomServe = new RoomService();
-
-                // title: String,
-                // author: String,
-                // type: String,
-                // genre: String,
-                // location: String,
-                // shelf: String,
-                // user: String,
-
-const BookList = ({ books }) => {
+const BookList = ({ books, dispatch }) => {
 
     let path = useLocation()
     let navigate = useNavigate()
-    let { bid } = useParams()
+    let { bcid, shid, rid, bid } = useParams()
+
+    const removeShelf = async () => {
+        await Shelves.removeShelfFromBookcase(shid, bcid)
+        dispatch({ type: REMOVE_SHELF, payload: { shid, bcid, rid } })
+        navigate(utilPath(path, 'bookcase', bcid))
+    }
 
     let renderedBooks = books?.map((b,i) => {
         return (
@@ -41,13 +37,14 @@ const BookList = ({ books }) => {
 
     return (
         <div className="table-contain">
+            <div className="pm-sh" onClick={removeShelf}>-</div>
             {renderedBooks?.length ? 
                 <table className='booklist'>
                     <tbody>
                         {renderedBooks}
                     </tbody>    
                 </table>
-            : null}
+            : "This shelf is empty"}
         </div>
     )
 }

@@ -29,7 +29,7 @@ const Rooms = () => {
         }
     }
 
-    let [showRooms, setShowRooms] = useState(true) // rid ? true : false
+    let [showRooms, setShowRooms] = useState(rid ? true : false) // rid ? true : false
 
     useEffect(() => {
         initialRoomSetup.current()

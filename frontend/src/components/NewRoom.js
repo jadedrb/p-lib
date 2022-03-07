@@ -3,7 +3,7 @@ import { ADD_ROOM, REMOVE_ROOM, SET_ROOMS, UPDATE_ROOM } from '../context'
 import { useNavigate, useLocation } from "react-router-dom";
 import { randomNum, utilPath } from "../services/utility";
 
-import { test0, test1 } from "../services/tests";
+// import { test0, test1 } from "../services/tests";
 
 import Rooms from "../services/RoomService"
 import Bookcases from "../services/BookcaseService"
@@ -12,7 +12,8 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
 
   let [rIndex, setRIndex] = useState(0)
 // rid ? rooms.findIndex(r => r.id === rid) : 
-  let [currentRoom, setCurrentRoom] = useState({ height: 10, width: 10, tile: 25, name: "New Room", bookcases: [], id: 0 })
+  let defaultRoom = { height: 10, width: 10, tile: 25, name: "New Room", bookcases: [], id: 0 }
+  let [currentRoom, setCurrentRoom] = useState(!rid && rooms[0] ? rooms[0] : defaultRoom)
 
   let [height, setHeight] = useState(currentRoom.height);
   let [width, setWidth] = useState(currentRoom.width);
@@ -57,7 +58,8 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
       // on mount
     //  let rm = switchRoom(0, rooms)
       mount.current = rIndex
-      //  navigate(utilPath(path, 'room', rid ? rid : rm.id ? rm.id : ''))
+      if (!bcid)
+        navigate(utilPath(path, 'room', rid ? rid : rooms[0]?.id ? rooms[0].id : ''))
     }
   }
 
@@ -344,13 +346,13 @@ console.log("switchRoom")
         <button>Save</button>
       </form>
 
-{/* For test purposes... */}
+{/* For test purposes...
       <button onClick={test0}>
         TEST EVERYTHING!
       </button>
       <button onClick={test1}>
         TEST Search
-      </button>
+      </button> */}
     </div>
   );
 };

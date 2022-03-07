@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { ADD_BOOK, Context, UPDATE_BOOK } from "../context";
+import { ADD_BOOK, Context, REMOVE_BOOK, UPDATE_BOOK } from "../context";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { utilPath, utilitySelector } from "../services/utility";
 
@@ -101,101 +101,103 @@ const NewBook = ({ setCurrShelf }) => {
     }
   };
 
+  const removeBook = async () => {
+    await BookService.removeBookFromShelfAndUser(bid, shid, user)
+    dispatch({ type: REMOVE_BOOK, payload: { bcid, rid, shid, bid }})
+    navigate(utilPath(path, 'shelf', shid))
+  }
+
   return (
-    <form id="ff">
-      <input
-        autoFocus
-        placeholder="Title"
-        name="title"
-        ref={firstInput}
-        value={inputs.title}
-        onChange={handleInput}
-        onKeyPress={handleEnter}
-        onClick={handleClick}
-      />
-      <input
-        placeholder="Author"
-        name="author"
-        value={inputs.author}
-        onChange={handleInput}
-        onKeyPress={handleEnter}
-        onClick={handleClick}
-      />
-      <input
-        placeholder="Color"
-        name="color"
-        type={colorType ? "text" : "color"}
-        value={!colorType && inputs.color.slice(0,1) !== "#" ? "#ffffff" : inputs.color}
-        onChange={handleInput}
-        onKeyPress={handleEnter}
-        onClick={handleClick}
-      />
-      <input 
-        type="button"
-        value=" "
-        name="skip"
-        onClick={() => setColorType(!colorType)}
-      />
-      <input
-        placeholder="Genre/Type"
-        name="genre"
-        value={inputs.genre}
-        onChange={handleInput}
-        onKeyPress={handleEnter}
-        onClick={handleClick}
-      />
-      <input
-        placeholder="Page Count"
-        name="pages"
-        type="number"
-        value={inputs.pages}
-        onChange={handleInput}
-        onKeyPress={handleEnter}
-        onClick={handleClick}
-      />
-      <input
-        placeholder="Publish Date"
-        name="pdate"
-        type="number"
-        value={inputs.pdate}
-        onChange={handleInput}
-        onKeyPress={handleEnter}
-        onClick={handleClick}
-      />
-      <input
-        placeholder="More"
-        name="more"
-        value={inputs.more}
-        onChange={handleInput}
-        onKeyPress={handleEnter}
-        onClick={handleClick}
-      />
-      <input 
-        type="button"
-        value="Save"
-        name="save"
-        onClick={handleEnter}
-        onKeyPress={handleEnter}
-      />
-      <input 
-        type="button"
-        value="Reset"
-        name="reset"
-        onClick={handleEnter}
-        onKeyPress={handleEnter}
-      />
-    </form>
+    <div className="nb-contain">
+      {bid && <h5>Book ID: {bid}</h5>}
+      {bid && <div className="pm-b" onClick={removeBook}>-</div>}
+    
+      <form className="ff">
+        <input
+          autoFocus
+          placeholder="Title"
+          name="title"
+          ref={firstInput}
+          value={inputs.title}
+          onChange={handleInput}
+          onKeyPress={handleEnter}
+          onClick={handleClick}
+        />
+        <input
+          placeholder="Author"
+          name="author"
+          value={inputs.author}
+          onChange={handleInput}
+          onKeyPress={handleEnter}
+          onClick={handleClick}
+        />
+        <input
+          placeholder="Color"
+          name="color"
+          type={colorType ? "text" : "color"}
+          value={!colorType && inputs.color.slice(0,1) !== "#" ? "#ffffff" : inputs.color}
+          onChange={handleInput}
+          onKeyPress={handleEnter}
+          onClick={handleClick}
+        />
+        <input 
+          type="button"
+          value=" "
+          name="skip"
+          onClick={() => setColorType(!colorType)}
+        />
+        <input
+          placeholder="Genre/Type"
+          name="genre"
+          value={inputs.genre}
+          onChange={handleInput}
+          onKeyPress={handleEnter}
+          onClick={handleClick}
+        />
+        <input
+          placeholder="Page Count"
+          name="pages"
+          type="number"
+          value={inputs.pages}
+          onChange={handleInput}
+          onKeyPress={handleEnter}
+          onClick={handleClick}
+        />
+        <input
+          placeholder="Publish Date"
+          name="pdate"
+          type="number"
+          value={inputs.pdate}
+          onChange={handleInput}
+          onKeyPress={handleEnter}
+          onClick={handleClick}
+        />
+        <input
+          placeholder="More"
+          name="more"
+          value={inputs.more}
+          onChange={handleInput}
+          onKeyPress={handleEnter}
+          onClick={handleClick}
+        />
+        <input 
+          type="button"
+          value="Save"
+          name="save"
+          onClick={handleEnter}
+          onKeyPress={handleEnter}
+        />
+        <input 
+          type="button"
+          value="Reset"
+          name="reset"
+          onClick={handleEnter}
+          onKeyPress={handleEnter}
+        />
+      </form>
+    </div>
   );
 };
 
 export default NewBook;
 
-
-/*
-
-THINGS TO DO:
-
-1. http://localhost:3000/room/ should render a room, but it doesn't
-2. Going to a complicated route that doesn't exist should redirect back to home
-
-*/

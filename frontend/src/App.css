@@ -18,9 +18,30 @@ tr:hover {
 }
 
 .table-contain {
+    position: relative;
     overflow: auto;
     border: 3px solid teal;
+    min-height: 50px;
+    padding: 10px;
 }
+
+.pm-sh {
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    font-size: 2rem;
+}
+
+.pm-sh:hover {
+    cursor: pointer;
+    color: rgb(155, 155, 155);
+}
+
+.pm-sh:active {
+    color: lime;
+}
+
+
 
 /* NewRoom */
 
@@ -121,9 +142,10 @@ tr:hover {
 .pm-bc {
     position: absolute;
     top: 40px;
-    right: 0;
+    right: 10px;
     font-size: 2rem;
 }
+
 
 .pm-bc:hover {
     cursor: pointer;
@@ -151,3 +173,28 @@ tr:hover {
 
 /* New Book */
 
+.ff {
+    border: 3px solid purple;
+    padding: 10px;
+}
+
+.pm-b {
+    position: absolute;
+    top: 30px;
+    right: 10px;
+    font-size: 2rem;
+}
+
+
+.pm-b:hover {
+    cursor: pointer;
+    color: rgb(155, 155, 155);
+}
+
+.pm-b:active {
+    color: lime;
+}
+
+.nb-contain {
+    position: relative;
+}

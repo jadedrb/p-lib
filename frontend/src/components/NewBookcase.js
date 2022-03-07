@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { UPDATE_BOOKCASE } from "../context";
+import { REMOVE_BOOKCASE, UPDATE_BOOKCASE } from "../context";
 import { utilPath } from "../services/utility";
 
 import Bookcases from "../services/BookcaseService"
 import Shelves from "../services/ShelfService"
 
 const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, shid, bid, bcid, rid }) => {
-console.log('rendered??')
+
   let [location, setLocation] = useState("Bookcase Location");
   let [shelves, setShelves] = useState("");
   let [width, setWidth] = useState(100);
@@ -74,6 +74,12 @@ console.log('rendered??')
       )
   }
 
+  const removeBookcase = async () => {
+    await Bookcases.removeBookcaseFromRoom(bcid, rid)
+    dispatch({ type: REMOVE_BOOKCASE, payload: { bcid, rid }})
+    navigate(utilPath(path, 'room', rid))
+  }
+
   if (currentRoom && currentBookcase) {
     return (
       <div className="new-bookcase">
@@ -86,7 +92,7 @@ console.log('rendered??')
             {renderBookcases()}
         </div>
 
-        <div className="pm-bc" onClick={() => console.log('btn')}>+</div>
+        <div className="pm-bc" onClick={removeBookcase}>-</div>
         {/* <div className="pm-r min-room" style={rooms.length ? null : { opacity: .2, pointerEvents: 'none' }} onClick={removeARoom}>-</div> */}
        
         <form onSubmit={handleSubmit}>
