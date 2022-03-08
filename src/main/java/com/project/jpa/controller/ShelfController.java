@@ -50,13 +50,25 @@ public class ShelfController {
 		}
 	}
 	
+//	@PostMapping("/bookcases/{roomId}")
+//	public List<Bookcase> bookcaseForRoom(@PathVariable int roomId, @RequestBody List<Bookcase> bookcases) {
+//		Room room = roomRepo.findById(roomId).orElseThrow();
+//		for (Bookcase bookcase : bookcases) {
+//			room.addBookcase(bookcase);
+//			bookcase.setRoom(room);
+//		}
+//		return bkcaseRepo.saveAll(bookcases);
+//	}
+	
 
 	@PostMapping("/shelves/{bkcaseId}")
-	public Shelf shelfForBookcase(@PathVariable int bkcaseId, @RequestBody Shelf shelf) {
+	public List<Shelf> shelfForBookcase(@PathVariable int bkcaseId, @RequestBody List<Shelf> shelves) {
 		Bookcase bookcase = bkcaseRepo.findById(bkcaseId).orElseThrow();
-		bookcase.addShelf(shelf);
-		shelf.setBookcase(bookcase);
-		return shelfRepo.save(shelf);
+		for (Shelf shelf : shelves) {
+			bookcase.addShelf(shelf);
+			shelf.setBookcase(bookcase);
+		}
+		return shelfRepo.saveAll(shelves);
 	}
 	
 	@DeleteMapping("/shelves/{shelfId}/bookcases/{bkcaseId}")

@@ -35,10 +35,10 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
       }
 
       // if the current number of shelves is lower than the amount set
-      if (currentBookcase.shelves.length !== Number(shelves)) {
-        for (let i = 0; i < Number(shelves) - currentBookcase.shelves.length; i++) {
-          await Shelves.addShelfForBookcase({}, bcid)
-        }
+      let shelvesAdded = Number(shelves) - currentBookcase.shelves.length
+      if (shelvesAdded > 0) {
+                                            // Convoluted way of making a dummy array of empty objects
+          await Shelves.addShelfForBookcase([...Array(Number(shelvesAdded)).keys()].map(() => { return {} }), bcid)
       }
 
       let nBk = await Bookcases.updateBookcaseForRoom(bkcase, bcid)

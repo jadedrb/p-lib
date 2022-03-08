@@ -39,20 +39,7 @@ public class BookcaseController {
 	public List<Room> getAllBooks() {
 		return roomRepo.findAll(); // equivalent to SELECT * FROM students
 	}
-	
-	
-//	@GetMapping("/bookcases/{room}")
-//	public List<Room> test(@PathVariable String room) {
-//		List<User> ul = bkcaseRepo.joinRoomAndBookcases(room);
-//
-//		try {
-//			return ul.get(0).getRooms();
-//		}
-//		catch (Exception e) {
-//			return new ArrayList<>();
-//		}
-//	
-//	}
+
 	
 	
 	
@@ -66,13 +53,15 @@ public class BookcaseController {
 			}
 		}
 		
-
+		
 		@PostMapping("/bookcases/{roomId}")
-		public Bookcase bookcaseForRoom(@PathVariable int roomId, @RequestBody Bookcase bookcase) {
+		public List<Bookcase> bookcaseForRoom(@PathVariable int roomId, @RequestBody List<Bookcase> bookcases) {
 			Room room = roomRepo.findById(roomId).orElseThrow();
-			room.addBookcase(bookcase);
-			bookcase.setRoom(room);
-			return bkcaseRepo.save(bookcase);
+			for (Bookcase bookcase : bookcases) {
+				room.addBookcase(bookcase);
+				bookcase.setRoom(room);
+			}
+			return bkcaseRepo.saveAll(bookcases);
 		}
 		
 		@DeleteMapping("/bookcases/{bkcaseId}/rooms/{roomId}")

@@ -181,6 +181,18 @@ public class BookController {
 		return bookRepo.findAllForUser(all, username);
 	}
 	
+	@GetMapping("/books/{id}/coord")
+	public Map<String, Integer> getBookCoordinates(@PathVariable int id) {
+		System.out.println("search by all");
+		Book book = bookRepo.getById(id);
+		Map<String, Integer> res = new HashMap<>();
+		res.put("book", book.getId());
+		res.put("shelf", book.getShelf().getId());
+		res.put("bookcase", book.getShelf().getBookcase().getId());
+		res.put("room", book.getShelf().getBookcase().getRoom().getId());
+		return res;
+	}
+	
 	
 }
 

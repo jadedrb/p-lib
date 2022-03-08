@@ -41,6 +41,10 @@ class BookService {
     getAllForUser(all, user) {
         return axios.get(API + `/books/${user}/search/all=${all}`).then(r => this.format(r))
     }
+
+    getBookCoordinates(id) {
+        return axios.get(API + `/books/${id}/coord`).then(r => this.format(r))
+    }
 }
 
 export default new BookService();

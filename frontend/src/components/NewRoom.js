@@ -301,14 +301,9 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
       room = payload.id;
     }
     if (bkcaseSwitch.current) {
-      for (let i = 0; i < bookcases.length; i++) {
-        let bk = bookcases[i];
-        if (!bk.id) {
-          await Bookcases.addBookcaseForRoom(bk, rid ? rid : room);
-          let rms = await Rooms.getRoomsForUser(user);
-          dispatch({ type: SET_ROOMS, payload: rms });
-        }
-      }
+        await Bookcases.addBookcaseForRoom(bookcases, rid ? rid : room);
+        let rms = await Rooms.getRoomsForUser(user);
+        dispatch({ type: SET_ROOMS, payload: rms });
     }
   };
 

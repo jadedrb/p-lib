@@ -209,3 +209,32 @@ tr:hover {
 .nb-contain {
     position: relative;
 }
+
+/*
+Search
+*/
+
+.search-lib {
+    display: flex;
+    justify-content: space-around;
+    position: absolute;
+    right: 0;
+    top: 20px;
+    width: 300px;
+}
+.search-lib input {
+    border: none;
+    background-color: rgb(226, 225, 214);
+    border-radius: 5px;
+    height: 18px;
+}
+.search-lib input:focus {
+    outline: 3px solid rgb(224, 223, 223);
+}
+
+.x-results {
+    position: absolute;
+    right: 6px;
+    top: 1px;
+    font-size: 1rem;
+}

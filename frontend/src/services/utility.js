@@ -35,6 +35,10 @@ export function utilPath(path, type, id) {
         case 'room':
             index = 1
             break;
+        case 'coord':
+            console.log(path)
+            let { book, shelf, bookcase, room } = path 
+            return `/room/${room}/bookcase/${bookcase}/shelf/${shelf}/book/${book}`
         default:
             break;
     }
