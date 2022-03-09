@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.jpa.exception.ResourceNotFoundException;
 import com.project.jpa.model.Book;
 import com.project.jpa.model.Bookcase;
+import com.project.jpa.model.Room;
 import com.project.jpa.model.Shelf;
 import com.project.jpa.model.User;
 import com.project.jpa.repository.BookRepository;
+import com.project.jpa.repository.RoomRepository;
 import com.project.jpa.repository.ShelfRepository;
 import com.project.jpa.repository.UserRepository;
 
@@ -31,6 +33,9 @@ import com.project.jpa.repository.UserRepository;
 @RestController
 @RequestMapping("/api")
 public class BookController {
+	
+	@Autowired
+	private RoomRepository roomRepo;
 
 	@Autowired
 	private BookRepository bookRepo;
@@ -114,6 +119,12 @@ public class BookController {
 	public Book bookForShelf(@PathVariable int shelfId, @PathVariable String userId, @RequestBody Book book) {
 		Shelf shelf = shelfRepo.findById(shelfId).orElseThrow();
 		User user = userRepo.findByUsername(userId).get(0);
+		Room room = roomRepo.findById(shelf.getBookcase().getRoom().getId()).orElseThrow();
+		
+//		Room room = shelf.getBookcase().getRoom();
+		room.addBook(book);
+		book.setRoom(room);
+		
 		shelf.addBook(book);
 		user.addBook(book);
 		book.setUser(user);
@@ -126,9 +137,9 @@ public class BookController {
 		Map<String, Boolean> res = new HashMap<>();
 		try {
 			User user = userRepo.findByUsername(userId).get(0);
-			Shelf shelf = shelfRepo.findById(shelfId).orElseThrow();
+//			Shelf shelf = shelfRepo.findById(shelfId).orElseThrow();
 			Book book = bookRepo.findById(bookId).orElseThrow();
-			shelf.removeBook(book);
+//			shelf.removeBook(book);
 			user.removeBook(book);
 			bookRepo.delete(book);
 			res.put("deleted", Boolean.TRUE);
@@ -192,6 +203,13 @@ public class BookController {
 		res.put("room", book.getShelf().getBookcase().getRoom().getId());
 		return res;
 	}
+	
+	@GetMapping("/books/search/in/room/{id}/title={title}")
+	public List<Book> getByAllInRoom(@PathVariable int id, @PathVariable String title) {
+		System.out.println("search by title in room");
+		return bookRepo.findAllInRoom(title, id);
+	}	
+	
 	
 	
 }

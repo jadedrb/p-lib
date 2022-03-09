@@ -27,6 +27,9 @@ public class Room {
 	public int height;
 	public int width;
 	public int tile;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
+	private List<Book> books = new ArrayList<>();
 
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
 	private List<Bookcase> bookcases = new ArrayList<>();
@@ -45,6 +48,22 @@ public class Room {
 		this.tile = tile;
 	}
 	
+	public void addBook(Book book) {
+		this.books.add(book);
+	}
+	
+	public void removeBook(Book book) {
+		this.books.remove(book);
+	}
+	
+	public List<Book> getBooks() {
+		return books;
+	}
+
+	public void setBooks(List<Book> books) {
+		this.books = books;
+	}
+
 	public User getUser() {
 		return user;
 	}

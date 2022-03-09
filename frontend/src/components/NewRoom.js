@@ -38,7 +38,6 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
   let mapRef = useRef();
   let mount = useRef();
   let waitForSwitch = useRef();
-  let bkcaseSwitch = useRef();
   let navAndSwitch = useRef();
 
   let navigate = useNavigate();
@@ -239,7 +238,6 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
         shHeight: 30,
       };
       setBookcases([...bookcases, newBc]);
-      bkcaseSwitch.current = true;
 
       setBcStart("");
       setBcEnd("");
@@ -273,8 +271,6 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
       navigate(`/room/`);
     }
 
-    bkcaseSwitch.current = false;
-
     setBcEnd("");
     setBcStart("");
     setRIndex(newIndex);
@@ -300,8 +296,9 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
       dispatch({ type: ADD_ROOM, payload });
       room = payload.id;
     }
-    if (bkcaseSwitch.current) {
-        await Bookcases.addBookcaseForRoom(bookcases, rid ? rid : room);
+    let bkcasesAdded = bookcases.filter(bk => !bk.hasOwnProperty("id"))
+    if (bkcasesAdded.length) {
+        await Bookcases.addBookcaseForRoom(bkcasesAdded, rid ? rid : room);
         let rms = await Rooms.getRoomsForUser(user);
         dispatch({ type: SET_ROOMS, payload: rms });
     }

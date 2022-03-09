@@ -22,6 +22,8 @@ public interface BookRepository extends JpaRepository<Book,Integer> {
 	List<Book> findByTitleContainingIgnoreCase(String piece);
 	List<Book> findByTitleAndAuthorContaining(String title, String author);
 	
+	// Find for user
+	
 	@Query("select b from User u JOIN u.books b WHERE u.username = :un AND lower(b.title) LIKE lower(concat('%', :t,'%'))")
 	List<Book> findTitleForUser(@Param("t") String title, @Param("un") String username);
 	
@@ -36,6 +38,11 @@ public interface BookRepository extends JpaRepository<Book,Integer> {
 	
 	// u.books is a collection and books is a property of the user object
 	
+	// Find within a room ("...WHERE r.id = :id" would also work, but I did it the other way just to prove to myself I could)
+	
+	@Query("select b from Room r JOIN r.books b WHERE b.room.id = :id AND lower(b.title) LIKE lower(concat('%', :t,'%'))")
+	List<Book> findAllInRoom(@Param("t") String title, @Param("id") int id);
+	// 	@Query("select b from Room r JOIN r.books b WHERE b.room.id = (:id) AND lower(b.more) LIKE lower(concat('%', :t,'%'))")
 }
 
 //	@Query("select b from Book b WHERE b.user.username = :un AND b.title = :t")
