@@ -47,55 +47,55 @@ class BookService {
     }
 
     getTitleInRoom(title, id) {
-        return axios.get(API + `/books/search/in/room/${id}/title=${title}`)
+        return axios.get(API + `/books/search/in/room/${id}/title=${title}`).then(r => this.format(r))
     }
 
     getGenreInRoom(genre, id) {
-        return axios.get(API + `/books/search/in/room/${id}/genre=${genre}`)
+        return axios.get(API + `/books/search/in/room/${id}/genre=${genre}`).then(r => this.format(r))
     }
 
     getGenreAndTitleInRoom(mix, id) {
-        return axios.get(API + `/books/search/in/room/${id}/genretitle=${mix}`)
+        return axios.get(API + `/books/search/in/room/${id}/genretitle=${mix}`).then(r => this.format(r))
     }
 
     getAllInRoom(all, id) {
-        return axios.get(API + `/books/search/in/room/${id}/all=${all}`)
+        return axios.get(API + `/books/search/in/room/${id}/all=${all}`).then(r => this.format(r))
     }
 
     //
 
     getTitleInBookcase(title, id) {
-        return axios.get(API + `/books/search/in/bookcase/${id}/title=${title}`)
+        return axios.get(API + `/books/search/in/bookcase/${id}/title=${title}`).then(r => this.format(r))
     }
 
     getGenreInBookcase(genre, id) {
-        return axios.get(API + `/books/search/in/bookcase/${id}/genre=${genre}`)
+        return axios.get(API + `/books/search/in/bookcase/${id}/genre=${genre}`).then(r => this.format(r))
     }
 
     getGenreAndTitleInBookcase(mix, id) {
-        return axios.get(API + `/books/search/in/bookcase/${id}/genretitle=${mix}`)
+        return axios.get(API + `/books/search/in/bookcase/${id}/genretitle=${mix}`).then(r => this.format(r))
     }
 
     getAllInBookcase(all, id) {
-        return axios.get(API + `/books/search/in/bookcase/${id}/all=${all}`)
+        return axios.get(API + `/books/search/in/bookcase/${id}/all=${all}`).then(r => this.format(r))
     }
 
     //
 
     getTitleInShelf(title, id) {
-        return axios.get(API + `/books/search/in/shelf/${id}/title=${title}`)
+        return axios.get(API + `/books/search/in/shelf/${id}/title=${title}`).then(r => this.format(r))
     }
 
     getGenreInShelf(genre, id) {
-        return axios.get(API + `/books/search/in/shelf/${id}/genre=${genre}`)
+        return axios.get(API + `/books/search/in/shelf/${id}/genre=${genre}`).then(r => this.format(r))
     }
 
     getGenreAndTitleInShelf(mix, id) {
-        return axios.get(API + `/books/search/in/shelf/${id}/genretitle=${mix}`)
+        return axios.get(API + `/books/search/in/shelf/${id}/genretitle=${mix}`).then(r => this.format(r))
     }
 
     getAllInShelf(all, id) {
-        return axios.get(API + `/books/search/in/shelf/${id}/all=${all}`)
+        return axios.get(API + `/books/search/in/shelf/${id}/all=${all}`).then(r => this.format(r))
     }
 
     // /books/{username}/search/more={more}

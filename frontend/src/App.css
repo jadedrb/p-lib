@@ -238,3 +238,8 @@ Search
     top: 1px;
     font-size: 1rem;
 }
+
+.search-lib select {
+    border: none;
+ 
+}

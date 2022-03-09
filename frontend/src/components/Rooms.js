@@ -12,10 +12,10 @@ const Rooms = () => {
 
     const { rooms, dispatch, user } = useContext(Context)
 
-    let { bcid, rid, bid } = useParams()
-    let initialRoomSetup = useRef()
-
-    initialRoomSetup.current = async () => {
+    let { bcid, rid, bid, shid } = useParams()
+    let wrapperRef = useRef()
+    
+    const initialRoomSetup = async () => {
         let tempUsr = "bob"
         if (!rooms.length) {
             let usr = await Userz.getUserByName(tempUsr)
@@ -36,18 +36,21 @@ const Rooms = () => {
     let [results, setResults] = useState([])
     let [typing, setTyping] = useState(false)
     let [showResults, setShowResults] = useState(true)
+    let [searchIn, setSearchIn] = useState("library")
+    let [searchType, setSearchType] = useState("title")
 
     useEffect(() => {
-        initialRoomSetup.current()
+        wrapperRef.current.initialRoomSetup()
     }, [])
 
     useEffect(() => {
         let delay;
         setTyping(true)
         setShowResults(true)
+        if (search.charAt(0) === "#") return
         if (search) {
             delay = setTimeout(async () => {
-                let res = await Bookz.getAllForUser(search, user)
+                let res = await wrapperRef.current.determineSearchArea(search, user)
                 setResults(res)
                 setTyping(false)
             }, 1000)
@@ -55,12 +58,68 @@ const Rooms = () => {
         return () => clearTimeout(delay)
     }, [search, user])
 
+    useEffect(() => {
+        setSearchIn("library")
+    }, [rid, shid, bcid])
+
+    const determineSearchArea = (search, user) => {
+        switch(searchIn) {
+            case "library":
+                if (searchType === "title") 
+                    return Bookz.getTitleForUser(search, user)
+                if (searchType === "genre")
+                    return Bookz.getGenreForUser(search, user)
+                if (searchType === "more")
+                    return Bookz.getMoreForUser(search, user)
+                return []
+            case "room":
+                if (searchType === "title") 
+                    return Bookz.getTitleInRoom(search, rid)
+                if (searchType === "genre") 
+                    return Bookz.getGenreInRoom(search, rid)
+                return []
+            case "bookcase":
+                if (searchType === "title") 
+                    return Bookz.getTitleInBookcase(search, bcid)
+                if (searchType === "genre") 
+                    return Bookz.getGenreInBookcase(search, bcid)
+                return []
+            case "shelf":
+                if (searchType === "title") 
+                    return Bookz.getTitleInShelf(search, shid)
+                if (searchType === "genre") 
+                    return Bookz.getGenreInShelf(search, shid)
+                return []
+            default:
+                return []
+        }
+    }
     const toggleRoomsView = async () => {
         if (!showRooms) {
-            initialRoomSetup.current()
+            wrapperRef.current.initialRoomSetup()
         }
         setShowRooms(!showRooms)
     }
+
+    const handleSearchChange = (e) => {
+        if (e.target.value === "#genre") {
+            setSearchType("genre")
+            setSearch("")
+        } else if (e.target.value === "#all") {
+            setSearchType("all")
+            setSearch("")
+        } else if (e.target.value === "#title") {
+            setSearchType("title")
+            setSearch("")
+        } else if (e.target.value === "#more") {
+            setSearchType("more")
+            setSearch("")
+        } else {
+            setSearch(e.target.value)
+        }
+    }
+
+    wrapperRef.current = { initialRoomSetup, determineSearchArea } 
 
     return (
         <div className="rooms">
@@ -68,10 +127,16 @@ const Rooms = () => {
             <button onClick={toggleRoomsView}>Rooms</button>
 
             <label className="search-lib">
-                Search Library:
+                <select value={searchIn} onChange={(e) => setSearchIn(e.target.value)}>
+                    <option value="library">Search Library:</option>
+                    {rid && <option value="room">Search Room:</option>}
+                    {bcid && <option value="bookcase">Search Bookcase:</option>}
+                    {shid && <option value="shelf">Search Shelf:</option>}
+                </select>
                 <input 
                     value={search} 
-                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder={searchType}
+                    onChange={handleSearchChange}
                 />
             </label>
             <br />
