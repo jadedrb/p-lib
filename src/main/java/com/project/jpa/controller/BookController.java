@@ -51,26 +51,12 @@ public class BookController {
 	public List<Book> getAllBooks() {
 		return bookRepo.findAll(); // equivalent to SELECT * FROM students
 	}
-	
-//	@GetMapping("/books/{name}")
-//	public List<Book> getByName(@PathVariable String name) {
-//		return bookRepo.findByName(name);
-//	}
-	
 
 	
 	@GetMapping("/books/search={piece}")
 	public List<Book> getByPiece(@PathVariable String piece) {
 		return bookRepo.findByTitleContainingIgnoreCase(piece);
 	}
-	
-//	@GetMapping("/students/searchx={piece}")
-//	public List<Book> getByTwo(@PathVariable String piece) {
-//		// doesn't work... might only work if it's two columns of String data type
-//		System.out.println(Integer.parseInt(piece));
-//		return bookRepo.findByNameAndGradeContaining(piece, piece);
-//	}
-	
 	
 	@Transactional
 	@DeleteMapping("/name/{name}")
@@ -87,17 +73,6 @@ public class BookController {
 			return "cannot delete because there's more than one " + name;
 		}
 		
-//		List<Student> stu = studentRepository.findByName(name);
-//		if (stu.isEmpty()) {
-//			return "nothing in here";
-//		}
-//		
-//		String result = "";
-//		for (Student item : stu) {
-//			result = result + item.getId() + " ";
-//			studentRepository.deleteById(item.getId());
-//		}
-//		return "deleted ids " + result + " with name " + name;
 		return "done deleting " + name;
 	}
 	
@@ -117,18 +92,22 @@ public class BookController {
 
 	@PostMapping("/books/{shelfId}/users/{userId}")
 	public Book bookForShelf(@PathVariable int shelfId, @PathVariable String userId, @RequestBody Book book) {
+//		Room room = roomRepo.findById(shelf.getBookcase().getRoom().getId()).orElseThrow();
 		Shelf shelf = shelfRepo.findById(shelfId).orElseThrow();
-		User user = userRepo.findByUsername(userId).get(0);
-		Room room = roomRepo.findById(shelf.getBookcase().getRoom().getId()).orElseThrow();
+		User user = userRepo.findByUsername(userId).get(0);		
+		Room room = shelf.getBookcase().getRoom();
+		Bookcase bookcase = shelf.getBookcase();
 		
-//		Room room = shelf.getBookcase().getRoom();
 		room.addBook(book);
-		book.setRoom(room);
-		
 		shelf.addBook(book);
 		user.addBook(book);
+		bookcase.addBook(book);
+		
+		book.setBookcase(bookcase);
+		book.setRoom(room);
 		book.setUser(user);
 		book.setShelf(shelf);
+		
 		return bookRepo.save(book);
 	}
 	
@@ -167,6 +146,7 @@ public class BookController {
 		return bookRepo.save(oldBook);
 	}
 	
+	// Search books for user 
 	
 	@GetMapping("/books/{username}/search/title={title}")
 	public List<Book> getByTitle(@PathVariable String username, @PathVariable String title) {
@@ -178,6 +158,12 @@ public class BookController {
 	public List<Book> getByGenre(@PathVariable String username, @PathVariable String genre) {
 		System.out.println("search by genre");
 		return bookRepo.findGenreForUser(genre, username);
+	}
+	
+	@GetMapping("/books/{username}/search/genretitle={search}")
+	public List<Book> getByGenreAndTitle(@PathVariable String username, @PathVariable String search) {
+		System.out.println("search by genre and title");
+		return bookRepo.findTitleAndGenreForUser(search, username);
 	}
 	
 	@GetMapping("/books/{username}/search/more={more}")
@@ -204,13 +190,83 @@ public class BookController {
 		return res;
 	}
 	
+	// Search for books in room
+	
 	@GetMapping("/books/search/in/room/{id}/title={title}")
-	public List<Book> getByAllInRoom(@PathVariable int id, @PathVariable String title) {
+	public List<Book> getByTitleInRoom(@PathVariable int id, @PathVariable String title) {
 		System.out.println("search by title in room");
-		return bookRepo.findAllInRoom(title, id);
+		return bookRepo.findTitleInRoom(title, id);
 	}	
 	
+	@GetMapping("/books/search/in/room/{id}/genre={genre}")
+	public List<Book> getByGenreInRoom(@PathVariable int id, @PathVariable String genre) {
+		System.out.println("search by title in room");
+		return bookRepo.findGenreInRoom(genre, id);
+	}	
 	
+	@GetMapping("/books/search/in/room/{id}/genretitle={search}")
+	public List<Book> getByGenreAndTitleInRoom(@PathVariable int id, @PathVariable String search) {
+		System.out.println("search by genre and title in room");
+		return bookRepo.findGenreAndTitleInRoom(search, id);
+	}	
+	
+	@GetMapping("/books/search/in/room/{id}/all={all}")
+	public List<Book> getByMoreInRoom(@PathVariable int id, @PathVariable String all) {
+		System.out.println("search by more in room");
+		return bookRepo.findAllInRoom(all, id);
+	}	
+	
+	// Search for books in bookcase
+	
+	@GetMapping("/books/search/in/bookcase/{id}/title={title}")
+	public List<Book> getByTitleInBookcase(@PathVariable int id, @PathVariable String title) {
+		System.out.println("search by title in bookcase");
+		return bookRepo.findTitleInBookcase(title, id);
+	}	
+	
+	@GetMapping("/books/search/in/bookcase/{id}/genre={genre}")
+	public List<Book> getByGenreInBookcase(@PathVariable int id, @PathVariable String genre) {
+		System.out.println("search by genre in bookcase");
+		return bookRepo.findGenreInBookcase(genre, id);
+	}	
+	
+	@GetMapping("/books/search/in/bookcase/{id}/genretitle={search}")
+	public List<Book> getByGenreAndTitleInBookcase(@PathVariable int id, @PathVariable String search) {
+		System.out.println("search by genre and title in bookcase");
+		return bookRepo.findGenreAndTitleInBookcase(search, id);
+	}	
+	
+	@GetMapping("/books/search/in/bookcase/{id}/all={all}")
+	public List<Book> getByMoreInBookcase(@PathVariable int id, @PathVariable String all) {
+		System.out.println("search by all in bookcase");
+		return bookRepo.findAllInBookcase(all, id);
+	}	
+	
+	// Search for books in shelf
+	
+	@GetMapping("/books/search/in/shelf/{id}/title={title}")
+	public List<Book> getByTitleInShelf(@PathVariable int id, @PathVariable String title) {
+		System.out.println("search by title in shelf");
+		return bookRepo.findTitleInShelf(title, id);
+	}	
+	
+	@GetMapping("/books/search/in/shelf/{id}/genre={genre}")
+	public List<Book> getByGenreInShelf(@PathVariable int id, @PathVariable String genre) {
+		System.out.println("search by genre in shelf");
+		return bookRepo.findGenreInShelf(genre, id);
+	}	
+	
+	@GetMapping("/books/search/in/shelf/{id}/genretitle={search}")
+	public List<Book> getByGenreAndTitleInShelf(@PathVariable int id, @PathVariable String search) {
+		System.out.println("search by genre and title in shelf");
+		return bookRepo.findGenreAndTitleInShelf(search, id);
+	}	
+	
+	@GetMapping("/books/search/in/shelf/{id}/all={all}")
+	public List<Book> getByMoreInShelf(@PathVariable int id, @PathVariable String all) {
+		System.out.println("search by all in shelf");
+		return bookRepo.findAllInShelf(all, id);
+	}	
 	
 }
 

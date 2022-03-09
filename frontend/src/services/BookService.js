@@ -45,6 +45,60 @@ class BookService {
     getBookCoordinates(id) {
         return axios.get(API + `/books/${id}/coord`).then(r => this.format(r))
     }
+
+    getTitleInRoom(title, id) {
+        return axios.get(API + `/books/search/in/room/${id}/title=${title}`)
+    }
+
+    getGenreInRoom(genre, id) {
+        return axios.get(API + `/books/search/in/room/${id}/genre=${genre}`)
+    }
+
+    getGenreAndTitleInRoom(mix, id) {
+        return axios.get(API + `/books/search/in/room/${id}/genretitle=${mix}`)
+    }
+
+    getAllInRoom(all, id) {
+        return axios.get(API + `/books/search/in/room/${id}/all=${all}`)
+    }
+
+    //
+
+    getTitleInBookcase(title, id) {
+        return axios.get(API + `/books/search/in/bookcase/${id}/title=${title}`)
+    }
+
+    getGenreInBookcase(genre, id) {
+        return axios.get(API + `/books/search/in/bookcase/${id}/genre=${genre}`)
+    }
+
+    getGenreAndTitleInBookcase(mix, id) {
+        return axios.get(API + `/books/search/in/bookcase/${id}/genretitle=${mix}`)
+    }
+
+    getAllInBookcase(all, id) {
+        return axios.get(API + `/books/search/in/bookcase/${id}/all=${all}`)
+    }
+
+    //
+
+    getTitleInShelf(title, id) {
+        return axios.get(API + `/books/search/in/shelf/${id}/title=${title}`)
+    }
+
+    getGenreInShelf(genre, id) {
+        return axios.get(API + `/books/search/in/shelf/${id}/genre=${genre}`)
+    }
+
+    getGenreAndTitleInShelf(mix, id) {
+        return axios.get(API + `/books/search/in/shelf/${id}/genretitle=${mix}`)
+    }
+
+    getAllInShelf(all, id) {
+        return axios.get(API + `/books/search/in/shelf/${id}/all=${all}`)
+    }
+
+    // /books/{username}/search/more={more}
 }
 
 export default new BookService();

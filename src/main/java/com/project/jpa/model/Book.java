@@ -45,6 +45,10 @@ public class Book {
 	
 	@ManyToOne
 	@JsonIgnore
+	private Bookcase bookcase;
+	
+	@ManyToOne
+	@JsonIgnore
 	private Shelf shelf;
 	
 	public Book() {}
@@ -58,6 +62,16 @@ public class Book {
 		this.pdate = pdate;
 		this.color = color;
 		this.more = more;
+	}
+	
+	
+
+	public Bookcase getBookcase() {
+		return bookcase;
+	}
+
+	public void setBookcase(Bookcase bookcase) {
+		this.bookcase = bookcase;
 	}
 
 	public Room getRoom() {

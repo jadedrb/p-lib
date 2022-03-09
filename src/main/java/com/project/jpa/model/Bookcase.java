@@ -34,6 +34,9 @@ public class Bookcase {
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "bookcase")
 	private List<Shelf> shelves = new ArrayList<>();
 	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "bookcase")
+	private List<Book> books = new ArrayList<>();
+	
 	@ManyToOne
 	@JsonIgnore
 	private Room room;
@@ -48,7 +51,25 @@ public class Bookcase {
 		this.width = width;
 	}
 	
+	public void addBook(Book book) {
+		this.books.add(book);
+	}
 	
+	public void removeBook(Book book) {
+		this.books.remove(book);
+	}
+	
+	
+	public List<Book> getBooks() {
+		return books;
+	}
+
+
+	public void setBooks(List<Book> books) {
+		this.books = books;
+	}
+
+
 	public Room getRoom() {
 		return room;
 	}
