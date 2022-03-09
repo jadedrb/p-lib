@@ -178,6 +178,24 @@ public class BookController {
 		return bookRepo.findAllForUser(all, username);
 	}
 	
+	@GetMapping("/books/{username}/search/color={color}")
+	public List<Book> getByColor(@PathVariable String username, @PathVariable String color) {
+		System.out.println("search by color");
+		return bookRepo.findColorForUser(color, username);
+	}
+	
+	@GetMapping("/books/{username}/search/published={pub}")
+	public List<Book> getByPublishDate(@PathVariable String username, @PathVariable int pub) {
+		System.out.println("search by publish date");
+		return bookRepo.findPublishDateForUser(pub, username);
+	}
+	
+	@GetMapping("/books/{username}/search/pages={pages}")
+	public List<Book> getByPages(@PathVariable String username, @PathVariable int pages) {
+		System.out.println("search by pages");
+		return bookRepo.findPagesForUser(pages, username);
+	}
+	
 	@GetMapping("/books/{id}/coord")
 	public Map<String, Integer> getBookCoordinates(@PathVariable int id) {
 		System.out.println("search by all");
@@ -216,6 +234,24 @@ public class BookController {
 		return bookRepo.findAllInRoom(all, id);
 	}	
 	
+	@GetMapping("/books/search/in/room/{id}/color={color}")
+	public List<Book> getByColorInRoom(@PathVariable int id, @PathVariable String color) {
+		System.out.println("search by color in room");
+		return bookRepo.findColorInRoom(color, id);
+	}
+	
+	@GetMapping("/books/search/in/room/{id}/published={pub}")
+	public List<Book> getByPublishDateInRoom(@PathVariable int id, @PathVariable int pub) {
+		System.out.println("search by publish date in room");
+		return bookRepo.findPublishDateInRoom(pub, id);
+	}
+	
+	@GetMapping("/books/search/in/room/{id}/pages={pages}")
+	public List<Book> getByPagesInRoom(@PathVariable int id, @PathVariable int pages) {
+		System.out.println("search by pages in room");
+		return bookRepo.findPagesInRoom(pages, id);
+	}
+	
 	// Search for books in bookcase
 	
 	@GetMapping("/books/search/in/bookcase/{id}/title={title}")
@@ -242,6 +278,25 @@ public class BookController {
 		return bookRepo.findAllInBookcase(all, id);
 	}	
 	
+	@GetMapping("/books/search/in/bookcase/{id}/color={color}")
+	public List<Book> getByColorInBookcase(@PathVariable int id, @PathVariable String color) {
+		System.out.println("search by color in bookcase");
+		return bookRepo.findColorInBookcase(color, id);
+	}
+	
+	@GetMapping("/books/search/in/bookcase/{id}/published={pub}")
+	public List<Book> getByPublishDateInBookcase(@PathVariable int id, @PathVariable int pub) {
+		System.out.println("search by publish date in bookcase");
+		return bookRepo.findPublishDateInBookcase(pub, id);
+	}
+	
+	@GetMapping("/books/search/in/bookcase/{id}/pages={pages}")
+	public List<Book> getByPagesInBookcase(@PathVariable int id, @PathVariable int pages) {
+		System.out.println("search by pages in bookcase");
+		return bookRepo.findPagesInBookcase(pages, id);
+	}
+	
+	
 	// Search for books in shelf
 	
 	@GetMapping("/books/search/in/shelf/{id}/title={title}")
@@ -267,6 +322,25 @@ public class BookController {
 		System.out.println("search by all in shelf");
 		return bookRepo.findAllInShelf(all, id);
 	}	
+	
+	@GetMapping("/books/search/in/shelf/{id}/color={color}")
+	public List<Book> getByColorInShelf(@PathVariable int id, @PathVariable String color) {
+		System.out.println("search by color in shelf");
+		return bookRepo.findColorInShelf(color, id);
+	}
+	
+	@GetMapping("/books/search/in/shelf/{id}/published={pub}")
+	public List<Book> getByPublishDateInShelf(@PathVariable int id, @PathVariable int pub) {
+		System.out.println("search by publish date in shelf");
+		return bookRepo.findPublishDateInShelf(pub, id);
+	}
+	
+	@GetMapping("/books/search/in/shelf/{id}/pages={pages}")
+	public List<Book> getByPagesInShelf(@PathVariable int id, @PathVariable int pages) {
+		System.out.println("search by pages in shelf");
+		return bookRepo.findPagesInShelf(pages, id);
+	}
+	
 	
 }
 

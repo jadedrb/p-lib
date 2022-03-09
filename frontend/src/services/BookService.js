@@ -42,9 +42,23 @@ class BookService {
         return axios.get(API + `/books/${user}/search/all=${all}`).then(r => this.format(r))
     }
 
+    getColorForUser(color, user) {
+        return axios.get(API + `/books/${user}/search/color=${color}`).then(r => this.format(r))
+    }
+
+    getPublishDateForUser(pdate, user) {
+        return axios.get(API + `/books/${user}/search/published=${pdate}`).then(r => this.format(r))
+    }
+
+    getPagesForUser(pages, user) {
+        return axios.get(API + `/books/${user}/search/published=${pages}`).then(r => this.format(r))
+    }
+
     getBookCoordinates(id) {
         return axios.get(API + `/books/${id}/coord`).then(r => this.format(r))
     }
+
+    ///
 
     getTitleInRoom(title, id) {
         return axios.get(API + `/books/search/in/room/${id}/title=${title}`).then(r => this.format(r))
@@ -60,6 +74,18 @@ class BookService {
 
     getAllInRoom(all, id) {
         return axios.get(API + `/books/search/in/room/${id}/all=${all}`).then(r => this.format(r))
+    }
+
+    getColorInRoom(color, id) {
+        return axios.get(API + `/books/search/in/room/${id}/color=${color}`).then(r => this.format(r))
+    }
+
+    getPublishDateInRoom(pdate, id) {
+        return axios.get(API + `/books/search/in/room/${id}/published=${pdate}`).then(r => this.format(r))
+    }
+
+    getPagesInRoom(pages, id) {
+        return axios.get(API + `/books/search/in/room/${id}/pages=${pages}`).then(r => this.format(r))
     }
 
     //
@@ -80,6 +106,18 @@ class BookService {
         return axios.get(API + `/books/search/in/bookcase/${id}/all=${all}`).then(r => this.format(r))
     }
 
+    getColorInBookcase(color, id) {
+        return axios.get(API + `/books/search/in/bookcase/${id}/color=${color}`).then(r => this.format(r))
+    }
+
+    getPublishDateInBookcase(pdate, id) {
+        return axios.get(API + `/books/search/in/bookcase/${id}/published=${pdate}`).then(r => this.format(r))
+    }
+
+    getPagesInBookcase(pages, id) {
+        return axios.get(API + `/books/search/in/bookcase/${id}/pages=${pages}`).then(r => this.format(r))
+    }
+
     //
 
     getTitleInShelf(title, id) {
@@ -96,6 +134,18 @@ class BookService {
 
     getAllInShelf(all, id) {
         return axios.get(API + `/books/search/in/shelf/${id}/all=${all}`).then(r => this.format(r))
+    }
+
+    getColorInShelf(color, id) {
+        return axios.get(API + `/books/search/in/shelf/${id}/color=${color}`).then(r => this.format(r))
+    }
+
+    getPublishDateInShelf(pdate, id) {
+        return axios.get(API + `/books/search/in/shelf/${id}/published=${pdate}`).then(r => this.format(r))
+    }
+
+    getPagesInShelf(pages, id) {
+        return axios.get(API + `/books/search/in/shelf/${id}/pages=${pages}`).then(r => this.format(r))
     }
 
     // /books/{username}/search/more={more}
