@@ -56,8 +56,10 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
           className="shelf" 
           style={{ height: `${shelfHeight}px`, outline: `${sh.id === shid ? '3px solid black' : 'none'}` }}
           onClick={() => {
-            if (!shid || !(shid === sh.id)) 
-              navigate(utilPath(path, 'shelf', sh.id))
+            if (!shid || !(shid === sh.id)) {
+              if (sh.id)
+                navigate(utilPath(path, 'shelf', sh.id))
+            }
           }}
         >
           {shid === sh.id && sh.books?.length ? 

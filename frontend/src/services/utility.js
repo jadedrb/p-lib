@@ -21,6 +21,7 @@ export function utilitySelector(rid, bcid, shid, rms, bid) {
 }
 
 export function utilPath(path, type, id) {
+    console.log(path, type, id)
     let index;
     switch (type) {
         case 'book':

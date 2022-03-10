@@ -215,10 +215,10 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
     });
 
     if (overlap) {
-      //  console.log("clicked on: " + currentBookcase.id)
       setBcStart("");
       setBcEnd("");
-      navigate(utilPath(path, "bookcase", currentBookcase.id));
+      if (currentBookcase.id)
+        navigate(utilPath(path, "bookcase", currentBookcase.id));
       return;
     }
 

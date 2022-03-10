@@ -64,6 +64,16 @@ const Rooms = () => {
 
     const parsePagesAndDate = (search) => {
         let greater, lesser;
+        // All this is to handle better searches for publish date and pages
+        if (/s/.test(search) && searchType === "published") {
+            let tenYearStart = Number(search.split("s")[0])
+            greater = tenYearStart - 1
+            lesser = tenYearStart + 11
+        } else {
+            let hundredYearStart = Number(search.split("s")[0])
+            greater = hundredYearStart - 1
+            lesser = hundredYearStart + 101
+        }
         if (/>/.test(search)) {
             let rinse = search.split(">")
             greater = rinse.filter(p => !/>/.test(p) && p !== "")
@@ -90,7 +100,7 @@ const Rooms = () => {
         } else if (!greater && lesser) {
             greater = "0"
         }
-        console.log("lesser: " + lesser + ", greater: " + greater)
+        console.log("greater: " + greater + ", lesser: " + lesser)
         return { greater: Number(greater), lesser: Number(lesser) }
     }
 
@@ -108,6 +118,8 @@ const Rooms = () => {
                     return Bookz.getGenreForUser(search, user)
                 if (searchType === "more")
                     return Bookz.getMoreForUser(search, user)
+                if (searchType === "all") 
+                    return Bookz.getAllForUser(search, user)
                 if (searchType === "color")
                     return Bookz.getColorForUser(search, user)
                 if (searchType === "author")
@@ -126,6 +138,10 @@ const Rooms = () => {
                     return Bookz.getColorInRoom(search, rid)
                 if (searchType === "author")
                     return Bookz.getAuthorInRoom(search, rid)
+                if (searchType === "all") 
+                    return Bookz.getAllInRoom(search, rid)
+                if (searchType === "more") 
+                    return Bookz.getMoreInRoom(search, rid)
                 if (searchType === "published") 
                     return Bookz.getPublishDateInRoom(parsePagesAndDate(search), rid)
                 if (searchType === "pages") 
@@ -140,6 +156,10 @@ const Rooms = () => {
                     return Bookz.getColorInBookcase(search, bcid)
                 if (searchType === "author")
                     return Bookz.getAuthorInBookcase(search, bcid)
+                if (searchType === "all") 
+                    return Bookz.getAllInBookcase(search, bcid)
+                if (searchType === "more") 
+                    return Bookz.getMoreInBookcase(search, bcid)
                 if (searchType === "published") 
                     return Bookz.getPublishDateInBookcase(parsePagesAndDate(search), rid)
                 if (searchType === "pages") 
@@ -154,6 +174,10 @@ const Rooms = () => {
                     return Bookz.getColorInShelf(search, shid)
                 if (searchType === "author")
                     return Bookz.getAuthorInShelf(search, shid)
+                if (searchType === "all") 
+                    return Bookz.getAllInShelf(search, shid)
+                if (searchType === "more") 
+                    return Bookz.getMoreInShelf(search, shid)
                 if (searchType === "published") 
                     return Bookz.getPublishDateInShelf(parsePagesAndDate(search), rid)
                 if (searchType === "pages") 
@@ -201,7 +225,7 @@ const Rooms = () => {
                 let lastChar = value.charAt(value.length - 1)
                 let test = /[0-9]/.test(lastChar)
                 console.log(value)
-                if (test || value.length === 0 || lastChar === " " || lastChar === "<" || lastChar === ">" || value.charAt(0) === "#") 
+                if (test || value.length === 0 || lastChar === " " || lastChar === "<" || lastChar === ">" || value.charAt(0) === "#" || lastChar === "s") 
                     setSearch(value) 
             } else {
                 setSearch(value)

@@ -37,6 +37,21 @@ export default App;
 
 THINGS TO DO:
 
-2. Start implementing search features (search by specific section or in general)
+Bugs:
+
+1. (DONE) Clicking a bookcase or shelf before saving it messes up path
+
+Small potatos:
+
+1. Add a loading indicator (spinner)
+2. (DONE) Make it so "1980s" or "300s" works in searches
+3. Give result columns clickable headers that orders the results
+4. Add a move bookcase and move books feature
+5. (maybe) Double-clicking a result opens up the edit window 
+
+Big potatos:
+
+1. Implement authentication in backend (tokens)
+2. Figure out how to export and import database data (for backup purposes)
 
 */
