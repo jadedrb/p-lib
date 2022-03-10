@@ -46,12 +46,16 @@ class BookService {
         return axios.get(API + `/books/${user}/search/color=${color}`).then(r => this.format(r))
     }
 
+    getAuthorForUser(author, user) {
+        return axios.get(API + `/books/${user}/search/author=${author}`).then(r => this.format(r))
+    }
+
     getPublishDateForUser(pdate, user) {
-        return axios.get(API + `/books/${user}/search/published=${pdate}`).then(r => this.format(r))
+        return axios.get(API + `/books/${user}/search/published=${pdate.lesser}&${pdate.greater}`).then(r => this.format(r))
     }
 
     getPagesForUser(pages, user) {
-        return axios.get(API + `/books/${user}/search/published=${pages}`).then(r => this.format(r))
+        return axios.get(API + `/books/${user}/search/pages=${pages.lesser}&${pages.greater}`).then(r => this.format(r))
     }
 
     getBookCoordinates(id) {
@@ -80,12 +84,20 @@ class BookService {
         return axios.get(API + `/books/search/in/room/${id}/color=${color}`).then(r => this.format(r))
     }
 
+    getAuthorInRoom(author, id) {
+        return axios.get(API + `/books/search/in/room/${id}/author=${author}`).then(r => this.format(r))
+    }
+
+    getMoreInRoom(more, id) {
+        return axios.get(API + `/books/search/in/room/${id}/more=${more}`).then(r => this.format(r))
+    }
+
     getPublishDateInRoom(pdate, id) {
-        return axios.get(API + `/books/search/in/room/${id}/published=${pdate}`).then(r => this.format(r))
+        return axios.get(API + `/books/search/in/room/${id}/published=${pdate.lesser}&${pdate.greater}`).then(r => this.format(r))
     }
 
     getPagesInRoom(pages, id) {
-        return axios.get(API + `/books/search/in/room/${id}/pages=${pages}`).then(r => this.format(r))
+        return axios.get(API + `/books/search/in/room/${id}/pages=${pages.lesser}&${pages.greater}`).then(r => this.format(r))
     }
 
     //
@@ -110,12 +122,20 @@ class BookService {
         return axios.get(API + `/books/search/in/bookcase/${id}/color=${color}`).then(r => this.format(r))
     }
 
+    getAuthorInBookcase(author, id) {
+        return axios.get(API + `/books/search/in/bookcase/${id}/author=${author}`).then(r => this.format(r))
+    }
+
+    getMoreInBookcase(more, id) {
+        return axios.get(API + `/books/search/in/bookcase/${id}/more=${more}`).then(r => this.format(r))
+    }
+
     getPublishDateInBookcase(pdate, id) {
-        return axios.get(API + `/books/search/in/bookcase/${id}/published=${pdate}`).then(r => this.format(r))
+        return axios.get(API + `/books/search/in/bookcase/${id}/published=${pdate.lesser}&${pdate.greater}`).then(r => this.format(r))
     }
 
     getPagesInBookcase(pages, id) {
-        return axios.get(API + `/books/search/in/bookcase/${id}/pages=${pages}`).then(r => this.format(r))
+        return axios.get(API + `/books/search/in/bookcase/${id}/pages=${pages.lesser}&${pages.greater}`).then(r => this.format(r))
     }
 
     //
@@ -140,12 +160,20 @@ class BookService {
         return axios.get(API + `/books/search/in/shelf/${id}/color=${color}`).then(r => this.format(r))
     }
 
+    getAuthorInShelf(author, id) {
+        return axios.get(API + `/books/search/in/shelf/${id}/author=${author}`).then(r => this.format(r))
+    }
+
+    getMoreInShelf(more, id) {
+        return axios.get(API + `/books/search/in/shelf/${id}/more=${more}`).then(r => this.format(r))
+    }
+
     getPublishDateInShelf(pdate, id) {
-        return axios.get(API + `/books/search/in/shelf/${id}/published=${pdate}`).then(r => this.format(r))
+        return axios.get(API + `/books/search/in/shelf/${id}/published=${pdate.lesser}&${pdate.greater}`).then(r => this.format(r))
     }
 
     getPagesInShelf(pages, id) {
-        return axios.get(API + `/books/search/in/shelf/${id}/pages=${pages}`).then(r => this.format(r))
+        return axios.get(API + `/books/search/in/shelf/${id}/pages=${pages.lesser}&${pages.greater}`).then(r => this.format(r))
     }
 
     // /books/{username}/search/more={more}
