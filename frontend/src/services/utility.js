@@ -72,6 +72,28 @@ export function utilMsg(info) {
     }
 }
 
+export function loading(where) {
+    let el = document.querySelector(where)
+    let prev = document.querySelector(".loading")
+    if (!el || prev) return
+    let loading = document.createElement("div")
+    let loader = document.createElement("div")
+    loading.setAttribute("class", `loading ${where}`)
+    loader.setAttribute("class", `loader`)
+    console.log(loading, " loading")
+    loading.appendChild(loader)
+    el.appendChild(loading)
+}
+
+export function clearLoading() {
+        let loading = document.querySelector(".loading")
+        if (!loading) return
+        let parentClass = loading.classList[1]
+        let parent = document.querySelector(parentClass)
+        parent.removeChild(loading)
+        console.log(loading, " finished loading")
+}
+
 
 /*
 

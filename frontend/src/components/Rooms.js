@@ -257,7 +257,7 @@ const Rooms = () => {
             {(search && !typing && showResults) || results.length ? <SearchResults books={results} bid={Number(bid)} setShowResults={setShowResults} setResults={setResults} /> : null}
 
             {showRooms &&
-                <div>
+                <div className="n-room">
                     <NewRoom 
                         rooms={rooms} 
                         dispatch={dispatch} 

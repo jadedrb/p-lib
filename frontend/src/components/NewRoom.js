@@ -221,7 +221,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
         navigate(utilPath(path, "bookcase", currentBookcase.id));
       return;
     }
-
+    if (!edit) return
     if (!bcStart) {
       setBcStart([row, column]);
     } else if (bcStart && !bcEnd) {
@@ -326,7 +326,11 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
         {name} ({rIndex})
       </h3>
       <div className="pm">
-        <div className="pm-r ed" onClick={() => setEdit(!edit)}>
+        <div className="pm-r ed" onClick={() => { 
+          if (bcStart) setBcStart("");
+          if (bcEnd) setBcEnd("");
+          setEdit(!edit)
+        }}>
           =
         </div>
         { edit &&

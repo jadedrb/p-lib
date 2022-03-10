@@ -22,7 +22,7 @@ const BookList = ({ books, bid, path, navigate }) => {
     })
 
     return (
-        <div className="table-contain">
+        <div className="table-contain booklist-r">
             {renderedBooks?.length ? 
                 <table className='booklist'>
                     <tbody>

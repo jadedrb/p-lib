@@ -1,9 +1,11 @@
 import axios from 'axios'
 import { API } from './api'
+import { loading, clearLoading } from './utility'
 
 class ShelfService {
 
     format(d) {
+        clearLoading()
         console.log(d.data)
         return d.data
     }
@@ -13,10 +15,12 @@ class ShelfService {
     }
 
     addShelfForBookcase(shelf, bookcase) {
+        loading(".new-bookcase")
         return axios.post(API + `/shelves/${bookcase}`, shelf).then(r => this.format(r))
     }
     
     removeShelfFromBookcase(id, bookcase) {
+        loading(".sh-b")
         return axios.delete(API + `/shelves/${id}/bookcases/${bookcase}`).then(r => this.format(r))
     }
     

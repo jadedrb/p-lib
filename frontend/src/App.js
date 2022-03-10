@@ -13,7 +13,6 @@ function App() {
   return (
     <>
       Personal Library
-        <Link to="/">Back to Home</Link>
         <Routes>
           <Route path={"/"} element={<Navigate to={"/room/"} />} />
           <Route path={"/room/"} element={<Rooms />} />
@@ -43,11 +42,12 @@ Bugs:
 
 Small potatos:
 
-1. Add a loading indicator (spinner)
+1. (DONE) Add a loading indicator (spinner)
 2. (DONE) Make it so "1980s" or "300s" works in searches
 3. Give result columns clickable headers that orders the results
 4. Add a move bookcase and move books feature
 5. (maybe) Double-clicking a result opens up the edit window 
+6. (maybe) Create a "pinned" books page
 
 Big potatos:
 
