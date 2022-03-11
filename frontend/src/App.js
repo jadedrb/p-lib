@@ -5,6 +5,7 @@ import Bookcases from './components/Bookcases';
 import CurrentShelf from './components/CurrentShelf';
 
 import { Routes, Route, Navigate, Link } from 'react-router-dom'
+import NewBook from './components/NewBook';
 
 function App() {
 
@@ -18,7 +19,8 @@ function App() {
           <Route path={"/room/:rid/*"} element={<Rooms />}>
             <Route path={"bookcase/:bcid/*"} element={<Bookcases />}>
               <Route path={"shelf/:shid/*"} element={<CurrentShelf />}>
-                <Route path={"book/:bid"} element={<CurrentShelf />} />
+                <Route path={"book/:bid"} element={<NewBook />} />
+                <Route path={"book"} element={<NewBook />} />
               </Route>
             </Route>
           </Route>

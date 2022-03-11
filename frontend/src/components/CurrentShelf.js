@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Context, REMOVE_SHELF } from "../context"
 import { utilitySelector, utilMsg } from '../services/utility';
 import BookList from './BookList';
-import NewBook from './NewBook';
+// import NewBook from './NewBook';
 import { utilPath } from '../services/utility';
 import Shelves from '../services/ShelfService'
 
@@ -55,12 +55,23 @@ function CurrentShelf() {
                         bid={Number(bid)}
                         navigate={navigate}
                     />
-                    {edit && <NewBook book={'test'} setCurrShelf={setCurrShelf} />}
+                    {/* {edit && <NewBook book={'test'} setCurrShelf={setCurrShelf} />} */}
                 </div>
                 : !currShelf ?
                 <div>No shelf selected</div>
                 : null
             }
+
+            <div className="b-sec-center">
+                <button className="b-section" onClick={() => {
+                    if (path.pathname.includes("/book/")) 
+                        navigate(utilPath(path, "shelf", shid))
+                    else
+                        navigate(utilPath(path, "book", ""))
+                }}>Book</button>
+                <div className="b-sec-line" style={{ display: path.pathname.includes("/book/") ? "block" : "none" }}/>
+            </div>
+            <Outlet />
         </div>
     );
 }

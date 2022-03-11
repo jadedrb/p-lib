@@ -69,12 +69,12 @@ function reducer(state, action) {
             return { ...state, rooms }
         }
         case ADD_BOOK: {
-            let { bcid, rid, shid, book, setCurrShelf } = action.payload
+            let { bcid, rid, shid, book } = action.payload
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms)
             let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
             console.log(roomIndex, bkcaseIndex, shelfIndex)
             shelf.books = [ ...shelf.books, book ]
-            setCurrShelf({ ...shelf })
+            // setCurrShelf({ ...shelf })
             return { ...state, rooms }
         }
         case UPDATE_BOOK: {

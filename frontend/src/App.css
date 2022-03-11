@@ -1,3 +1,5 @@
+
+
 td {
     border: 1px solid black;
 }
@@ -142,9 +144,17 @@ tr:hover {
     justify-content: space-around;
     width: 30%;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: -40px;
+    right: -40px;
 }
+.bookcase + .pm {
+    top: -20px;
+}
+
+.sh-b .pm {
+    top: 90px;
+}
+
 
 .pm-r {
     font-size: 2rem;
@@ -190,9 +200,6 @@ tr:hover {
 }
 
 .pm-b {
-    position: absolute;
-    top: 40px;
-    right: 20px;
     font-size: 2rem;
 }
 
@@ -208,6 +215,22 @@ tr:hover {
 
 .nb-contain {
     position: relative;
+    padding: 20px;
+}
+
+.nb-contain .pm {
+    top: -10px;
+}
+
+.nb-contain form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.nb-contain form input {
+   padding: 3px;
+   margin: 5px;
 }
 
 /*
@@ -278,19 +301,25 @@ Search
     padding-right: 50px;
     z-index: 2;
     border-radius: 5px;
+    margin: 50px;
+}
+.b-section:nth-child(1) {
+    margin-bottom: 20px;
 }
 
 .rooms {
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
+
+/* 
 .bookcases {
-    margin-top: 50px;
+    margin: 50px;
 }
 
 .new-bookcase {
     margin-top: 30px;
-}
+} */
 
 .b-sec-center {
     position: relative;
@@ -301,7 +330,7 @@ Search
     z-index: 1;
     opacity: .1;
     position: absolute;
-    top: 48%;
+    top: 63%;
     bottom: 100px;
     border: 2px solid black;
     background-color: black;
@@ -319,4 +348,29 @@ Search
     background-color: antiquewhite;
     border-color: antiquewhite;
     opacity: 10;
+}
+
+.ff-contain {
+    display: flex;
+    justify-content: center;
+}
+.ff-contain form {
+    min-width: 40%;
+}
+
+.ff-contain form label {
+    font-size: .8rem;
+    opacity: .5;
+}
+.ff-contain form input[type="button"] {
+    margin-left: 25%;
+    width: 50%;
+}
+#color + input {
+    position: absolute;
+    top: 145px;
+    width: 5%;
+}
+#color {
+    width: 50%;
 }

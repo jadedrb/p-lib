@@ -238,7 +238,7 @@ const Rooms = () => {
     return (
         <div className="rooms">
             <div className="b-sec-center">
-                <button className="b-section" onClick={toggleRoomsView}>Rooms</button>
+                <button className="b-section" onClick={toggleRoomsView}>Room</button>
                 <div className="b-sec-line" style={{ display: showRooms ? "block" : "none" }}/>
             </div>
             <label className="search-lib">

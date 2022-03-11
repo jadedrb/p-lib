@@ -26,7 +26,7 @@ const Bookcases = () => {
     return (
         <div className="bookcases">
             <div className="b-sec-center">
-                <button className="b-section" onClick={() => setShowBookcases(!showBookcases)}>Bookcases</button>
+                <button className="b-section" onClick={() => setShowBookcases(!showBookcases)}>Bookcase</button>
                 <div className="b-sec-line" style={{ display: showBookcases ? "block" : "none" }}/>
             </div>
             {showBookcases &&

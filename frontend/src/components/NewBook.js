@@ -24,6 +24,8 @@ const NewBook = ({ setCurrShelf }) => {
     more: ""
   })
 
+  let [edit, setEdit] = useState(true)
+
   let [colorType, setColorType] = useState(true)
   let [inputs, setInputs] = useState(initialInputs.current);
 
@@ -58,6 +60,8 @@ const NewBook = ({ setCurrShelf }) => {
   };
 
   const handleEnter = async (e) => {
+    if (!edit) return
+  
     let nextInput;
 
     if (e.key === "Enter") {
@@ -65,9 +69,15 @@ const NewBook = ({ setCurrShelf }) => {
         ? currentFocus.nextSibling
         : currentFocus;
 
+    if (nextInput.nodeName === "LABEL")
+      nextInput = nextInput.nextSibling
+
       // When pressing enter, skip the color input type button and Save button
       if (nextInput.name === 'skip' || nextInput.name === 'save') 
         nextInput = nextInput.nextSibling
+
+    if (nextInput.nodeName === "LABEL")
+      nextInput = nextInput.nextSibling
 
       nextInput.focus();
       nextInput.select();
@@ -95,9 +105,10 @@ const NewBook = ({ setCurrShelf }) => {
 
     // If enter press leads nowhere OR if Reset button is pressed
     if (nextInput === currentFocus || e.target.name === "reset") {
+      console.log(firstInput)
       firstInput.current.focus();
       setCurrentFocus(firstInput.current);
-      navigate(utilPath(path, 'shelf', shid))
+      navigate(utilPath(path, 'book', ""))
     }
   };
 
@@ -109,94 +120,127 @@ const NewBook = ({ setCurrShelf }) => {
     navigate(utilPath(path, 'shelf', shid))
   }
 
+  // const opacheck = () => currentFocus?.previousSibling?.htmlFor === currentFocus?.name
+console.log(edit, bid, bid && edit)
   return (
     <div className="nb-contain">
-      {bid && <h5>Book ID: {bid}</h5>}
-      {bid && <div className="pm-b" onClick={removeBook}>-</div>}
-    
-      <form className="ff">
-        <input
-          autoFocus
-          placeholder="Title"
-          name="title"
-          ref={firstInput}
-          value={inputs.title}
-          onChange={handleInput}
-          onKeyPress={handleEnter}
-          onClick={handleClick}
-        />
-        <input
-          placeholder="Author"
-          name="author"
-          value={inputs.author}
-          onChange={handleInput}
-          onKeyPress={handleEnter}
-          onClick={handleClick}
-        />
-        <input
-          placeholder="Color"
-          name="color"
-          type={colorType ? "text" : "color"}
-          value={!colorType && inputs.color.slice(0,1) !== "#" ? "#ffffff" : inputs.color}
-          onChange={handleInput}
-          onKeyPress={handleEnter}
-          onClick={handleClick}
-        />
-        <input 
-          type="button"
-          value=" "
-          name="skip"
-          onClick={() => setColorType(!colorType)}
-        />
-        <input
-          placeholder="Genre/Type"
-          name="genre"
-          value={inputs.genre}
-          onChange={handleInput}
-          onKeyPress={handleEnter}
-          onClick={handleClick}
-        />
-        <input
-          placeholder="Page Count"
-          name="pages"
-          type="number"
-          value={inputs.pages}
-          onChange={handleInput}
-          onKeyPress={handleEnter}
-          onClick={handleClick}
-        />
-        <input
-          placeholder="Publish Date"
-          name="pdate"
-          type="number"
-          value={inputs.pdate}
-          onChange={handleInput}
-          onKeyPress={handleEnter}
-          onClick={handleClick}
-        />
-        <input
-          placeholder="More"
-          name="more"
-          value={inputs.more}
-          onChange={handleInput}
-          onKeyPress={handleEnter}
-          onClick={handleClick}
-        />
-        <input 
-          type="button"
-          value={bid ? "Save" : "Create"}
-          name="save"
-          onClick={handleEnter}
-          onKeyPress={handleEnter}
-        />
-        <input 
-          type="button"
-          value="Reset"
-          name="reset"
-          onClick={handleEnter}
-          onKeyPress={handleEnter}
-        />
-      </form>
+
+          <div className="pm">
+                <div className="pm-r ed" onClick={() => setEdit(!edit)}>=</div>
+                {bid && edit && <div className="pm-b" onClick={removeBook}>-</div>}
+          </div>
+
+
+       {/* {bid && <h5>Book ID: {bid}</h5>} */}
+      <div className="ff-contain">
+        <form className="ff">
+          <label htmlFor="title">Title</label>
+          <input
+            readOnly={edit ? false : true}
+            id="title"
+            autoFocus
+            placeholder="Title"
+            name="title"
+            ref={firstInput}
+            value={inputs.title}
+            onChange={handleInput}
+            onKeyPress={handleEnter}
+            onClick={handleClick}
+          />
+          <label htmlFor="author">Author</label>
+          <input
+            readOnly={edit ? false : true}
+            id="author"
+            placeholder="Author"
+            name="author"
+            value={inputs.author}
+            onChange={handleInput}
+            onKeyPress={handleEnter}
+            onClick={handleClick}
+          />
+          <label htmlFor="color">Color</label>
+          <input
+            readOnly={edit ? false : true}
+            id="color"
+            placeholder="Color"
+            name="color"
+            type={colorType ? "text" : "color"}
+            value={!colorType && inputs.color.slice(0,1) !== "#" ? "#ffffff" : inputs.color}
+            onChange={handleInput}
+            onKeyPress={handleEnter}
+            onClick={handleClick}
+          />
+          {edit &&
+          <input 
+            type="button"
+            value=" "
+            name="skip"
+            onClick={() => setColorType(!colorType)}
+          />}
+          <label htmlFor="genre">Genre</label>
+          <input
+            readOnly={edit ? false : true}
+            id="genre"
+            placeholder="Genre/Type"
+            name="genre"
+            value={inputs.genre}
+            onChange={handleInput}
+            onKeyPress={handleEnter}
+            onClick={handleClick}
+          />
+          <label htmlFor="pages">Pages</label>
+          <input
+            readOnly={edit ? false : true}
+            id="pages"
+            placeholder="Page Count"
+            name="pages"
+            type="number"
+            value={inputs.pages}
+            onChange={handleInput}
+            onKeyPress={handleEnter}
+            onClick={handleClick}
+          />
+          <label htmlFor="pdate">Published</label>
+          <input
+            readOnly={edit ? false : true}
+            id="pdate"
+            placeholder="Publish Date"
+            name="pdate"
+            type="number"
+            value={inputs.pdate}
+            onChange={handleInput}
+            onKeyPress={handleEnter}
+            onClick={handleClick}
+          />
+          <label htmlFor="more">More</label>
+          <input
+            readOnly={edit ? false : true}
+            id="more"
+            placeholder="More"
+            name="more"
+            value={inputs.more}
+            onChange={handleInput}
+            onKeyPress={handleEnter}
+            onClick={handleClick}
+          />
+          {edit &&
+          <input 
+            type="button"
+            value={bid ? "Save" : "Create"}
+            name="save"
+            onClick={handleEnter}
+            onKeyPress={handleEnter}
+          />}
+          {edit &&
+          <input 
+            type="button"
+            value="Reset"
+            name="reset"
+            onClick={handleEnter}
+            onKeyPress={handleEnter}
+          />}
+        </form>
+      </div>
     </div>
   );
 };
