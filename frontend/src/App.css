@@ -20,7 +20,7 @@ tr:hover {
 .table-contain {
     position: relative;
     overflow: auto;
-    border: 3px solid teal;
+    border: 3px solid rgb(70, 75, 75);
     min-height: 50px;
     padding: 10px;
 }
@@ -61,7 +61,7 @@ tr:hover {
 .room-sec {
     display: flex;
     justify-content: center;
-    border: 3px solid orange;
+    /* border: 3px solid orange; */
 }
 
 .arrw {
@@ -116,7 +116,7 @@ tr:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 3px solid blue;
+    /* border: 3px solid blue; */
   
 }
 
@@ -181,11 +181,11 @@ tr:hover {
 /* New Book */
 .sh-b {
     position: relative;
-    border: 3px solid plum;
+    /* border: 3px solid plum; */
 }
 
 .ff {
-    border: 3px solid purple;
+    /* border: 3px solid purple; */
     padding: 10px;
 }
 
@@ -271,3 +271,52 @@ Search
     100% { transform: rotate(360deg); }
 }
   
+.b-section {
+    border: none;
+    padding: 10px;
+    padding-left: 50px;
+    padding-right: 50px;
+    z-index: 2;
+    border-radius: 5px;
+}
+
+.rooms {
+    margin-top: 100px;
+}
+
+.bookcases {
+    margin-top: 50px;
+}
+
+.new-bookcase {
+    margin-top: 30px;
+}
+
+.b-sec-center {
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+.b-sec-line {
+    z-index: 1;
+    opacity: .1;
+    position: absolute;
+    top: 48%;
+    bottom: 100px;
+    border: 2px solid black;
+    background-color: black;
+    border-radius: 20px;
+    width: 90%;
+    height: 1px;
+}
+
+.b-section:hover {
+    cursor: pointer;
+    background-color: antiquewhite;
+}
+
+.b-section:active + .b-sec-line {
+    background-color: antiquewhite;
+    border-color: antiquewhite;
+    opacity: 10;
+}

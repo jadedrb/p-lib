@@ -41,8 +41,10 @@ function CurrentShelf() {
                 <div className="pm-r ed" onClick={() => setEdit(!edit)}>=</div>
                 {edit && <div className="pm-r min-room" onClick={removeShelf}>-</div>}
             </div>}
-            
-            <button onClick={() => setShowShelf(!showShelf)}>Shelf</button>
+            <div className="b-sec-center">
+                <button className="b-section" onClick={() => setShowShelf(!showShelf)}>Shelf</button>
+                <div className="b-sec-line" style={{ display: showShelf ? "block" : "none" }}/>
+            </div>
             {showShelf && 
                 currShelf ?
                 <div>

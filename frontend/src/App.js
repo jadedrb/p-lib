@@ -12,7 +12,6 @@ function App() {
 
   return (
     <>
-      Personal Library
         <Routes>
           <Route path={"/"} element={<Navigate to={"/room/"} />} />
           <Route path={"/room/"} element={<Rooms />} />

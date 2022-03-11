@@ -237,9 +237,10 @@ const Rooms = () => {
 
     return (
         <div className="rooms">
-
-            <button onClick={toggleRoomsView}>Rooms</button>
-
+            <div className="b-sec-center">
+                <button className="b-section" onClick={toggleRoomsView}>Rooms</button>
+                <div className="b-sec-line" style={{ display: showRooms ? "block" : "none" }}/>
+            </div>
             <label className="search-lib">
                 <select value={searchIn} onChange={(e) => setSearchIn(e.target.value)}>
                     <option value="library">Search Library:</option>
