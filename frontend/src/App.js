@@ -4,7 +4,7 @@ import Rooms from './components/Rooms';
 import Bookcases from './components/Bookcases';
 import CurrentShelf from './components/CurrentShelf';
 
-import { Routes, Route, Navigate, Link } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import NewBook from './components/NewBook';
 
 function App() {
@@ -12,7 +12,6 @@ function App() {
   // This app uses SpringJPA as backend - Workspace: /Users/JadeDRB/springboot
 
   return (
-    <>
         <Routes>
           <Route path={"/"} element={<Navigate to={"/room/"} />} />
           <Route path={"/room/"} element={<Rooms />} />
@@ -26,7 +25,6 @@ function App() {
           </Route>
           <Route path={"*"} element={<div>Page not found... whoops!</div>}/>
         </Routes>
-      </>
   );
 }
 
@@ -40,6 +38,10 @@ THINGS TO DO:
 Bugs:
 
 1. (DONE) Clicking a bookcase or shelf before saving it messes up path
+2. Going to "/book/0000" or similar should revert back to "book"
+3. If number is too long in Pages or Published there's an error (string related?)
+4. Clicking Room should only reset everything if double-clicked
+5. Does clicking Reset update again? 
 
 Small potatos:
 

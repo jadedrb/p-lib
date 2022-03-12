@@ -62,6 +62,11 @@ const Rooms = () => {
         setSearchIn("library")
     }, [rid, shid, bcid])
 
+    useEffect(() => {
+        if (!results.length && searchIn === "results")
+            setSearchIn("library")
+    }, [results.length, searchIn])
+
     const parsePagesAndDate = (search) => {
         let greater, lesser;
         // All this is to handle better searches for publish date and pages
@@ -178,6 +183,19 @@ const Rooms = () => {
                 if (searchType === "pages") 
                     return Bookz.getPagesInShelf(parsePagesAndDate(search), rid)
                 return []
+            case "results":
+                if (searchType === "title" || searchType === "genre" || searchType === "color" || searchType === "author" || searchType === "more") 
+                    return results.filter((b) => b[searchType].toLowerCase().includes(search.toLowerCase()))
+                if (searchType === "all") 
+                    return results.filter((b) => b.title.toLowerCase().includes(search.toLowerCase()))
+                if (searchType === "published" || searchType === "pages") {
+                    let { greater, lesser } = parsePagesAndDate(search)
+                    if (searchType === "published")
+                        return results.filter((b) => b.pdate > greater && b.pdate < lesser)
+                    else
+                        return results.filter((b) => b.pages > greater && b.pages < lesser)
+                }
+                return []
             default:
                 return []
         }
@@ -244,6 +262,7 @@ const Rooms = () => {
                     {rid && <option value="room">Search Room:</option>}
                     {bcid && <option value="bookcase">Search Bookcase:</option>}
                     {shid && <option value="shelf">Search Shelf:</option>}
+                    {results.length && <option value="results">Search Results:</option>}
                 </select>
                 <input 
                     value={search} 

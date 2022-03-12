@@ -106,15 +106,16 @@ const NewBook = ({ setCurrShelf }) => {
   }
 
   const handleSaveCreate = async (e) => {
+    let newBook = { ...inputs, author: inputs.author.split(" ").reverse().join(" ")}
     if (bid) {
-      let book = await BookService.updateBookForShelf(inputs, bid)
+      let book = await BookService.updateBookForShelf(newBook, bid)
       console.log(book)
       dispatch({
         type: UPDATE_BOOK,
         payload: { shid, rid, bcid, bid, book },
       });
     } else {
-      let book = await BookService.addBookForShelfAndUser(inputs, shid, user)
+      let book = await BookService.addBookForShelfAndUser(newBook, shid, user)
       navigate(utilPath(path, 'book', book.id))
       dispatch({
         type: ADD_BOOK,

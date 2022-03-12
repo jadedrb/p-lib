@@ -94,6 +94,31 @@ export function clearLoading() {
         console.log(loading, " finished loading")
 }
 
+export function utilOrder(results, order, toggle) {
+    if (order === "author" || order === "title" || order === "color" || order === "more" || order === "genre") {
+        return results.sort((a, b) => {
+            if (toggle) {
+                if (a[order] < b[order])
+                    return -1;
+                if (a[order] > b[order])
+                    return 1;
+            } else {
+                if (b[order] < a[order])
+                    return -1;
+                if (b[order] > a[order])
+                    return 1;
+            }
+            return 0;
+        })
+    } 
+    else if (order === "pdate" || order === "pages")
+        return results.sort((a, b) => toggle ? a[order] - b[order] : b[order] - a[order])
+    else 
+        return results
+}
+
+
+
 
 /*
 

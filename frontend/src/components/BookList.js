@@ -1,9 +1,14 @@
-import React from 'react';
-import { utilPath } from '../services/utility';
+import React, { useState } from 'react';
+import { utilPath, utilOrder } from '../services/utility';
 
 const BookList = ({ books, bid, path, navigate }) => {
 
-    let renderedBooks = books?.map((b,i) => {
+    let [order, setOrder] = useState("")
+    let [ascDesc, setAscDesc] = useState(true)
+
+    let renderedBooks = utilOrder(books, order, ascDesc)
+
+    renderedBooks = renderedBooks?.map((b,i) => {
         return (
             <tr 
                 key={i} 
@@ -21,10 +26,28 @@ const BookList = ({ books, bid, path, navigate }) => {
         )
     })
 
+    const handleOrder = (o) => {
+        if (order === o)
+            setAscDesc(!ascDesc)
+        else 
+            setOrder(o)
+    }
+
     return (
         <div className="table-contain booklist-r">
             {renderedBooks?.length ? 
                 <table className='booklist'>
+                    <thead>
+                        <tr style={{ backgroundColor: "lightgrey", fontSize: "13px" }}>
+                            <th onClick={() => handleOrder("title")}>title</th>
+                            <th onClick={() => handleOrder("author")}>author</th>
+                            <th onClick={() => handleOrder("color")}>color</th>
+                            <th onClick={() => handleOrder("genre")}>genre</th>
+                            <th onClick={() => handleOrder("pages")}>pages</th>
+                            <th onClick={() => handleOrder("pdate")}>published</th>
+                            <th onClick={() => handleOrder("more")}>more</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         {renderedBooks}
                     </tbody>    

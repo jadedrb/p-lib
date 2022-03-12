@@ -20,6 +20,8 @@ tr:hover {
 }
 
 .table-contain {
+    display: flex;
+    justify-content: center;
     position: relative;
     overflow: auto;
     border: 3px solid rgb(70, 75, 75);
@@ -429,4 +431,27 @@ Search
 }
 
 
+
+table {
+    border: none;
+}
+thead {
+    background-color: black;
+}
+tr:nth-child(odd) {
+    background-color: rgb(236, 236, 236);
+    border: none;
+}
+td {
+    text-align: center;
+    border-left: none;
+    border-top: none;
+}
+.th {
+    color: orange;
+}
+/* .table-head tr {
+    border: 3px solid aqua;
+    opacity: .1;
+} */
 
