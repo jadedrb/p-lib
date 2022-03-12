@@ -105,12 +105,16 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
       
        {edit &&
         <form onSubmit={handleSubmit}>
+          <label htmlFor="bookcase-loc">Bookcase Location</label>
           <input
+            id="bookcase-loc"
             onChange={(e) => setLocation(e.target.value)}
             placeholder="bookcase location"
             value={location}
           />
+          <label htmlFor="bookcase-num-sh">Number of Shelves</label>
           <input
+              id="bookcase-num-sh"
               onChange={(e) => setShelves(e.target.value)}
               placeholder="number of shelves"
               type='number'

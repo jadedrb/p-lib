@@ -87,6 +87,28 @@ tr:hover {
     position: relative;
 }
 
+.newroom form {
+    display: flex;
+    flex-direction: column;
+}
+
+.nr-ff {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.nr-ff label {
+    font-size: .8rem;
+    opacity: .5;
+}
+.nr-ff input {
+    margin: 5px;
+    padding: 3px;
+}
+.nr-ff button {
+    margin-top: 20px;
+}
+
 
 .pm-r:hover {
     cursor: pointer;
@@ -118,19 +140,50 @@ tr:hover {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding-bottom: 5px !important;
     /* border: 3px solid blue; */
-  
 }
 
 .new-bookcase form {
     display: flex;
     flex-direction: column;
     margin: 30px;
+    padding: 0px;
 }
 
 .new-bookcase label {
-    font-size: 15px;
+    font-size: .8rem;
+    opacity: .5;
 }
+
+.new-bookcase form {
+    /* border: 1px solid black; */
+}
+
+.new-bookcase input {
+    margin: 5px;
+    padding: 3px;
+}
+
+/*
+
+.nr-ff {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.nr-ff label {
+    font-size: .8rem;
+    opacity: .5;
+}
+.nr-ff input {
+    margin: 5px;
+    padding: 3px;
+}
+.nr-ff button {
+    margin-top: 20px;
+}
+*/
 
 /* .pm-bc {
     position: absolute;
@@ -374,3 +427,6 @@ Search
 #color {
     width: 50%;
 }
+
+
+

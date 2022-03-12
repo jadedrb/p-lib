@@ -104,11 +104,6 @@ const Rooms = () => {
         return { greater: Number(greater), lesser: Number(lesser) }
     }
 
-    // <190>139
-    // ['<190', '139']
-
-    // >190<300
-    // ['190<300']
     const determineSearchArea = (search, user) => {
         switch(searchIn) {
             case "library":
@@ -237,6 +232,8 @@ const Rooms = () => {
 
     return (
         <div className="rooms">
+            {(search && !typing && showResults) || results.length ? <SearchResults books={results} bid={Number(bid)} setShowResults={setShowResults} setResults={setResults} /> : null}
+
             <div className="b-sec-center">
                 <button className="b-section" onClick={toggleRoomsView}>Room</button>
                 <div className="b-sec-line" style={{ display: showRooms ? "block" : "none" }}/>
@@ -255,7 +252,6 @@ const Rooms = () => {
                 />
             </label>
             <br />
-            {(search && !typing && showResults) || results.length ? <SearchResults books={results} bid={Number(bid)} setShowResults={setShowResults} setResults={setResults} /> : null}
 
             {showRooms &&
                 <div className="n-room">

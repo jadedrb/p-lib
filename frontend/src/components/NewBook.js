@@ -24,7 +24,7 @@ const NewBook = ({ setCurrShelf }) => {
     more: ""
   })
 
-  let [edit, setEdit] = useState(true)
+  let [edit, setEdit] = useState(bid ? false : true)
 
   let [colorType, setColorType] = useState(true)
   let [inputs, setInputs] = useState(initialInputs.current);
@@ -59,9 +59,9 @@ const NewBook = ({ setCurrShelf }) => {
     setCurrentFocus(e.target);
   };
 
-  const handleEnter = async (e) => {
+  const handleEnter = (e) => {
     if (!edit) return
-  
+    console.log(firstInput)
     let nextInput;
 
     if (e.key === "Enter") {
@@ -86,21 +86,7 @@ const NewBook = ({ setCurrShelf }) => {
 
     // If enter press on the last input OR if they click the Save button
     if (nextInput?.name === "reset" || e.target.name === "save") {
-      if (bid) {
-        let book = await BookService.updateBookForShelf(inputs, bid)
-        console.log(book)
-        dispatch({
-          type: UPDATE_BOOK,
-          payload: { shid, rid, bcid, bid, book },
-        });
-      } else {
-        let book = await BookService.addBookForShelfAndUser(inputs, shid, user)
-        navigate(utilPath(path, 'book', book.id))
-        dispatch({
-          type: ADD_BOOK,
-          payload: { shid, rid, bcid, setCurrShelf, book },
-        });
-      }
+      handleSaveCreate()
     }
 
     // If enter press leads nowhere OR if Reset button is pressed
@@ -112,6 +98,33 @@ const NewBook = ({ setCurrShelf }) => {
     }
   };
 
+  const handleResetPress = () => {
+    firstInput.current.focus();
+    setCurrentFocus(firstInput.current);
+    navigate(utilPath(path, 'book', ""))
+    setInputs(initialInputs.current)
+  }
+
+  const handleSaveCreate = async (e) => {
+    if (bid) {
+      let book = await BookService.updateBookForShelf(inputs, bid)
+      console.log(book)
+      dispatch({
+        type: UPDATE_BOOK,
+        payload: { shid, rid, bcid, bid, book },
+      });
+    } else {
+      let book = await BookService.addBookForShelfAndUser(inputs, shid, user)
+      navigate(utilPath(path, 'book', book.id))
+      dispatch({
+        type: ADD_BOOK,
+        payload: { shid, rid, bcid, setCurrShelf, book },
+      });
+    }
+    if (e?.target?.value) // to determine whether they clicked a button or pressed Enter
+      navigate(utilPath(path, 'shelf', shid))
+  }
+
   const removeBook = async () => {
     let confirm = window.confirm(utilMsg({ type: 'book', details: { bid, title: inputs.title } }))
     if (!confirm) return
@@ -120,8 +133,6 @@ const NewBook = ({ setCurrShelf }) => {
     navigate(utilPath(path, 'shelf', shid))
   }
 
-  // const opacheck = () => currentFocus?.previousSibling?.htmlFor === currentFocus?.name
-console.log(edit, bid, bid && edit)
   return (
     <div className="nb-contain">
 
@@ -228,7 +239,7 @@ console.log(edit, bid, bid && edit)
             type="button"
             value={bid ? "Save" : "Create"}
             name="save"
-            onClick={handleEnter}
+            onClick={handleSaveCreate}
             onKeyPress={handleEnter}
           />}
           {edit &&
@@ -236,7 +247,7 @@ console.log(edit, bid, bid && edit)
             type="button"
             value="Reset"
             name="reset"
-            onClick={handleEnter}
+            onClick={handleResetPress}
             onKeyPress={handleEnter}
           />}
         </form>

@@ -55,4 +55,7 @@ Big potatos:
 1. Implement authentication in backend (tokens)
 2. Figure out how to export and import database data (for backup purposes)
 
+Other:
+
+Search for const handlePathBackToRoom = () => navigate("/room/");
 */

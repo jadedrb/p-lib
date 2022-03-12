@@ -368,29 +368,42 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
       </div>
 
       {edit &&
-      <form onSubmit={handleSubmit}>
-        <input
-          onChange={(e) => setHeight(e.target.value)}
-          placeholder="height"
-          value={height}
-        />
-        <input
-          onChange={(e) => setWidth(e.target.value)}
-          placeholder="width"
-          value={width}
-        />
-        <input
-          onChange={(e) => setTile(e.target.value)}
-          placeholder="tile size"
-          value={tile}
-        />
-        <input
-          onChange={(e) => setName(e.target.value)}
-          placeholder="room name"
-          value={name}
-        />
-        <button>Save</button>
-      </form>}
+      <div className="nr-ff">
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="height">Height</label>
+          <input
+            id="height"
+            onChange={(e) => setHeight(e.target.value)}
+            placeholder="height"
+            type="number"
+            value={height}
+          />
+          <label htmlFor="width">Width</label>
+          <input
+            id="width"
+            onChange={(e) => setWidth(e.target.value)}
+            placeholder="width"
+            type="number"
+            value={width}
+          />
+          <label htmlFor="tiles">Tile Size</label>
+          <input
+            id="tiles"
+            onChange={(e) => setTile(e.target.value)}
+            placeholder="tile size"
+            type="number"
+            value={tile}
+          />
+          <label htmlFor="rname">Room Name</label>
+          <input
+            id="rname"
+            onChange={(e) => setName(e.target.value)}
+            placeholder="room name"
+            value={name}
+          />
+          <button>Save</button>
+        </form>
+      </div>}
       
       {/* For test purposes...
       <button onClick={test0}>
