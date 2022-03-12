@@ -22,10 +22,12 @@ tr:hover {
 .table-contain {
     display: flex;
     justify-content: center;
+    align-items: center;
     position: relative;
     overflow: auto;
     border: 3px solid rgb(70, 75, 75);
     min-height: 50px;
+    /* max-height: 200px; */
     padding: 10px;
 }
 
@@ -208,6 +210,7 @@ tr:hover {
 
 .sh-b .pm {
     top: 90px;
+
 }
 
 
@@ -247,6 +250,10 @@ tr:hover {
 .sh-b {
     position: relative;
     /* border: 3px solid plum; */
+}
+
+.sh-b h4 {
+    text-align: center;
 }
 
 .ff {
@@ -450,8 +457,17 @@ td {
 .th {
     color: orange;
 }
+.table-contain h5 {
+    position: absolute;
+    opacity: .5;
+    top: -20px;
+    left: 10px;
+}
 /* .table-head tr {
     border: 3px solid aqua;
     opacity: .1;
 } */
 
+.booklist-r {
+    margin-top: 20px;
+}

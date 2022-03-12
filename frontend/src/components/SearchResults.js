@@ -56,6 +56,7 @@ const SearchResults = ({ books, bid, setResults, setShowResults }) => {
     return (
         <div className="table-contain search-c">
             <div className="pm-r min-room x-results" onClick={closeSearchResults}>X</div>
+            {renderedBooks.length ? <h5>results: {renderedBooks.length}</h5> : null}
             {renderedBooks?.length ? 
                 <table className='booklist'>
                     <thead>
@@ -73,7 +74,7 @@ const SearchResults = ({ books, bid, setResults, setShowResults }) => {
                         {renderedBooks}
                     </tbody>    
                 </table>
-            : "No results found"}
+            : <span>No results found</span>}
         </div>
     )
 }

@@ -35,6 +35,7 @@ const BookList = ({ books, bid, path, navigate }) => {
 
     return (
         <div className="table-contain booklist-r">
+            {renderedBooks.length ? <h5>books: {renderedBooks.length}</h5> : null}
             {renderedBooks?.length ? 
                 <table className='booklist'>
                     <thead>
@@ -52,7 +53,7 @@ const BookList = ({ books, bid, path, navigate }) => {
                         {renderedBooks}
                     </tbody>    
                 </table>
-            : "This shelf is empty"}
+            : <span>This shelf is empty</span>}
         </div>
     )
 }

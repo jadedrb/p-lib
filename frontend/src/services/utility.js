@@ -113,8 +113,13 @@ export function utilOrder(results, order, toggle) {
     } 
     else if (order === "pdate" || order === "pages")
         return results.sort((a, b) => toggle ? a[order] - b[order] : b[order] - a[order])
-    else 
-        return results
+    else if (order === "lastname") {
+        let a = results.a.author.split(" ").reverse().join(" ")
+        let b = results.b.author.split(" ").reverse().join(" ")
+        return a < b ? -1 : a > b ? 1 : 0
+    }
+        
+    return results
 }
 
 

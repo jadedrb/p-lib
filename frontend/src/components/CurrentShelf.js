@@ -13,6 +13,7 @@ function CurrentShelf() {
 
     let [showShelf, setShowShelf] = useState(true)
     let [currShelf, setCurrShelf] = useState(null)
+    let [shelfPos, setShelfPos] = useState({})
 
     let [edit, setEdit] = useState(false)
 
@@ -22,8 +23,19 @@ function CurrentShelf() {
     let navigate = useNavigate()
 
     useEffect(() => {
-        let { shelf } = utilitySelector(rid, bcid, shid, rooms)
-        console.log(shelf)
+        let { shelf, bkcase } = utilitySelector(rid, bcid, shid, rooms)
+        
+        let top, bot, swap;
+        let pos = bkcase?.shelves?.findIndex(sh => sh.id === Number(shid))
+     
+        if (typeof pos === "number") {
+            bot = bkcase.shelves.length - pos
+            top = pos + 1
+        }
+        swap = shelfPos.top > shelfPos.bot ? "bottom" : "top"
+    
+        setShelfPos({ top, bot, swap })
+
         setCurrShelf(shelf)
     }, [shid, rid, bcid, rooms])
 
@@ -34,6 +46,9 @@ function CurrentShelf() {
         dispatch({ type: REMOVE_SHELF, payload: { shid, bcid, rid } })
         navigate(utilPath(path, 'bookcase', bcid))
     }
+
+    let tob = shelfPos.swap === "top" ? shelfPos.top : shelfPos.bot
+    let position = tob === 1 ? "1st" : tob === 2 ? "2nd" : tob === 3 ? "3rd" : tob + "th"
 
     return ( 
         <div className='sh-b'>
@@ -46,9 +61,14 @@ function CurrentShelf() {
                 <div className="b-sec-line" style={{ display: showShelf ? "block" : "none" }}/>
             </div>
             {showShelf && 
+            <h4 style={{ cursor: "pointer" }} onClick={() => setShelfPos((prev) => ({ ...prev, swap: prev.swap === "top" ? "bot" : "top" }))}>
+                <span style={{ color: "blue" }}>{position}</span> shelf 
+                <span style={{ opacity: ".4" }}> (from the {shelfPos.swap})</span>
+            </h4>}
+            {showShelf && 
                 currShelf ?
                 <div>
-                    <h5>Shelf ID: {shid}</h5>
+                    {/* <h5>Shelf ID: {shid}</h5> */}
                     <BookList 
                         books={currShelf?.books} 
                         path={path}

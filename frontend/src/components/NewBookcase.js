@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { REMOVE_BOOKCASE, UPDATE_BOOKCASE } from "../context";
-import { utilMsg, utilPath } from "../services/utility";
+import { utilMsg, utilPath, utilOrder } from "../services/utility";
 
 import Bookcases from "../services/BookcaseService"
 import Shelves from "../services/ShelfService"
@@ -64,13 +64,14 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
         >
           {shid === sh.id && sh.books?.length ? 
           sh.books
+            .sort((a,b) => utilOrder({ a, b }, "lastname"))
             .map((b,i) => 
               <span 
                 key={i} 
                 onClick={() => navigate(utilPath(path, 'book', b.id)) }
                 style={{ backgroundColor: bid === b.id ? b.color : 'white' }}
               >
-                s
+                
               </span>
             ) : 
             null}
@@ -91,9 +92,9 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
       <div className="new-bookcase" style={{ paddingBottom: edit ? "none" : "40px"}}>
         <h4>
             <span style={{ color: 'blue' }}>{location}</span> in {currentRoom.name}</h4>
-        <h5>
+        {/* <h5>
           Room ID: {currentRoom?.id}, Bookcase ID: {currentBookcase?.id}
-        </h5>
+        </h5> */}
         <div className="bookcase" style={{ width: `${width}%` }}>
             {renderBookcases()}
         </div>
