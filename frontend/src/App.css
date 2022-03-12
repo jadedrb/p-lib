@@ -91,6 +91,14 @@ tr:hover {
     position: relative;
 }
 
+.newroom h3 {
+    text-align: center;
+}
+
+.newroom h3 span {
+    color: rgb(74, 74, 255);
+}
+
 .newroom form {
     display: flex;
     flex-direction: column;

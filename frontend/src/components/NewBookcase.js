@@ -91,7 +91,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
     return (
       <div className="new-bookcase" style={{ paddingBottom: edit ? "none" : "40px"}}>
         <h4>
-            <span style={{ color: 'blue' }}>{location}</span> in {currentRoom.name}</h4>
+            <span style={{ color: 'rgb(74, 74, 255)' }}>{location}</span> in {currentRoom.name}</h4>
         {/* <h5>
           Room ID: {currentRoom?.id}, Bookcase ID: {currentBookcase?.id}
         </h5> */}

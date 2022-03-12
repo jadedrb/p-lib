@@ -323,7 +323,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
   return (
     <div className="newroom">
       <h3>
-        {name} ({rIndex})
+        <span>{name}</span> ({rIndex})
       </h3>
       <div className="pm">
         <div className="pm-r ed" onClick={() => { 
