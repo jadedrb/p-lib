@@ -26,6 +26,7 @@ public class User {
 	private String email;
 	private String password;
 	private String username;
+	private String other;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user") // , orphanRemoval = true
 	private List<Room> rooms = new ArrayList<>();
@@ -35,11 +36,21 @@ public class User {
 														   			// of keeping a column called "user_id"
 	public User() {}									   			// and therefore needs the mappedBy
 															
-	public User(String email, String password, String username) {
+	public User(String email, String password, String username, String other) {
 		super();
 		this.email = email;
 		this.password = password;
 		this.username = username;
+		this.other = other;
+	}
+
+
+	public String getOther() {
+		return other;
+	}
+
+	public void setOther(String other) {
+		this.other = other;
 	}
 
 	public int getId() {

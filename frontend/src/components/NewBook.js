@@ -70,11 +70,11 @@ const NewBook = ({ setCurrShelf }) => {
     let nextInput;
 
     if (e.key === "Enter") {
-      nextInput = currentFocus.nextSibling
-        ? currentFocus.nextSibling
+      nextInput = currentFocus?.nextSibling
+        ? currentFocus?.nextSibling
         : currentFocus;
 
-    if (nextInput.nodeName === "LABEL")
+    if (nextInput?.nodeName === "LABEL")
       nextInput = nextInput.nextSibling
 
       // When pressing enter, skip the color input type button and Save button
@@ -119,11 +119,11 @@ const NewBook = ({ setCurrShelf }) => {
         payload: { shid, rid, bcid, bid, book },
       });
     } else {
-      let book = await BookService.addBookForShelfAndUser(inputs, shid, user)
-      navigate(utilPath(path, 'book', book.id))
+      let books = await BookService.addBooksForShelfAndUser([inputs], shid, user)
+      navigate(utilPath(path, 'book', books[0].id))
       dispatch({
         type: ADD_BOOK,
-        payload: { shid, rid, bcid, setCurrShelf, book },
+        payload: { shid, rid, bcid, setCurrShelf, books },
       });
     }
     if (e?.target?.value) // to determine whether they clicked a button or pressed Enter
@@ -148,7 +148,7 @@ const NewBook = ({ setCurrShelf }) => {
                 {bid && edit && <div className="pm-b" onClick={removeBook}>-</div>}
           </div>: null}
 
-        {shelfPres && !move ?
+        {(shelfPres && !move) || (move && !edit) ?
 
       <div className="ff-contain">
         <form className="ff">
@@ -258,7 +258,18 @@ const NewBook = ({ setCurrShelf }) => {
             onKeyPress={handleEnter}
           />}
         </form>
-      </div>: move ? <Move book={inputs} params={params} rooms={rooms} /> : "No book selected"}
+      </div>
+      : edit && move ? 
+      <Move 
+        from={"book"}
+        book={inputs} 
+        params={params} 
+        rooms={rooms} 
+        user={user} 
+        dispatch={dispatch} 
+        path={path}
+        navigate={navigate}
+      /> : "No book selected"}
     </div>
   );
 };

@@ -20,7 +20,7 @@ class BookService {
         return axios.get(API + `/books/${shelf}`).then(r => this.format(r))
     }
 
-    addBookForShelfAndUser(book, shelf, user) {
+    addBooksForShelfAndUser(book, shelf, user) {
         loading(".booklist-r")
         return axios.post(API + `/books/${shelf}/users/${user}`, book).then(r => this.format(r))
     }

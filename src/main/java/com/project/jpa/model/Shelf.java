@@ -21,7 +21,8 @@ public class Shelf {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public int id;
+	private int id;
+	private String organize;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "shelf")
 	private List<Book> books = new ArrayList<>();
@@ -30,8 +31,24 @@ public class Shelf {
 	@JsonIgnore
 	private Bookcase bookcase;
 	
+	
+	public Shelf(String organize) {
+		super();
+		this.organize = organize;
+	}
+
 	public Shelf() {}
 	
+
+	public String getOrganize() {
+		return organize;
+	}
+
+
+	public void setOrganize(String organize) {
+		this.organize = organize;
+	}
+
 
 	public Bookcase getBookcase() {
 		return bookcase;

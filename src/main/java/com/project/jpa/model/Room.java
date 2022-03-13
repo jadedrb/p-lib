@@ -22,11 +22,11 @@ public class Room {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int id;
-	public String name;
-	public int height;
-	public int width;
-	public int tile;
+	private int id;
+	private String name;
+	private int height;
+	private int width;
+	private int tile;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "room")
 	private List<Book> books = new ArrayList<>();

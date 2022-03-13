@@ -25,6 +25,7 @@ import com.project.jpa.model.Room;
 import com.project.jpa.model.Shelf;
 import com.project.jpa.model.User;
 import com.project.jpa.repository.BookRepository;
+import com.project.jpa.repository.BookcaseRepository;
 import com.project.jpa.repository.RoomRepository;
 import com.project.jpa.repository.ShelfRepository;
 import com.project.jpa.repository.UserRepository;
@@ -42,6 +43,9 @@ public class BookController {
 	
 	@Autowired
 	private ShelfRepository shelfRepo;
+	
+	@Autowired
+	private BookcaseRepository bkcaseRepo;
 	
 	@Autowired
 	private UserRepository userRepo;
@@ -91,24 +95,27 @@ public class BookController {
 	
 
 	@PostMapping("/books/{shelfId}/users/{userId}")
-	public Book bookForShelf(@PathVariable int shelfId, @PathVariable String userId, @RequestBody Book book) {
+	public List<Book> bookForShelf(@PathVariable int shelfId, @PathVariable String userId, @RequestBody List<Book> books) {
 //		Room room = roomRepo.findById(shelf.getBookcase().getRoom().getId()).orElseThrow();
 		Shelf shelf = shelfRepo.findById(shelfId).orElseThrow();
 		User user = userRepo.findByUsername(userId).get(0);		
 		Room room = shelf.getBookcase().getRoom();
 		Bookcase bookcase = shelf.getBookcase();
 		
-		room.addBook(book);
-		shelf.addBook(book);
-		user.addBook(book);
-		bookcase.addBook(book);
+		for (Book book : books) {
+			
+			room.addBook(book);
+			shelf.addBook(book);
+			user.addBook(book);
+			bookcase.addBook(book);
+			
+			book.setBookcase(bookcase);
+			book.setRoom(room);
+			book.setUser(user);
+			book.setShelf(shelf);
+		}
 		
-		book.setBookcase(bookcase);
-		book.setRoom(room);
-		book.setUser(user);
-		book.setShelf(shelf);
-		
-		return bookRepo.save(book);
+		return bookRepo.saveAll(books);
 	}
 	
 	@DeleteMapping("/books/{bookId}/shelves/{shelfId}/users/{userId}")
@@ -385,12 +392,5 @@ public class BookController {
 	}
 
 }
-
-
-
-
-
-
-
 
 

@@ -93,6 +93,8 @@ public class ShelfController {
 		
 		Shelf oldShelf = shelfRepo.findById(shelfId).orElseThrow();
 		
+		oldShelf.setOrganize(newShelf.getOrganize());
+		
 		return shelfRepo.save(oldShelf);
 	}
 	

@@ -78,7 +78,7 @@ public class UserController implements UserService {
 	
 	@GetMapping("/users/add/{user}")
 	public void addTest(@PathVariable String user) {
-		User userE = new User(user + "@gmail.com", user + "123", user);
+		User userE = new User(user + "@gmail.com", user + "123", user, "");
 		userRepo.save(userE);
 	}
 	

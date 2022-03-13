@@ -257,6 +257,7 @@ tr:hover {
 /* New Book */
 .sh-b {
     position: relative;
+    text-align: center;
     /* border: 3px solid plum; */
 }
 
@@ -286,6 +287,12 @@ tr:hover {
 .nb-contain {
     position: relative;
     padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.nb-contain div {
+    text-align: center;
 }
 
 .nb-contain .pm {
@@ -478,4 +485,8 @@ td {
 
 .booklist-r {
     margin-top: 20px;
+}
+
+select {
+    text-align: center;
 }

@@ -6,20 +6,24 @@ import BookList from './BookList';
 // import NewBook from './NewBook';
 import { utilPath } from '../services/utility';
 import Shelves from '../services/ShelfService'
+import Move from './Move';
 
 function CurrentShelf() {
 
-    let { rooms, dispatch } = useContext(Context)
+    let { rooms, dispatch, user } = useContext(Context)
 
     let [showShelf, setShowShelf] = useState(true)
     let [currShelf, setCurrShelf] = useState(null)
     let [shelfPos, setShelfPos] = useState({})
 
+    let [move, setMove] = useState(false)
+
     let wrapper = useRef()
 
     let [edit, setEdit] = useState(false)
 
-    let { shid, rid, bcid, bid } = useParams()
+    let params = useParams()
+    let { shid, rid, bcid, bid } = params
 
     let path = useLocation()
     let navigate = useNavigate()
@@ -38,8 +42,8 @@ function CurrentShelf() {
         swap = wrapper.current.swapem()
     
         setShelfPos({ top, bot, swap })
-
         setCurrShelf(shelf)
+        setMove(false)
     }, [shid, rid, bcid, rooms])
 
     const removeShelf = async () => {
@@ -61,6 +65,7 @@ function CurrentShelf() {
         <div className='sh-b'>
             {showShelf && currShelf && <div className="pm">
                 <div className="pm-r ed" onClick={() => setEdit(!edit)}>=</div>
+                {shid && edit && <div className="pm-r ed" onClick={() => setMove(!move)}>~</div>}
                 {edit && <div className="pm-r min-room" onClick={removeShelf}>-</div>}
             </div>}
             <div className="b-sec-center">
@@ -68,7 +73,7 @@ function CurrentShelf() {
                 <div className="b-sec-line" style={{ display: showShelf ? "block" : "none" }}/>
             </div>
             {showShelf && currShelf && 
-            <h4 style={{ cursor: "pointer" }} onClick={() => setShelfPos((prev) => ({ ...prev, swap: prev.swap === "top" ? "bot" : "top" }))}>
+            <h4 style={{ cursor: "pointer" }} onClick={() => setShelfPos((prev) => ({ ...prev, swap: prev.swap === "top" ? "bottom" : "top" }))}>
                 <span style={{ color: "rgb(74, 74, 255)" }}>{position}</span> shelf 
                 <span style={{ opacity: ".4" }}> (from the {shelfPos.swap})</span>
             </h4>}
@@ -88,6 +93,21 @@ function CurrentShelf() {
                 <div>No shelf selected</div>
                 : null
             }
+
+            {edit && move ?  
+               <Move
+                 from={"shelf"}
+                //  book={inputs} 
+                 params={params} 
+                 rooms={rooms} 
+                 user={user} 
+                 dispatch={dispatch} 
+                 path={path}
+                 navigate={navigate} 
+                /> 
+               : null
+            }
+
 
             <div className="b-sec-center">
                 <button className="b-section" onClick={() => {
