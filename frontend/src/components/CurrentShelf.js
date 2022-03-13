@@ -59,7 +59,7 @@ function CurrentShelf() {
 
     return ( 
         <div className='sh-b'>
-            {showShelf && <div className="pm">
+            {showShelf && currShelf && <div className="pm">
                 <div className="pm-r ed" onClick={() => setEdit(!edit)}>=</div>
                 {edit && <div className="pm-r min-room" onClick={removeShelf}>-</div>}
             </div>}
@@ -67,7 +67,7 @@ function CurrentShelf() {
                 <button className="b-section" onClick={() => setShowShelf(!showShelf)}>Shelf</button>
                 <div className="b-sec-line" style={{ display: showShelf ? "block" : "none" }}/>
             </div>
-            {showShelf && 
+            {showShelf && currShelf && 
             <h4 style={{ cursor: "pointer" }} onClick={() => setShelfPos((prev) => ({ ...prev, swap: prev.swap === "top" ? "bot" : "top" }))}>
                 <span style={{ color: "rgb(74, 74, 255)" }}>{position}</span> shelf 
                 <span style={{ opacity: ".4" }}> (from the {shelfPos.swap})</span>
@@ -84,7 +84,7 @@ function CurrentShelf() {
                     />
                     {/* {edit && <NewBook book={'test'} setCurrShelf={setCurrShelf} />} */}
                 </div>
-                : !currShelf ?
+                : !currShelf && showShelf ?
                 <div>No shelf selected</div>
                 : null
             }

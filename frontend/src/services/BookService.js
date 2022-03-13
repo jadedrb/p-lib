@@ -10,6 +10,12 @@ class BookService {
         return d.data
     }
 
+    // handleError(d, e) {
+    //     clearLoading()
+    //     console.log(e)
+    //     return d
+    // }
+
     getBooksForShelf(shelf) {
         return axios.get(API + `/books/${shelf}`).then(r => this.format(r))
     }
@@ -26,7 +32,7 @@ class BookService {
     
     updateBookForShelf(book, id) {
         loading(".booklist-r")
-        return axios.put(API + `/books/${id}`, book).then(r => this.format(r))
+        return axios.put(API + `/books/${id}`, book).then(r => this.format(r))//.catch((e) => this.handleError(book, e))
     }
 
     // SEARCH Endpoints

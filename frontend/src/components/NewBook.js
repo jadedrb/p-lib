@@ -4,11 +4,13 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { utilPath, utilitySelector, utilMsg } from "../services/utility";
 
 import BookService from "../services/BookService"
+import Move from "./Move";
 
 const NewBook = ({ setCurrShelf }) => {
   const { rooms, dispatch, user } = useContext(Context);
 
-  let { shid, rid, bcid, bid } = useParams();
+  let params = useParams();
+  let { shid, rid, bcid, bid } = params
   let navigate = useNavigate()
   let path = useLocation()
 
@@ -25,19 +27,21 @@ const NewBook = ({ setCurrShelf }) => {
   })
 
   let [edit, setEdit] = useState(bid ? false : true)
+  let [move, setMove] = useState(false)
 
   let [colorType, setColorType] = useState(true)
   let [inputs, setInputs] = useState(initialInputs.current);
 
   let [currentFocus, setCurrentFocus] = useState(null);
+  let [shelfPres, setShelfPres] = useState(null);
 
   useEffect(() => {
     setCurrentFocus(firstInput.current);
   }, []);
 
   useEffect(() => {
+    let { book, shelf } = utilitySelector(rid, bcid, shid, rooms, bid)
     if (bid) {
-      let { book } = utilitySelector(rid, bcid, shid, rooms, bid)
       if (book) { 
         let { title, author, genre, pages, pdate, color, more } = book
         setInputs({ title, author, genre, pages, pdate, color, more })
@@ -45,6 +49,7 @@ const NewBook = ({ setCurrShelf }) => {
     } else {
       setInputs(initialInputs.current)
     }
+    setShelfPres(shelf)
   }, [rid, bcid, shid, rooms, bid])
 
   const handleInput = (e) => {
@@ -135,14 +140,16 @@ const NewBook = ({ setCurrShelf }) => {
 
   return (
     <div className="nb-contain">
+      {shelfPres ?
 
           <div className="pm">
-                <div className="pm-r ed" onClick={() => setEdit(!edit)}>=</div>
+                {bid && <div className="pm-r ed" onClick={() => setEdit(!edit)}>=</div>}
+                {bid && edit && <div className="pm-r ed" onClick={() => setMove(!move)}>~</div>}
                 {bid && edit && <div className="pm-b" onClick={removeBook}>-</div>}
-          </div>
+          </div>: null}
 
+        {shelfPres && !move ?
 
-       {/* {bid && <h5>Book ID: {bid}</h5>} */}
       <div className="ff-contain">
         <form className="ff">
           <label htmlFor="title">Title</label>
@@ -251,7 +258,7 @@ const NewBook = ({ setCurrShelf }) => {
             onKeyPress={handleEnter}
           />}
         </form>
-      </div>
+      </div>: move ? <Move book={inputs} params={params} rooms={rooms} /> : "No book selected"}
     </div>
   );
 };

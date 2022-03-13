@@ -56,6 +56,7 @@ Big potatos:
 
 1. Implement authentication in backend (tokens)
 2. Figure out how to export and import database data (for backup purposes)
+3. Deploy backend to Heroku and frontend to something faster (GitHub Pages?)
 
 Other:
 
