@@ -23,13 +23,15 @@ export const FINISH_UPDATE = "FINISH_UPDATE"
 export const SET_USER = "SET_USER"
 
 export const TOGGLE_SELECT = "TOGGLE_SELECT"
+export const TOGGLE_BKCASE_SELECT = "TOGGLE_BKCASE_SELECT"
 
 let initialState = {
     books: [],
     rooms: [],
     user: "bob",
     updates: 0,
-    selected: []
+    selected: [],
+    reposition: { toggle: false }
 }
 
 function reducer(state, action) {
@@ -138,6 +140,12 @@ function reducer(state, action) {
             else 
                 return { ...state, selected: [...state.selected, action.payload] }            
         }
+        case TOGGLE_BKCASE_SELECT: {
+            if (typeof action.payload === "boolean")
+                return { ...state, reposition: { toggle: action.payload } }
+            else 
+                return { ...state, reposition: action.payload }
+        }
         case QUEUE_UPDATE: {
             return { ...state, updates: state.updates + 1 }
         }
@@ -156,10 +164,10 @@ export function Provider(props) {
 
     let [state, dispatch] = useReducer(reducer, initialState)
 
-    let { books, rooms, user, selected } = state
+    let { books, rooms, user, selected, reposition } = state
 
     return (
-        <Context.Provider value={{ books, rooms, user, selected, dispatch }}>
+        <Context.Provider value={{ books, rooms, user, selected, reposition, dispatch }}>
             {props.children}
         </Context.Provider>
     )

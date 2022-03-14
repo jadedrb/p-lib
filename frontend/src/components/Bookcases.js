@@ -7,7 +7,8 @@ import { utilitySelector } from "../services/utility";
 const Bookcases = () => {
     let { rooms, current, dispatch } = useContext(Context);
     
-    let { rid, bcid, shid, bid } = useParams()
+    let params = useParams()
+    let { rid, bcid, shid, bid } = params
     let navigate = useNavigate()
     let path = useLocation()
 
@@ -38,6 +39,8 @@ const Bookcases = () => {
                         currentBookcase={currentBookcase}
                         navigate={navigate}
                         path={path}
+                        rooms={rooms}
+                        params={params}
                         shid={Number(shid)}
                         bid={Number(bid)}
                         bcid={Number(bcid)}

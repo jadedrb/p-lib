@@ -4,8 +4,9 @@ import { utilMsg, utilPath, utilOrder } from "../services/utility";
 
 import Bookcases from "../services/BookcaseService"
 import Shelves from "../services/ShelfService"
+import Move from "./Move";
 
-const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, shid, bid, bcid, rid }) => {
+const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, shid, bid, bcid, rid, params, rooms }) => {
 
   let [location, setLocation] = useState("Bookcase Location");
   let [shelves, setShelves] = useState("");
@@ -13,6 +14,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
   let [shelfHeight, setShelfHeight] = useState(30)
   let [color, setColor] = useState({})
 
+  let [move, setMove] = useState(false)
   let [edit, setEdit] = useState(false)
 
   useEffect(() => {
@@ -48,8 +50,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
       let nBk = await Bookcases.updateBookcaseForRoom(bkcase, bcid)
       console.log(nBk, ": updated bookcase")
       dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: nBk }})
-console.log(color)
-console.log(color.color !== color.orig)
+
       if (color.color !== color.orig)
         navigate(utilPath(path, "room", rid))
   }
@@ -109,11 +110,12 @@ console.log(color.color !== color.orig)
         </div>
 
         <div className="pm">
-          <div className="pm-r ed" onClick={() => setEdit(!edit)}>=</div>
+          <div className="pm-r ed" onClick={() => { setEdit(!edit); if(move) setMove(false); }}>=</div>
+          {edit && <div className="pm-r ed" onClick={() => setMove(!move)}>~</div>}
           {edit && <div className="pm-r min-room" onClick={removeBookcase}>-</div>}
         </div>
       
-       {edit &&
+       {edit && !move &&
         <form onSubmit={handleSubmit}>
           <label htmlFor="bookcase-loc">Bookcase Location</label>
           <input
@@ -155,6 +157,16 @@ console.log(color.color !== color.orig)
           <br />
           <button>Save</button>
         </form>}
+
+        {move && edit &&
+              <Move 
+              path={path}
+              from={"bkcase"}
+              bkcase={currentBookcase} 
+              room={currentRoom}
+              params={params} 
+              navigate={navigate}
+              />}
       </div>
     );
   } else return <div>No bookcase selected</div>;

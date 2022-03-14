@@ -143,7 +143,7 @@ const NewBook = ({ setCurrShelf }) => {
       {shelfPres ?
 
           <div className="pm">
-                {bid && <div className="pm-r ed" onClick={() => setEdit(!edit)}>=</div>}
+                {bid && <div className="pm-r ed" onClick={() => { setEdit(!edit); if(move) setMove(false); }}>=</div>}
                 {bid && edit && <div className="pm-r ed" onClick={() => setMove(!move)}>~</div>}
                 {bid && edit && <div className="pm-b" onClick={removeBook}>-</div>}
           </div>: null}
@@ -264,9 +264,6 @@ const NewBook = ({ setCurrShelf }) => {
         from={"book"}
         book={inputs} 
         params={params} 
-        rooms={rooms} 
-        user={user} 
-        dispatch={dispatch} 
         path={path}
         navigate={navigate}
       /> : "No book selected"}

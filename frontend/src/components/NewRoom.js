@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { ADD_ROOM, REMOVE_ROOM, SET_ROOMS, UPDATE_ROOM } from "../context";
+import { ADD_ROOM, REMOVE_ROOM, SET_ROOMS, TOGGLE_BKCASE_SELECT, UPDATE_ROOM } from "../context";
 import { useNavigate, useLocation } from "react-router-dom";
 import { randomNum, utilMsg, utilPath,rgbToHex } from "../services/utility";
 
@@ -8,7 +8,7 @@ import { randomNum, utilMsg, utilPath,rgbToHex } from "../services/utility";
 import Rooms from "../services/RoomService";
 import Bookcases from "../services/BookcaseService";
 
-const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
+const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition }) => {
   let [rIndex, setRIndex] = useState(0);
   // rid ? rooms.findIndex(r => r.id === rid) :
   let defaultRoom = {
@@ -183,7 +183,12 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
         if (tiles) {
           div.style.backgroundColor = currentBookcase.color;
           if (currentBookcase.id === bcid) {
-            div.style.outline = "3px solid black";
+            if (reposition.toggle) {
+              div.style.opacity = ".5"
+              div.style.outline = "3px solid white"
+            } else {
+              div.style.outline = "3px solid black";
+            }
           }
         }
 
@@ -191,7 +196,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
       }
     }
   
-  }, [height, width, tile, bcStart, bcEnd, bookcases, bcid]);
+  }, [height, width, tile, bcStart, bcEnd, bookcases, bcid, reposition]);
 
   const handleBoxClick = async (e) => {
     if (e.target.className[0] !== "b") return;
@@ -218,13 +223,24 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
     if (overlap) {
       setBcStart("");
       setBcEnd("");
-      if (currentBookcase.id)
+      if (currentBookcase.id && !reposition.toggle)
         navigate(utilPath(path, "bookcase", currentBookcase.id));
       return;
     }
-    if (!edit) return
+    console.log('got here at least')
+    console.log(reposition)
+    if (!edit && !reposition.toggle) return
     if (!bcStart) {
       setBcStart([row, column]);
+
+      if (reposition.toggle) {
+        setBookcases(bookcases.filter(bk => bk.reposition !== true));
+        dispatch({
+          type: TOGGLE_BKCASE_SELECT,
+          payload: { toggle: true }
+        })
+      }
+
     } else if (bcStart && !bcEnd) {
       setBcEnd([row, column]);
     } else {
@@ -233,17 +249,38 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
         colLow: Math.min(bcStart[1], bcEnd[1]),
         rowHigh: Math.max(bcStart[0], bcEnd[0]),
         colHigh: Math.max(bcStart[1], bcEnd[1]),
-        color: rgbToHex(randomNum(), randomNum(), randomNum()),
+        color: reposition.toggle ? "blue" : rgbToHex(randomNum(), randomNum(), randomNum()),
         location: "",
         bcWidth: 100,
         shHeight: 30,
       };
+
+      if (reposition.toggle) {
+        newBc.reposition = true
+        dispatch({
+          type: TOGGLE_BKCASE_SELECT,
+          payload: { toggle: true, newBc }
+        })
+      }
+
       setBookcases([...bookcases, newBc]);
 
       setBcStart("");
       setBcEnd("");
     }
   };
+
+  useEffect(() => {
+    if (!reposition.toggle) {
+      setBcStart("");
+      setBcEnd("");
+      setBookcases(bk => bk.filter(bk => bk.reposition !== true));
+    } else {
+      if (edit) {
+        setEdit(false)
+      }
+    }
+  }, [reposition, edit])
 
   const roomConstruct = (h, w, rn, ti, bc) => {
     return {
@@ -331,7 +368,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
         <div className="pm-r ed" onClick={() => { 
           if (bcStart) setBcStart("");
           if (bcEnd) setBcEnd("");
-          setEdit(!edit)
+          if (!reposition.toggle) setEdit(!edit)
         }}>
           =
         </div>

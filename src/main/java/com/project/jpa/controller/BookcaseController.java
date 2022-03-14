@@ -86,10 +86,24 @@ public class BookcaseController {
 			
 			Bookcase oldBkcase = bkcaseRepo.findById(bkcaseId).orElseThrow();
 			
-			oldBkcase.setHeight(newBkcase.getHeight());
-			oldBkcase.setLocation(newBkcase.getLocation());
-			oldBkcase.setWidth(newBkcase.getWidth());
-			oldBkcase.setColor(newBkcase.getColor());
+			if (newBkcase.getHeight() != 0) 
+				oldBkcase.setHeight(newBkcase.getHeight());
+			if (newBkcase.getWidth() != 0) 
+				oldBkcase.setWidth(newBkcase.getWidth());
+			
+			if (newBkcase.getLocation() != null) 
+				oldBkcase.setLocation(newBkcase.getLocation());
+			if (newBkcase.getColor() != null) 
+				oldBkcase.setColor(newBkcase.getColor());
+			
+			if (newBkcase.getRowHigh() != 0) 
+				oldBkcase.setRowHigh(newBkcase.getRowHigh());
+			if (newBkcase.getRowLow() != 0) 
+				oldBkcase.setRowLow(newBkcase.getRowLow());
+			if (newBkcase.getColHigh() != 0) 
+				oldBkcase.setColHigh(newBkcase.getColHigh());
+			if (newBkcase.getColLow() != 0) 
+				oldBkcase.setColLow(newBkcase.getColLow());
 			
 			return bkcaseRepo.save(oldBkcase);
 		}

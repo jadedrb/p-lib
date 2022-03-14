@@ -55,6 +55,9 @@ Small potatos:
 4. Add a move bookcase and move books feature
 5. (maybe) Double-clicking a result opens up the edit window 
 6. (maybe) Create a "pinned" books page
+7. Delete bulk (so you don't have to loop and do X number of delete requests) 
+8. Default order (shelf options)
+9. Turn id to Long in backend (for greater range of id's)
 
 Big potatos:
 

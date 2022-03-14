@@ -124,13 +124,14 @@ export function utilOrder(results, order, toggle) {
 
 
 
-
+// Did not write this function (copy pasted)
 export function componentToHex(c) {
     console.log(c)
     var hex = c.toString(16);
-    return hex.length == 1 ? "0" + hex : hex;
+    return hex.length === 1 ? "0" + hex : hex;
   }
 
+// Did not write this function (copy pasted)
 export function rgbToHex(r, g, b) {
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
 }
