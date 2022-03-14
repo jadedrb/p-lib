@@ -11,17 +11,19 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
   let [shelves, setShelves] = useState("");
   let [width, setWidth] = useState(100);
   let [shelfHeight, setShelfHeight] = useState(30)
+  let [color, setColor] = useState({})
 
   let [edit, setEdit] = useState(false)
 
   useEffect(() => {
     if (currentRoom && currentBookcase) {
-      let { location, shelves, width, height } = currentBookcase
+      let { location, shelves, width, height, color } = currentBookcase
   
       setLocation(location ? location : "Bookcase Location")
       setShelves(shelves.length)
       setWidth(width ? width : 100)
       setShelfHeight(height ? height : 30)
+      setColor({ color, orig: color })
     }
   }, [currentRoom, currentBookcase, currentBookcase?.location, currentBookcase?.shelves.length, currentBookcase?.bcWidth, currentBookcase?.shHeight])
 
@@ -31,6 +33,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
       let bkcase = {
         location, 
         width,
+        color: color.color,
         height: shelfHeight
       }
 
@@ -40,11 +43,15 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
                                             // Convoluted way of making a dummy array of empty objects
           await Shelves.addShelfForBookcase([...Array(Number(shelvesAdded)).keys()].map(() => { return {} }), bcid)
       }
+      setEdit(false)
 
       let nBk = await Bookcases.updateBookcaseForRoom(bkcase, bcid)
       console.log(nBk, ": updated bookcase")
-  
       dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: nBk }})
+console.log(color)
+console.log(color.color !== color.orig)
+      if (color.color !== color.orig)
+        navigate(utilPath(path, "room", rid))
   }
 
   const renderBookcases = () => {
@@ -69,7 +76,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
               <span 
                 key={i} 
                 onClick={() => navigate(utilPath(path, 'book', b.id)) }
-                style={{ backgroundColor: bid === b?.id ? b.color : 'white' }}
+                style={{ backgroundColor: bid === b?.id && b.color ? b.color : bid === b?.id && !b.color ? 'lightgrey' : 'white' }}
               >
                 
               </span>
@@ -78,6 +85,8 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
         </p>
       )
   }
+
+
 
   const removeBookcase = async () => {
     let confirm = window.confirm(utilMsg({ type: 'bookcase', details: { bookcase: currentBookcase } }))
@@ -136,6 +145,14 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
             type="range"
             value={shelfHeight}
           />
+          <label htmlFor="bk-color">Color</label>
+          <input
+            id="bk-color"
+            onChange={(e) => setColor({ orig: color.orig, color: e.target.value })}
+            type="color"
+            value={color.color}
+          />
+          <br />
           <button>Save</button>
         </form>}
       </div>
@@ -144,5 +161,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
 };
 
 export default NewBookcase;
+
+
 
 

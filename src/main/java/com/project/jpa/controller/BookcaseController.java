@@ -89,6 +89,7 @@ public class BookcaseController {
 			oldBkcase.setHeight(newBkcase.getHeight());
 			oldBkcase.setLocation(newBkcase.getLocation());
 			oldBkcase.setWidth(newBkcase.getWidth());
+			oldBkcase.setColor(newBkcase.getColor());
 			
 			return bkcaseRepo.save(oldBkcase);
 		}

@@ -159,6 +159,7 @@ tr:hover {
 .new-bookcase form {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     margin: 30px;
     padding: 0px;
 }
@@ -168,11 +169,8 @@ tr:hover {
     opacity: .5;
 }
 
-.new-bookcase form {
-    /* border: 1px solid black; */
-}
-
 .new-bookcase input {
+    width: 100%;
     margin: 5px;
     padding: 3px;
 }

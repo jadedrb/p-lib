@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { ADD_ROOM, REMOVE_ROOM, SET_ROOMS, UPDATE_ROOM } from "../context";
 import { useNavigate, useLocation } from "react-router-dom";
-import { randomNum, utilMsg, utilPath } from "../services/utility";
+import { randomNum, utilMsg, utilPath,rgbToHex } from "../services/utility";
 
 // import { test0, test1 } from "../services/tests";
 
@@ -190,6 +190,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
         map.appendChild(div);
       }
     }
+  
   }, [height, width, tile, bcStart, bcEnd, bookcases, bcid]);
 
   const handleBoxClick = async (e) => {
@@ -232,7 +233,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
         colLow: Math.min(bcStart[1], bcEnd[1]),
         rowHigh: Math.max(bcStart[0], bcEnd[0]),
         colHigh: Math.max(bcStart[1], bcEnd[1]),
-        color: `rgb(${randomNum()}, ${randomNum()}, ${randomNum()})`,
+        color: rgbToHex(randomNum(), randomNum(), randomNum()),
         location: "",
         bcWidth: 100,
         shHeight: 30,
@@ -286,6 +287,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user }) => {
     e.preventDefault();
 
     let room = roomConstruct();
+    setEdit(false)
 
     if (rid) {
       let payload = await Rooms.updateRoomOfIdForUser(room, rid, user);

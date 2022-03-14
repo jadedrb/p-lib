@@ -125,6 +125,22 @@ export function utilOrder(results, order, toggle) {
 
 
 
+export function componentToHex(c) {
+    console.log(c)
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+  }
+
+export function rgbToHex(r, g, b) {
+    return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+export function extractRgb(str) {
+    return str.slice(0, -1).slice(4).split(",").map(c => Number(c))
+}
+
+
+
 /*
 
 let newRooms = state.rooms.map(r => {
