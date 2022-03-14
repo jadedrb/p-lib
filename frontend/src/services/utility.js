@@ -21,7 +21,7 @@ export function utilitySelector(rid, bcid, shid, rms, bid) {
 }
 
 export function utilPath(path, type, id) {
-    console.log(path, type, id)
+    console.log("utilPath, " + type + " " + id)
     let index;
     switch (type) {
         case 'book':
@@ -80,7 +80,7 @@ export function loading(where) {
     let loader = document.createElement("div")
     loading.setAttribute("class", `loading ${where}`)
     loader.setAttribute("class", `loader`)
-    console.log(loading, " loading")
+    // console.log(loading, " loading")
     loading.appendChild(loader)
     el.appendChild(loading)
 }
@@ -91,7 +91,7 @@ export function clearLoading() {
         let parentClass = loading.classList[1]
         let parent = document.querySelector(parentClass)
         parent.removeChild(loading)
-        console.log(loading, " finished loading")
+        // console.log(loading, " finished loading")
 }
 
 export function utilOrder(results, order, toggle) {

@@ -17,7 +17,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
   useEffect(() => {
     if (currentRoom && currentBookcase) {
       let { location, shelves, width, height } = currentBookcase
-      console.log(currentBookcase)
+  
       setLocation(location ? location : "Bookcase Location")
       setShelves(shelves.length)
       setWidth(width ? width : 100)
@@ -69,7 +69,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
               <span 
                 key={i} 
                 onClick={() => navigate(utilPath(path, 'book', b.id)) }
-                style={{ backgroundColor: bid === b.id ? b.color : 'white' }}
+                style={{ backgroundColor: bid === b?.id ? b.color : 'white' }}
               >
                 
               </span>

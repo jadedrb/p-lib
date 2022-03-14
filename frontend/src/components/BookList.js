@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { utilPath, utilOrder } from '../services/utility';
 
-const BookList = ({ books, bid, path, navigate }) => {
+const BookList = ({ books, bid, path, navigate, selected }) => {
 
     let [order, setOrder] = useState("")
     let [ascDesc, setAscDesc] = useState(true)
 
     let renderedBooks = utilOrder(books, order, ascDesc)
 
+    // console.log(renderedBooks)
+
     renderedBooks = renderedBooks?.map((b,i) => {
         return (
             <tr 
                 key={i} 
                 onClick={() => navigate(utilPath(path, 'book', b.id))} 
-                style={{ outline: bid === b.id ? '3px solid black' : 'none' }}
+                style={{ outline: selected.includes(b?.id + "") ? '3px solid rgb(74, 74, 255)' : bid === b?.id ? '3px solid black' : 'none' }}
             >
                 <td>{b.title}</td>
                 <td>{b.author}</td>

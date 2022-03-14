@@ -1,3 +1,5 @@
+import React, { useContext } from 'react'
+import { Context } from './context'
 import './App.css';
 
 import Rooms from './components/Rooms';
@@ -9,6 +11,8 @@ import NewBook from './components/NewBook';
 
 function App() {
 
+  let { selected } = useContext(Context)
+
   // This app uses SpringJPA as backend - Workspace: /Users/JadeDRB/springboot
 
   return (
@@ -18,7 +22,7 @@ function App() {
           <Route path={"/room/:rid/*"} element={<Rooms />}>
             <Route path={"bookcase/:bcid/*"} element={<Bookcases />}>
               <Route path={"shelf/:shid/*"} element={<CurrentShelf />}>
-                <Route path={"book/:bid"} element={<NewBook />} />
+                <Route path={"book/:bid"} element={selected.length ? null : <NewBook />} />
                 <Route path={"book"} element={<NewBook />} />
               </Route>
             </Route>

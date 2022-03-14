@@ -95,6 +95,12 @@ public class RoomController {
 		
 		return roomRepo.save(oldRoom);
 	}
+	
+	// This is used by getRoomsForUser from frontend
+		@GetMapping("/room/{id}")
+		public Room roomOfUser(@PathVariable int id) {
+			return roomRepo.findById(id).orElseThrow();
+		}
 }
 
 

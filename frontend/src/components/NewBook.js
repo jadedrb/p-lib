@@ -119,11 +119,11 @@ const NewBook = ({ setCurrShelf }) => {
         payload: { shid, rid, bcid, bid, book },
       });
     } else {
-      let books = await BookService.addBooksForShelfAndUser([inputs], shid, user)
-      navigate(utilPath(path, 'book', books[0].id))
+      let [ book ] = await BookService.addBooksForShelfAndUser([inputs], shid, user)
+      navigate(utilPath(path, 'book', book.id))
       dispatch({
         type: ADD_BOOK,
-        payload: { shid, rid, bcid, setCurrShelf, books },
+        payload: { shid, rid, bcid, setCurrShelf, book },
       });
     }
     if (e?.target?.value) // to determine whether they clicked a button or pressed Enter

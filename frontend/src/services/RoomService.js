@@ -13,6 +13,11 @@ class RoomService {
         return axios.get(API + '/rooms').then(r => this.format(r))
     }
 
+    getRoomOfId(id) {
+        loading(".newroom")
+        return axios.get(API + `/room/${id}`).then(r => this.format(r)).catch(() => { console.log('uhoh'); clearLoading(); return []; })
+    }
+
     getRoomsForUser(user) {
         loading(".newroom")
         return axios.get(API + `/rooms/${user}`).then(r => this.format(r)).catch(() => { console.log('uhoh'); clearLoading(); return []; })

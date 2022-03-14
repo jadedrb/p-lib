@@ -14,6 +14,7 @@ export const REMOVE_BOOKCASE = 'REMOVE_BOOKCASE'
 export const REMOVE_SHELF = 'REMOVE_SHELF'
 
 export const ADD_BOOK = "ADD_BOOK"
+export const ADD_BULK = "ADD_BULK"
 export const UPDATE_BOOK = "UPDATE_BOOK"
 export const REMOVE_BOOK = "REMOVE_BOOK"
 
@@ -21,11 +22,14 @@ export const QUEUE_UPDATE = "QUEUE_UPDATE"
 export const FINISH_UPDATE = "FINISH_UPDATE"
 export const SET_USER = "SET_USER"
 
+export const TOGGLE_SELECT = "TOGGLE_SELECT"
+
 let initialState = {
     books: [],
     rooms: [],
     user: "bob",
-    updates: 0
+    updates: 0,
+    selected: []
 }
 
 function reducer(state, action) {
@@ -69,13 +73,42 @@ function reducer(state, action) {
             return { ...state, rooms }
         }
         case ADD_BOOK: {
-            let { bcid, rid, shid, books } = action.payload
+            let { bcid, rid, shid, book } = action.payload
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms)
             let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
             console.log(roomIndex, bkcaseIndex, shelfIndex)
-            shelf.books = [ ...shelf.books, ...books]
+            console.log(book)
+            console.log(shelf.books)
+            console.log([...shelf.books])
+            console.log([ ...shelf.books, book])
+            shelf.books = [ ...shelf.books, book]
             // setCurrShelf({ ...shelf })
             return { ...state, rooms }
+        }
+        case ADD_BULK: {
+            let { bcid, rid, shid, books } = action.payload
+            let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms)
+            let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
+            shelf.books = [ ...shelf.books, ...books]
+            let trueLength = shelf.books.length
+            console.log(trueLength)
+            console.log(shelf.books.length)
+            console.log(rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books.length)
+            // while (rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books.length) {
+
+            // }
+            // setTimeout(() => {
+            //     console.log(shelf.books)
+            //     return state
+            // }, 3000)
+            // setCurrShelf({ ...shelf })
+            
+            console.log(rooms)
+            return { ...state, rooms }
+            // return { ...state, rooms: state.rooms
+            //     .map(r => r.id === Number(roomIndex) ? {...r, bookcases: r.bookcases.
+            //         map(bk => bk.id === Number(bkcaseIndex) ? {...bk, shelves: bk.shelves.
+            //             map(sh => sh.id === Number(shelfIndex) ? {...sh, books: sh.books.concat(books)} : sh)} : bk)} : r )}
         }
         case UPDATE_BOOK: {
             console.log('updating...')
@@ -93,7 +126,17 @@ function reducer(state, action) {
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms, bid)
             let newBooks = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books.filter(b => b.id !== Number(bid))
             rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books = newBooks
+            console.log(rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books)
+            // console.log('rooms (after remove): ', rooms)
             return { ...state, rooms }
+        }
+        case TOGGLE_SELECT: {
+            if (typeof action.payload === "object")
+                return { ...state, selected: [] }
+            else if (state.selected.includes(action.payload))
+                return { ...state, selected: state.selected.filter(b => action.payload !== b) }
+            else 
+                return { ...state, selected: [...state.selected, action.payload] }            
         }
         case QUEUE_UPDATE: {
             return { ...state, updates: state.updates + 1 }
@@ -113,10 +156,10 @@ export function Provider(props) {
 
     let [state, dispatch] = useReducer(reducer, initialState)
 
-    let { books, rooms, user } = state
+    let { books, rooms, user, selected } = state
 
     return (
-        <Context.Provider value={{ books, rooms, user, dispatch }}>
+        <Context.Provider value={{ books, rooms, user, selected, dispatch }}>
             {props.children}
         </Context.Provider>
     )

@@ -10,7 +10,7 @@ import Move from './Move';
 
 function CurrentShelf() {
 
-    let { rooms, dispatch, user } = useContext(Context)
+    let { rooms, dispatch, user, selected } = useContext(Context)
 
     let [showShelf, setShowShelf] = useState(true)
     let [currShelf, setCurrShelf] = useState(null)
@@ -42,6 +42,7 @@ function CurrentShelf() {
         swap = wrapper.current.swapem()
     
         setShelfPos({ top, bot, swap })
+        console.log(shelf)
         setCurrShelf(shelf)
         setMove(false)
     }, [shid, rid, bcid, rooms])
@@ -62,7 +63,7 @@ function CurrentShelf() {
     let position = tob === 1 ? "1st" : tob === 2 ? "2nd" : tob === 3 ? "3rd" : tob + "th"
 
     return ( 
-        <div className='sh-b'>
+        <div className='sh-b' onClick={() => console.log(rooms)}>
             {showShelf && currShelf && <div className="pm">
                 <div className="pm-r ed" onClick={() => setEdit(!edit)}>=</div>
                 {shid && edit && <div className="pm-r ed" onClick={() => setMove(!move)}>~</div>}
@@ -73,7 +74,7 @@ function CurrentShelf() {
                 <div className="b-sec-line" style={{ display: showShelf ? "block" : "none" }}/>
             </div>
             {showShelf && currShelf && 
-            <h4 style={{ cursor: "pointer" }} onClick={() => setShelfPos((prev) => ({ ...prev, swap: prev.swap === "top" ? "bottom" : "top" }))}>
+            <h4 style={{ cursor: "pointer" }} onClick={() => { setShelfPos((prev) => ({ ...prev, swap: prev.swap === "top" ? "bottom" : "top" })) }}>
                 <span style={{ color: "rgb(74, 74, 255)" }}>{position}</span> shelf 
                 <span style={{ opacity: ".4" }}> (from the {shelfPos.swap})</span>
             </h4>}
@@ -82,7 +83,8 @@ function CurrentShelf() {
                 <div>
                     {/* <h5>Shelf ID: {shid}</h5> */}
                     <BookList 
-                        books={currShelf?.books} 
+                        selected={selected}
+                        books={currShelf.books} 
                         path={path}
                         bid={Number(bid)}
                         navigate={navigate}
@@ -94,10 +96,10 @@ function CurrentShelf() {
                 : null
             }
 
-            {edit && move ?  
+            {showShelf && edit && move ?  
                <Move
                  from={"shelf"}
-                //  book={inputs} 
+                 selected={selected}
                  params={params} 
                  rooms={rooms} 
                  user={user} 
