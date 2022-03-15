@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import { ADD_ROOM, REMOVE_ROOM, SET_ROOMS, TOGGLE_BKCASE_SELECT, UPDATE_ROOM } from "../context";
-import { useNavigate, useLocation } from "react-router-dom";
 import { randomNum, utilMsg, utilPath,rgbToHex } from "../services/utility";
 
 // import { test0, test1 } from "../services/tests";
@@ -8,7 +7,7 @@ import { randomNum, utilMsg, utilPath,rgbToHex } from "../services/utility";
 import Rooms from "../services/RoomService";
 import Bookcases from "../services/BookcaseService";
 
-const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition }) => {
+const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path }) => {
   let [rIndex, setRIndex] = useState(0);
   // rid ? rooms.findIndex(r => r.id === rid) :
   let defaultRoom = {
@@ -40,8 +39,8 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition }) => {
   let waitForSwitch = useRef();
   let navAndSwitch = useRef();
 
-  let navigate = useNavigate();
-  let path = useLocation();
+  // let navigate = useNavigate();
+  // let path = useLocation();
   let pathname = path.pathname;
 
   const handlePathAndSwitchRoom = () => {
@@ -84,7 +83,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition }) => {
     if (typeof mount.current === "number") {
       //  console.log(rooms, rid)
       if (rid) {
-        //    console.log(rid)
+           console.log(rid)
         let indx = rooms.findIndex((r) => r?.id === rid);
         const cr = rooms.length && rooms[indx] ? rooms[indx] : currentRoom;
         // console.log(cr, rooms.length, rooms[indx])
@@ -94,8 +93,8 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition }) => {
           if (rooms.length) navigate(utilPath(path, "room", rooms[0].id));
           return;
         }
-        if (indx > 0) setRIndex(indx);
-
+        
+        setRIndex(indx);
         setCurrentRoom(cr);
         setHeight(cr.height);
         setWidth(cr.width);
@@ -117,27 +116,27 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition }) => {
     }
   };
 
-  const handlePathBackToRoom = () => navigate("/room/");
+  // const handlePathBackToRoom = () => navigate("/room/");
 
   // adding these functions to a ref to avoid warnings about missing dependencies inside useEffect
   navAndSwitch.current = {
     handlePathAndSwitchRoom,
-    handlePathBackToRoom,
+    // handlePathBackToRoom,
     handleCurrentRoomSetup,
     handleSwitchAfterAddOrRemove,
   };
 
   useEffect(() => {
     console.log("useEffect: rIndex", rIndex);
-    //console.log('ye')
+    console.log('ye')
     navAndSwitch.current.handlePathAndSwitchRoom();
   }, [rIndex]);
 
-  useEffect(() => {
-    return () => {
-      navAndSwitch.current.handlePathBackToRoom();
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     // navAndSwitch.current.handlePathBackToRoom();
+  //   };
+  // }, []);
 
   useEffect(() => {
     // const defaultRoom = { height: 10, width: 10, tile: 25, name: "New Room", bookcases: [] }

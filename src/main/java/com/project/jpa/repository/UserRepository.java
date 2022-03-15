@@ -12,7 +12,7 @@ import com.project.jpa.exception.AuthException;
 import com.project.jpa.model.Book;
 import com.project.jpa.model.User;
 
-public interface UserRepository extends JpaRepository<User,Integer> {
+public interface UserRepository extends JpaRepository<User,Long> {
 
 	//Integer create(String email, String password) throws AuthException;
 	

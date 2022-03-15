@@ -15,7 +15,7 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
             <tr 
                 key={i} 
                 onClick={() => navigate(utilPath(path, 'book', b.id))} 
-                style={{ outline: selected.includes(b?.id + "") ? '3px solid rgb(74, 74, 255)' : bid === b?.id ? '3px solid black' : 'none' }}
+                style={{ outline: selected.highlight.includes(b?.id + "") ? '3px solid rgb(74, 74, 255)' : bid === b?.id ? '3px solid black' : 'none' }}
             >
                 <td>{b.title}</td>
                 <td>{b.author}</td>

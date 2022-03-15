@@ -21,7 +21,7 @@ public class Shelf {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	private long id;
 	private String organize;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "shelf")
@@ -58,7 +58,7 @@ public class Shelf {
 		this.bookcase = bookcase;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	

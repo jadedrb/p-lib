@@ -99,7 +99,7 @@ public class UserController implements UserService {
 	}
 	
 	@DeleteMapping("/users/{id}")
-	public Map<String, Boolean> roomFromUser(@PathVariable Integer id) {
+	public Map<String, Boolean> roomFromUser(@PathVariable Long id) {
 		try {
 			User user = userRepo.findById(id).orElseThrow();
 			userRepo.delete(user);

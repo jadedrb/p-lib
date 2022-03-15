@@ -24,7 +24,7 @@ class ShelfService {
         return axios.delete(API + `/shelves/${id}/bookcases/${bookcase}`).then(r => this.format(r))
     }
     
-    updateShelfForBookcase(shelf, id) {
+    updateShelfOfId(shelf, id) {
         return axios.put(API + `/shelves/${id}`, shelf).then(r => this.format(r))
     }
 }

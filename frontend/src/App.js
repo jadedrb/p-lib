@@ -14,7 +14,7 @@ function App() {
   let { selected } = useContext(Context)
 
   // This app uses SpringJPA as backend - Workspace: /Users/JadeDRB/springboot
-
+console.log(selected)
   return (
         <Routes>
           <Route path={"/"} element={<Navigate to={"/room/"} />} />
@@ -22,7 +22,7 @@ function App() {
           <Route path={"/room/:rid/*"} element={<Rooms />}>
             <Route path={"bookcase/:bcid/*"} element={<Bookcases />}>
               <Route path={"shelf/:shid/*"} element={<CurrentShelf />}>
-                <Route path={"book/:bid"} element={selected.length ? null : <NewBook />} />
+                <Route path={"book/:bid"} element={selected.toggle ? null : <NewBook />} />
                 <Route path={"book"} element={<NewBook />} />
               </Route>
             </Route>

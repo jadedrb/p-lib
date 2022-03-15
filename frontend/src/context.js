@@ -12,6 +12,7 @@ export const UPDATE_BOOKCASE = 'UPDATE_BOOKCASE'
 export const REMOVE_BOOKCASE = 'REMOVE_BOOKCASE'
 
 export const REMOVE_SHELF = 'REMOVE_SHELF'
+export const UPDATE_SHELF = 'UPDATE_SHELF'
 
 export const ADD_BOOK = "ADD_BOOK"
 export const ADD_BULK = "ADD_BULK"
@@ -30,12 +31,13 @@ let initialState = {
     rooms: [],
     user: "bob",
     updates: 0,
-    selected: [],
+    selected: { toggle: false, highlight: [] },
     reposition: { toggle: false }
 }
 
 function reducer(state, action) {
     switch(action.type) {
+
         case SET_ROOMS: {
             return { ...state, rooms: action.payload }
         }
@@ -52,6 +54,8 @@ function reducer(state, action) {
                 ...state,
                 rooms: state.rooms.map(r => r.id === action.payload.id ? action.payload : r)
             }
+
+
         case UPDATE_BOOKCASE: {
             let { bcId, rmId, bc } = action.payload
             let { roomIndex, rooms, bkcaseIndex, bkcase } = utilitySelector(rmId, bcId, null, state.rooms)
@@ -67,6 +71,8 @@ function reducer(state, action) {
             rooms[roomIndex].bookcases = newBookcases
             return { ...state, rooms }
         }
+
+
         case REMOVE_SHELF: {
             let { bcid, rid, shid } = action.payload
             let { roomIndex, rooms, bkcaseIndex } = utilitySelector(rid, bcid, shid, state.rooms)
@@ -74,6 +80,14 @@ function reducer(state, action) {
             rooms[roomIndex].bookcases[bkcaseIndex].shelves = newShelves
             return { ...state, rooms }
         }
+        case UPDATE_SHELF: {
+            let { bcid, rid, shid, sh } = action.payload
+            let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms)
+            rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex] = sh
+            return { ...state, rooms }
+        }
+
+
         case ADD_BOOK: {
             let { bcid, rid, shid, book } = action.payload
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms)
@@ -132,13 +146,15 @@ function reducer(state, action) {
             // console.log('rooms (after remove): ', rooms)
             return { ...state, rooms }
         }
+
+
         case TOGGLE_SELECT: {
             if (typeof action.payload === "object")
-                return { ...state, selected: [] }
-            else if (state.selected.includes(action.payload))
-                return { ...state, selected: state.selected.filter(b => action.payload !== b) }
+                return { ...state, selected: { toggle: false, highlight: [] } }
+            else if (state.selected.highlight.includes(action.payload))
+                return { ...state, selected: { toggle: true, highlight: state.selected.highlight.filter(b => action.payload !== b) } }
             else 
-                return { ...state, selected: [...state.selected, action.payload] }            
+                return { ...state, selected: { toggle: true, highlight: [...state.selected.highlight, action.payload] } }             
         }
         case TOGGLE_BKCASE_SELECT: {
             if (typeof action.payload === "boolean")
@@ -146,12 +162,16 @@ function reducer(state, action) {
             else 
                 return { ...state, reposition: action.payload }
         }
+
+
         case QUEUE_UPDATE: {
             return { ...state, updates: state.updates + 1 }
         }
         case FINISH_UPDATE: {
             return { ...state, updates: state.updates - 1 }
         }
+
+
         case SET_USER: {
             return { ...state, user: action.payload }
         }

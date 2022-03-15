@@ -56,7 +56,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
                     payload: bid
                 })
             }
-        } else if (selected?.length) {
+        } else if (selected?.highlight.length) {
             dispatch({
                 type: TOGGLE_SELECT,
                 payload: []
@@ -65,7 +65,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
     }
 
     const handleToggleMount = (mount) => {
-        if (mount) {
+        if (mount && from === "bkcase") {
             dispatch({
                 type: TOGGLE_BKCASE_SELECT,
                 payload: true
@@ -87,6 +87,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
     useEffect(() => {
         wrapper.current.handleToggleMount(true)
         return () => {
+            console.log("dismounting")
             wrapper.current.handleToggleMount(false)
         }
     }, [])
@@ -124,7 +125,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
             else {
                 if (selBulk === "selected") {
                     console.log('copy origin... 2')
-                    await handleCopy(currShelf.filter(b => selected.includes(b.id + "")))
+                    await handleCopy(currShelf.filter(b => selected.highlight.includes(b.id + "")))
                 } else {
                     console.log('copy origin... 3')
                     await handleCopy(currShelf)
@@ -141,7 +142,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
             } else {
                 if (selBulk === "selected") {
                     console.log('copy origin... 5')
-                    let filter = currShelf.filter(b => selected.includes(b.id + ""))
+                    let filter = currShelf.filter(b => selected.highlight.includes(b.id + ""))
                     await handleCopy(filter)
                     await handleMove(filter)
                 } else {
@@ -238,7 +239,7 @@ console.log(reposition)
                 <option value="contents">Every book on this shelf</option>
                 <option value="selected">Selected books from this shelf</option>
             </select> :
-            <p style={{ fontWeight: "bold" }}>{bkcase.location} (id: {bkcase.id})</p>
+            <p style={{ fontWeight: "bold" }}>{bkcase.location ? 'wow' : "Untitled Bookcase"} (id: {bkcase.id})</p>
             }
             <p style={{ opacity: ".4" }}>{from !== "bkcase" ? "To..." : "In..."}</p>
 

@@ -41,7 +41,7 @@ public class ShelfController {
 	
 	
 	@GetMapping("/shelves/{bkcase}")
-	public List<Shelf> shelvesOfBookcase(@PathVariable int bkcase) {
+	public List<Shelf> shelvesOfBookcase(@PathVariable long bkcase) {
 		try {
 			return bkcaseRepo.findById(bkcase).orElseThrow().getShelves();
 		}
@@ -62,7 +62,7 @@ public class ShelfController {
 	
 
 	@PostMapping("/shelves/{bkcaseId}")
-	public List<Shelf> shelfForBookcase(@PathVariable int bkcaseId, @RequestBody List<Shelf> shelves) {
+	public List<Shelf> shelfForBookcase(@PathVariable long bkcaseId, @RequestBody List<Shelf> shelves) {
 		Bookcase bookcase = bkcaseRepo.findById(bkcaseId).orElseThrow();
 		for (Shelf shelf : shelves) {
 			bookcase.addShelf(shelf);
@@ -72,7 +72,7 @@ public class ShelfController {
 	}
 	
 	@DeleteMapping("/shelves/{shelfId}/bookcases/{bkcaseId}")
-	public Map<String, Boolean> shelfFromBookcase(@PathVariable Integer shelfId, @PathVariable Integer bkcaseId) {
+	public Map<String, Boolean> shelfFromBookcase(@PathVariable Long shelfId, @PathVariable Long bkcaseId) {
 		Map<String, Boolean> res = new HashMap<>();
 		try {
 			Bookcase bookcase = bkcaseRepo.findById(bkcaseId).orElseThrow();
@@ -89,7 +89,7 @@ public class ShelfController {
 
 
 	@PutMapping("/shelves/{shelfId}")
-	public Shelf updateShelfForBookcase(@PathVariable int shelfId, @RequestBody Shelf newShelf) {
+	public Shelf updateShelfForBookcase(@PathVariable long shelfId, @RequestBody Shelf newShelf) {
 		
 		Shelf oldShelf = shelfRepo.findById(shelfId).orElseThrow();
 		

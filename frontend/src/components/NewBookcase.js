@@ -22,8 +22,8 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
       let { location, shelves, width, height, color } = currentBookcase
   
       setLocation(location ? location : "Bookcase Location")
-      setShelves(shelves.length)
-      setWidth(width ? width : 100)
+      setShelves(shelves.length ? shelves.length : 3)
+      setWidth(width ? width : 50)
       setShelfHeight(height ? height : 30)
       setColor({ color, orig: color })
     }
@@ -62,7 +62,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
         <p 
           key={i} 
           className="shelf" 
-          style={{ height: `${shelfHeight}px`, outline: `${sh.id === shid ? '3px solid black' : 'none'}` }}
+          style={{ height: `${shelfHeight}px`, outline: `${sh.id === shid ? '3px solid black' : 'none'}`, opacity: currentBookcase.shelves.length ? '10' : '.1' }}
           onClick={() => {
             if (!shid || !(shid === sh.id)) {
               if (sh.id)
@@ -71,8 +71,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
           }}
         >
           {shid === sh.id && sh.books?.length ? 
-          sh.books
-            .sort((a,b) => utilOrder({ a, b }, "lastname"))
+          utilOrder(sh.books, sh.organize)
             .map((b,i) => 
               <span 
                 key={i} 
@@ -105,7 +104,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
         {/* <h5>
           Room ID: {currentRoom?.id}, Bookcase ID: {currentBookcase?.id}
         </h5> */}
-        <div className="bookcase" style={{ width: `${width}%` }}>
+        <div className="bookcase" style={{ width: `${width}%`, border: currentBookcase.shelves.length ? '1px solid black' : '1px solid lightgrey' }}>
             {renderBookcases()}
         </div>
 

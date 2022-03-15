@@ -67,7 +67,7 @@ public class RoomController {
 
 // This is the removeRoomFromUser from frontend
 	@DeleteMapping("/rooms/{id}/users/{name}")
-	public Map<String, Boolean> roomFromUser(@PathVariable Integer id, @PathVariable String name) {
+	public Map<String, Boolean> roomFromUser(@PathVariable Long id, @PathVariable String name) {
 		Map<String, Boolean> res = new HashMap<>();
 		try {
 			User user = userRepo.findByUsername(name).get(0);
@@ -84,7 +84,7 @@ public class RoomController {
 	
 // This is the updateRoomForUser from frontend
 	@PutMapping("/rooms/{id}/users/{name}")
-	public Room updateRoomForUser(@PathVariable int id, @RequestBody Room newRoom) {
+	public Room updateRoomForUser(@PathVariable long id, @RequestBody Room newRoom) {
 		
 		Room oldRoom = roomRepo.findById(id).orElseThrow();
 		
@@ -98,7 +98,7 @@ public class RoomController {
 	
 	// This is used by getRoomsForUser from frontend
 		@GetMapping("/room/{id}")
-		public Room roomOfUser(@PathVariable int id) {
+		public Room roomOfUser(@PathVariable long id) {
 			return roomRepo.findById(id).orElseThrow();
 		}
 }

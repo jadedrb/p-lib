@@ -95,17 +95,45 @@ export function clearLoading() {
 }
 
 export function utilOrder(results, order, toggle) {
+
+    let originalOrder = order
+
+    if (order.includes("name")) {
+        order = "author"
+    } 
+
+    if (originalOrder.includes("asc")) {
+        toggle = true
+        if (order !== "author") {
+            console.log('uno')
+            order = order.split(" ")[0]
+        }
+    } else if (originalOrder.includes("desc")) {
+        toggle = false
+        if (order !== "author") {
+            console.log('dos')
+            order = order.split(" ")[0]
+        }
+    }
+console.log(order)
     if (order === "author" || order === "title" || order === "color" || order === "more" || order === "genre") {
         return results.sort((a, b) => {
+            let aa = { ...a }
+            let bb = { ...b }
+            if (originalOrder.includes("last")) {
+                aa.author = aa.author.split(" ").reverse().join(" ")
+                bb.author = bb.author.split(" ").reverse().join(" ")
+                console.log('we got here...')
+            }
             if (toggle) {
-                if (a[order] < b[order])
+                if (aa[order] < bb[order])
                     return -1;
-                if (a[order] > b[order])
+                if (aa[order] > bb[order])
                     return 1;
             } else {
-                if (b[order] < a[order])
+                if (bb[order] < aa[order])
                     return -1;
-                if (b[order] > a[order])
+                if (bb[order] > aa[order])
                     return 1;
             }
             return 0;
@@ -113,11 +141,11 @@ export function utilOrder(results, order, toggle) {
     } 
     else if (order === "pdate" || order === "pages")
         return results.sort((a, b) => toggle ? a[order] - b[order] : b[order] - a[order])
-    else if (order === "lastname") {
-        let a = results.a.author.split(" ").reverse().join(" ")
-        let b = results.b.author.split(" ").reverse().join(" ")
-        return a < b ? -1 : a > b ? 1 : 0
-    }
+    // else if (order === "lastname") {
+    //     let a = results.a.author.split(" ").reverse().join(" ")
+    //     let b = results.b.author.split(" ").reverse().join(" ")
+    //     return a < b ? -1 : a > b ? 1 : 0
+    // }
         
     return results
 }

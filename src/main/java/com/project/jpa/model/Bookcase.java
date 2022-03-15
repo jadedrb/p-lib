@@ -20,7 +20,7 @@ public class Bookcase {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	private long id;
 	private String location;
 	private int height;
 	private int width;
@@ -99,10 +99,10 @@ public class Bookcase {
 	}
 	
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getLocation() {

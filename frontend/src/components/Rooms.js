@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect, useRef } from "react"
 import NewRoom from "./NewRoom"
 import { Context, SET_ROOMS, SET_USER } from '../context'
-import { Outlet, useParams } from "react-router-dom"
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
 
 import Roomz from '../services/RoomService'
 import Userz from '../services/UserService'
@@ -14,6 +14,9 @@ const Rooms = () => {
 
     let { bcid, rid, bid, shid } = useParams()
     let wrapperRef = useRef()
+
+    let navigate = useNavigate();
+    let path = useLocation();
     
     const initialRoomSetup = async () => {
         let tempUsr = "bob"
@@ -253,7 +256,7 @@ const Rooms = () => {
             {(search && !typing && showResults) || results.length ? <SearchResults books={results} bid={Number(bid)} setShowResults={setShowResults} setResults={setResults} /> : null}
 
             <div className="b-sec-center">
-                <button className="b-section" onClick={toggleRoomsView}>Room</button>
+                <button className="b-section" onClick={toggleRoomsView} onDoubleClick={() => { navigate("/room"); setShowRooms(false) } }>Room</button>
                 <div className="b-sec-line" style={{ display: showRooms ? "block" : "none" }}/>
             </div>
             <label className="search-lib">
@@ -275,6 +278,8 @@ const Rooms = () => {
             {showRooms &&
                 <div className="n-room">
                     <NewRoom 
+                        navigate={navigate}
+                        path={path}
                         reposition={reposition}
                         rooms={rooms} 
                         dispatch={dispatch} 

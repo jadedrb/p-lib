@@ -10,7 +10,7 @@ import com.project.jpa.model.Book;
 import com.project.jpa.model.Room;
 import com.project.jpa.model.User;
 
-public interface RoomRepository extends JpaRepository<Room,Integer> {
+public interface RoomRepository extends JpaRepository<Room,Long> {
 	
 	@Query("select r from User u JOIN u.rooms r WHERE u.username = :n ORDER BY r.id")
 	List<Room> joinUserAndRoom(@Param("n") String username);

@@ -44,7 +44,7 @@ public class BookcaseController {
 	
 	
 		@GetMapping("/bookcases/{room}")
-		public List<Bookcase> bookcasesOfRoom(@PathVariable int room) {
+		public List<Bookcase> bookcasesOfRoom(@PathVariable long room) {
 			try {
 				return roomRepo.findById(room).orElseThrow().getBookcases();
 			}
@@ -55,7 +55,7 @@ public class BookcaseController {
 		
 		
 		@PostMapping("/bookcases/{roomId}")
-		public List<Bookcase> bookcaseForRoom(@PathVariable int roomId, @RequestBody List<Bookcase> bookcases) {
+		public List<Bookcase> bookcaseForRoom(@PathVariable long roomId, @RequestBody List<Bookcase> bookcases) {
 			Room room = roomRepo.findById(roomId).orElseThrow();
 			for (Bookcase bookcase : bookcases) {
 				room.addBookcase(bookcase);
@@ -65,7 +65,7 @@ public class BookcaseController {
 		}
 		
 		@DeleteMapping("/bookcases/{bkcaseId}/rooms/{roomId}")
-		public Map<String, Boolean> bookcaseFromRoom(@PathVariable Integer bkcaseId, @PathVariable Integer roomId) {
+		public Map<String, Boolean> bookcaseFromRoom(@PathVariable long bkcaseId, @PathVariable long roomId) {
 			Map<String, Boolean> res = new HashMap<>();
 			try {
 				Bookcase bookcase = bkcaseRepo.findById(bkcaseId).orElseThrow();
@@ -82,7 +82,7 @@ public class BookcaseController {
 
 
 		@PutMapping("/bookcases/{bkcaseId}")
-		public Bookcase updateBookcaseForRoom(@PathVariable int bkcaseId, @RequestBody Bookcase newBkcase) {
+		public Bookcase updateBookcaseForRoom(@PathVariable long bkcaseId, @RequestBody Bookcase newBkcase) {
 			
 			Bookcase oldBkcase = bkcaseRepo.findById(bkcaseId).orElseThrow();
 			

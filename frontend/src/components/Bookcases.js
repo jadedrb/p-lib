@@ -2,7 +2,7 @@ import { useState, useContext, useEffect } from "react"
 import NewBookcase from "./NewBookcase"
 import { useParams, useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { Context } from "../context"
-import { utilitySelector } from "../services/utility";
+import { utilitySelector, utilPath } from "../services/utility";
 
 const Bookcases = () => {
     let { rooms, current, dispatch } = useContext(Context);
@@ -27,7 +27,7 @@ const Bookcases = () => {
     return (
         <div className="bookcases">
             <div className="b-sec-center">
-                <button className="b-section" onClick={() => setShowBookcases(!showBookcases)}>Bookcase</button>
+                <button className="b-section" onClick={() => setShowBookcases(!showBookcases)} onDoubleClick={() => { navigate(utilPath(path, "room", rid)); setShowBookcases(false) } }>Bookcase</button>
                 <div className="b-sec-line" style={{ display: showBookcases ? "block" : "none" }}/>
             </div>
             {showBookcases &&

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { Context, REMOVE_SHELF } from "../context"
+import { Context, REMOVE_SHELF, UPDATE_SHELF } from "../context"
 import { utilitySelector, utilMsg } from '../services/utility';
 import BookList from './BookList';
 // import NewBook from './NewBook';
@@ -16,10 +16,11 @@ function CurrentShelf() {
     let [currShelf, setCurrShelf] = useState(null)
     let [shelfPos, setShelfPos] = useState({})
 
-    let [move, setMove] = useState(false)
-
     let wrapper = useRef()
 
+    let [order, setOrder] = useState(false)
+
+    let [move, setMove] = useState(false)
     let [edit, setEdit] = useState(false)
 
     let params = useParams()
@@ -44,6 +45,7 @@ function CurrentShelf() {
         setShelfPos({ top, bot, swap })
         console.log(shelf)
         setCurrShelf(shelf)
+        setOrder(shelf?.organize ? shelf.organize : "lastname asc")
         setMove(false)
     }, [shid, rid, bcid, rooms])
 
@@ -53,6 +55,13 @@ function CurrentShelf() {
         await Shelves.removeShelfFromBookcase(shid, bcid)
         dispatch({ type: REMOVE_SHELF, payload: { shid, bcid, rid } })
         navigate(utilPath(path, 'bookcase', bcid))
+    }
+
+    const handleShelfUpdate = async (e) => {
+        e.preventDefault()
+        let updatedShelf = await Shelves.updateShelfOfId({ organize: order }, shid)
+        dispatch({ type: UPDATE_SHELF, payload: { bcid, rid, shid, sh: updatedShelf } })
+        setEdit(false)
     }
 
     const swapem = () => shelfPos.top > shelfPos.bot ? "bottom" : "top"
@@ -70,7 +79,7 @@ function CurrentShelf() {
                 {edit && <div className="pm-r min-room" onClick={removeShelf}>-</div>}
             </div>}
             <div className="b-sec-center">
-                <button className="b-section" onClick={() => setShowShelf(!showShelf)}>Shelf</button>
+                <button className="b-section" onClick={() => setShowShelf(!showShelf)} onDoubleClick={() => { navigate(utilPath(path, "bookcase", bcid)); setShowShelf(false) } }>Shelf</button>
                 <div className="b-sec-line" style={{ display: showShelf ? "block" : "none" }}/>
             </div>
             {showShelf && currShelf && 
@@ -95,6 +104,26 @@ function CurrentShelf() {
                 <div>No shelf selected</div>
                 : null
             }
+
+            {showShelf && edit && !move ? 
+                <>
+                    <br /><br />
+                    <label htmlFor='order'>Default order of books on this shelf: </label>
+                    <br /><br />
+                    <select id='order' value={order} onChange={(e) => setOrder(e.target.value)}>
+                        <option value="lastname asc">Author's Last Name (A-Z)</option>
+                        <option value="lastname desc">Author's Last Name (Z-A)</option>
+                        <option value="firstname asc">Author's First Name (A-Z)</option>
+                        <option value="firstname desc">Author's First Name (Z-A)</option>
+                        <option value="title asc">Title (A-Z)</option>
+                        <option value="title desc">Title (Z-A)</option>
+                        <option value="genre">Genre</option>
+                        <option value="pages">Page Count</option>
+                    </select> 
+                    <p style={{ opacity: '.3', fontStyle: 'italic', fontSize: '13px' }}>(affects their order in the Bookcase and how they first appear in the table above)</p>
+                    <input type="button" value="Save" onClick={handleShelfUpdate}/>
+                </>
+                  : null}
 
             {showShelf && edit && move ?  
                <Move
