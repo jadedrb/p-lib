@@ -34,7 +34,7 @@ const Rooms = () => {
         }
     }
 
-    let [showRooms, setShowRooms] = useState(rid ? true : false) // rid ? true : false
+    let [showRooms, setShowRooms] = useState(true) // rid ? true : false
     let [search, setSearch] = useState("")
     let [results, setResults] = useState([])
     let [typing, setTyping] = useState(false)

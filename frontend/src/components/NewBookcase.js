@@ -71,7 +71,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
           }}
         >
           {shid === sh.id && sh.books?.length ? 
-          utilOrder(sh.books, sh.organize)
+          utilOrder(sh.books, sh.organize ? sh.organize : "lastname asc")
             .map((b,i) => 
               <span 
                 key={i} 

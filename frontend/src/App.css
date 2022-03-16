@@ -22,13 +22,18 @@ tr:hover {
 .table-contain {
     display: flex;
     justify-content: center;
-    align-items: center;
+    /* align-items: baseline; */
     position: relative;
     overflow: auto;
+    height: 120%;
     border: 3px solid rgb(70, 75, 75);
     min-height: 50px;
-    /* max-height: 200px; */
+    max-height: 350px;
     padding: 10px;
+}
+
+.booklist {
+   border: 3px solid black;
 }
 
 .pm-sh {
