@@ -39,8 +39,6 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
   let waitForSwitch = useRef();
   let navAndSwitch = useRef();
 
-  // let navigate = useNavigate();
-  // let path = useLocation();
   let pathname = path.pathname;
 
   const handlePathAndSwitchRoom = () => {
@@ -71,10 +69,12 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
       // on mount
       //  let rm = switchRoom(0, rooms)
       mount.current = rIndex;
-      if (!bcid)
-        navigate(
-          utilPath(path, "room", rid ? rid : rooms[0]?.id ? rooms[0].id : "")
-        );
+
+      // if (!bcid) {
+      //   navigate(
+      //     utilPath(path, "room", rid ? rid : rooms[0]?.id ? rooms[0].id : "")
+      //   );
+      // }
     }
   };
 
@@ -139,6 +139,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
   // }, []);
 
   useEffect(() => {
+    console.log("useEffect: handleFunctins");
     // const defaultRoom = { height: 10, width: 10, tile: 25, name: "New Room", bookcases: [] }
     navAndSwitch.current.handleCurrentRoomSetup();
 
@@ -148,6 +149,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
   }, [rooms, rid]);
 
   useEffect(() => {
+    console.log("useEffect: bunch of stuff");
     let map = mapRef.current;
     map.innerHTML = "";
     map.style.gridTemplateColumns = `repeat(${width}, ${tile}px)`;

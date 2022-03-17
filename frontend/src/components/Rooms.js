@@ -1,10 +1,8 @@
 import { useState, useContext, useEffect, useRef } from "react"
 import NewRoom from "./NewRoom"
-import { Context, SET_ROOMS, SET_USER } from '../context'
+import { Context, SET_USER } from '../context'
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
 
-import Roomz from '../services/RoomService'
-import Userz from '../services/UserService'
 import Bookz from '../services/BookService'
 import SearchResults from "./SearchResults"
 
@@ -17,22 +15,6 @@ const Rooms = () => {
 
     let navigate = useNavigate();
     let path = useLocation();
-    
-    const initialRoomSetup = async () => {
-        let tempUsr = "bob"
-        if (!rooms.length) {
-            let usr = await Userz.getUserByName(tempUsr)
-            let payload;
-
-            if (!usr)
-                usr = await Userz.addUser({ username: tempUsr, password: "", email: "" })
-                
-            payload = await Roomz.getRoomsForUser(user)
-            console.log('start?')
-            dispatch({ type: SET_USER, payload: tempUsr })
-            dispatch({ type: SET_ROOMS, payload })
-        }
-    }
 
     let [showRooms, setShowRooms] = useState(true) // rid ? true : false
     let [search, setSearch] = useState("")
@@ -41,10 +23,6 @@ const Rooms = () => {
     let [showResults, setShowResults] = useState(true)
     let [searchIn, setSearchIn] = useState("library")
     let [searchType, setSearchType] = useState("title")
-
-    useEffect(() => {
-        wrapperRef.current.initialRoomSetup()
-    }, [])
 
     useEffect(() => {
         let delay;
@@ -69,6 +47,11 @@ const Rooms = () => {
         if (!results.length && searchIn === "results")
             setSearchIn("library")
     }, [results.length, searchIn])
+
+    useEffect(() => {
+        if (wrapperRef.current.finish)
+            wrapperRef.current.finish = false
+    }, [showRooms])
 
     const parsePagesAndDate = (search) => {
         let greater, lesser;
@@ -203,10 +186,8 @@ const Rooms = () => {
                 return []
         }
     }
-    const toggleRoomsView = async () => {
-        if (!showRooms) {
-            wrapperRef.current.initialRoomSetup()
-        }
+    const toggleRoomsView = () => {
+        if (wrapperRef.current.finish) return
         setShowRooms(!showRooms)
     }
 
@@ -249,14 +230,23 @@ const Rooms = () => {
         }
     }
 
-    wrapperRef.current = { initialRoomSetup, determineSearchArea } 
+    wrapperRef.current = { determineSearchArea } 
+
+    const handleLogout = () => {
+        sessionStorage.removeItem("token")
+        dispatch({
+            type: SET_USER,
+            payload: ""
+        })
+        navigate("/home")
+    }
 
     return (
         <div className="rooms">
             {(search && !typing && showResults) || results.length ? <SearchResults books={results} bid={Number(bid)} setShowResults={setShowResults} setResults={setResults} /> : null}
-
+            <button className="logout" onClick={handleLogout}>Logout</button>
             <div className="b-sec-center">
-                <button className="b-section" onClick={toggleRoomsView} onDoubleClick={() => { navigate("/room"); setShowRooms(false) } }>Room</button>
+                <button className="b-section" onClick={toggleRoomsView}>Room</button>
                 <div className="b-sec-line" style={{ display: showRooms ? "block" : "none" }}/>
             </div>
             <label className="search-lib">

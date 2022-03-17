@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,8 +40,18 @@ public class RoomController {
 	
 	
 	@GetMapping("/rooms")
-	public List<Room> getAllBooks() {
-		return roomRepo.findAll(); // equivalent to SELECT * FROM students
+	public List<Room> getAllBooks(Authentication auth) throws Exception {
+		List<Room> rooms = roomRepo.findAll();
+		
+		if (!rooms.isEmpty()) {
+			String incomingUser = auth.getName();
+			String outgoingUser = rooms.get(0).getUser().getUsername();
+			if (!incomingUser.equals(outgoingUser)) {
+				throw new Exception(incomingUser + "does not have access to this information");
+			}
+		}
+		
+		return rooms; // equivalent to SELECT * FROM students
 	}
 	
 // This is used by getRoomsForUser from frontend

@@ -1,11 +1,23 @@
 import axios from 'axios'
-import { API } from './api'
+import { API, authAxios } from './api'
 
 class UserService {
 
     format(d) {
         // console.log(d.data)
         return d.data
+    }
+
+    validateUserToken() {
+        return authAxios.get('/auth/test').then(r => this.format(r))
+    }
+
+    registerUser(user) {
+        return axios.post(API + `/auth/register`, user).then(r => this.format(r))
+    }
+
+    loginUser(user) {
+        return axios.post(API + `/auth/login`, user).then(r => this.format(r))
     }
 
     getUser(user) {

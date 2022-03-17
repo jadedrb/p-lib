@@ -1,4 +1,7 @@
-
+* {
+    margin: 0;
+    padding: 0;
+}
 
 td {
     border: 1px solid black;
@@ -98,6 +101,7 @@ tr:hover {
 
 .newroom h3 {
     text-align: center;
+    padding: 10px;
 }
 
 .newroom h3 span {
@@ -493,3 +497,42 @@ td {
 select {
     text-align: center;
 }
+
+
+.home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: aliceblue;
+    height: 100vh;
+}
+
+.home h1 {
+    color: rgb(41, 41, 41);
+}
+.home h1 span {
+    color: rgb(65, 65, 65);
+    
+}
+
+.logout {
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    background-color: white;
+    color: lightgray;
+    border: none;
+}
+
+.logout:hover {
+    color: rgb(92, 92, 92);
+    font-weight: bolder;
+    cursor: pointer;
+    
+}
+
+.logout:active {
+    color: black;
+}
+/* rgb(74, 74, 255); */

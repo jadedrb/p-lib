@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { API } from './api'
+import { API, authAxios } from './api'
 import { loading, clearLoading } from './utility'
 
 class RoomService {
@@ -20,12 +20,12 @@ class RoomService {
 
     getRoomsForUser(user) {
         loading(".newroom")
-        return axios.get(API + `/rooms/${user}`).then(r => this.format(r)).catch(() => { console.log('uhoh'); clearLoading(); return []; })
+        return authAxios.get(`/rooms/${user}`).then(r => this.format(r)).catch(() => { console.log('uhoh'); clearLoading(); return []; })
     }
     
     addRoomForUser(room, user) {
         loading(".newroom")
-        return axios.post(API + `/rooms/${user}`, room).then(r => this.format(r))
+        return authAxios.post(`/rooms/${user}`, room).then(r => this.format(r))
     }
     
     removeRoomFromUser(id, name) {

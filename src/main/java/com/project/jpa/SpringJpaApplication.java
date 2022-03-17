@@ -2,6 +2,10 @@ package com.project.jpa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 public class SpringJpaApplication {
@@ -9,5 +13,12 @@ public class SpringJpaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringJpaApplication.class, args);
 	}
+	
+    // Creating a bean for password encryption
+//    @Bean
+//    public BCryptPasswordEncoder getBCryptPasswordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+	
 
 }

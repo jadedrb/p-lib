@@ -7,6 +7,13 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+//import org.springframework.security.authentication.AuthenticationManager;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,63 +23,111 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.jpa.exception.AuthException;
-import com.project.jpa.model.Book;
-import com.project.jpa.model.Room;
-import com.project.jpa.model.Shelf;
+import com.project.jpa.config.AuthRequest;
+import com.project.jpa.config.JwtUtil;
+//import com.project.jpa.config.JwtUtil;
+//import com.project.jpa.exception.AuthException;
+//import com.project.jpa.model.Book;
+//import com.project.jpa.model.Room;
+//import com.project.jpa.model.Shelf;
 import com.project.jpa.model.User;
 import com.project.jpa.repository.RoomRepository;
 import com.project.jpa.repository.UserRepository;
-import com.project.jpa.services.UserService;
 
-@CrossOrigin//(origins="http://localhost:3000")
+@CrossOrigin(origins="http://localhost:3000")
 @RestController
 @RequestMapping("/api")
-public class UserController implements UserService {
+public class UserController {
+	
+	@Autowired
+	private JwtUtil jwtUtil;
+//	
+	@Autowired
+    BCryptPasswordEncoder passwordEncoder;
+
+	@Autowired
+	private AuthenticationManager authenticationManager;
 	
 	@Autowired
 	UserRepository userRepo;
 	
 	@Autowired
 	RoomRepository roomRepo;
-
-	@Override
-	public User validateUser(String email, String password) throws AuthException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public User registerUser(String email, String password) throws AuthException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-//	@Override
-//	public User registerUser(String email, String password) throws AuthException {
-//		// TODO Auto-generated method stub
-//		if (email != null) 
-//			email = email.toLowerCase();
-//		
-//		Integer count = userRepo.getCountByEmail(email);
-//		
-//		if (count > 0)
-//			throw new AuthException("Email in use.");
-//		
-//		Integer userId = userRepo.create(email, password);
-//		// ^ will return primary key of newly created user
-//		
-//		return userRepo.findById(userId);
-//	}
 	
-//	@GetMapping("/test")
-//	public List<User> test() {
-//		System.out.println("do we reach here?");
-//		return userRepo.joinUserAndRoom();
-//	}
+	@GetMapping("/")
+	public String welcome() {
+		return "hello!";
+	}
+	
+	@GetMapping("/auth/test")
+	public String testing(Authentication authentication) {
+		return authentication.getName();
+	}
+	 
+	@PostMapping("/auth/login")
+	public String generateToken(@RequestBody AuthRequest authRequest) {
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
+			);
+		} catch(Exception e) {
+			return "invalid credentials";
+		}
+		return jwtUtil.generateToken(authRequest.getUsername());
+	}
+	
+	
+	@PostMapping("/auth/register")
+	public String createUser(@RequestBody User user) {
+		System.out.println("in register...");
+		String originalPassword = user.getPassword();
+		
+		List<User> existingUsers = userRepo.findByUsername(user.getUsername());
+		if (existingUsers.isEmpty()) {
+			String crypticPassword = passwordEncoder.encode(user.getPassword());
+			user.setPassword(crypticPassword);
+			userRepo.save(user);
+			System.out.println("in here1");
+		} else {
+			System.out.println("in here1b");
+			return "user already exists...";
+		}
+		System.out.println("in here2");
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(user.getUsername(), originalPassword)
+			);
+			System.out.println("in here3");
+		} catch(Exception e) {
+			System.out.println("in here4");
+			return "something went wrong with creating a token on registration";
+		}
+		System.out.println("in here5");
+		return jwtUtil.generateToken(user.getUsername());
+	}
+
+	
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User request) {
+   
+    	System.out.println("here");
+//System.out.println(request);
+//System.out.println(request.getUsername());
+//System.out.println(request.getPassword());
+//        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
+//        System.out.println(token);
+//        System.out.println(token.getCredentials());
+//
+//        Authentication test = authenticationManager.authenticate(token);
+//        System.out.println(test);
+//        System.out.println(test.toString());
+//
+//        String jwt = jwtUtil.generate(request.getUsername());
+        return ResponseEntity.ok("wow");
+    }
 	
 	@GetMapping("/users")
-	public List<User> getAllShelves() {
+	public List<User> getAllShelves(Authentication authentication) {
 		return userRepo.findAll(); // equivalent to SELECT * FROM students
 	}
 	
@@ -93,10 +148,6 @@ public class UserController implements UserService {
 		}
 	}
 	
-	@PostMapping("/users")
-	public User createUser(@RequestBody User user) {;
-		return userRepo.save(user);
-	}
 	
 	@DeleteMapping("/users/{id}")
 	public Map<String, Boolean> roomFromUser(@PathVariable Long id) {
@@ -111,6 +162,7 @@ public class UserController implements UserService {
 			return null;
 		}
 	}
+
 	
 //	@GetMapping("/users/{user}/rooms")
 //	public List<Room> findRoomsForUser(@PathVariable String user) {

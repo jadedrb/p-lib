@@ -29,7 +29,7 @@ export const TOGGLE_BKCASE_SELECT = "TOGGLE_BKCASE_SELECT"
 let initialState = {
     books: [],
     rooms: [],
-    user: "bob",
+    user: false,
     updates: 0,
     selected: { toggle: false, highlight: [] },
     reposition: { toggle: false }

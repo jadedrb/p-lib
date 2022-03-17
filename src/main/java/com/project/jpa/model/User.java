@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 
 @Entity
 @Table(name="users")
@@ -43,6 +44,10 @@ public class User {
 		this.username = username;
 		this.other = other;
 	}
+	
+//	public User(String name, User user, ArrayList<GrantedAuthority> authorities) {
+//
+//	}
 
 
 	public String getOther() {

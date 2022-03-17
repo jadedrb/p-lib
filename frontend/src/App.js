@@ -1,25 +1,66 @@
-import React, { useContext } from 'react'
-import { Context } from './context'
+import React, { useContext, useEffect, useRef } from 'react'
+import { Context, SET_ROOMS, SET_USER } from './context'
 import './App.css';
 
 import Rooms from './components/Rooms';
 import Bookcases from './components/Bookcases';
 import CurrentShelf from './components/CurrentShelf';
 
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
 import NewBook from './components/NewBook';
+import Home from './components/Home';
+
+import UserService from './services/UserService';
+import RoomService from './services/RoomService';
 
 function App() {
 
-  let { selected } = useContext(Context)
+  let { selected, user, dispatch } = useContext(Context)
 
-  // This app uses SpringJPA as backend - Workspace: /Users/JadeDRB/springboot
-console.log(selected)
+  let navigate = useNavigate()
+  let mounted = useRef()
+
+  useEffect(() => {
+    const validate = async () => {
+      let token = sessionStorage.getItem("token")
+      
+      if (token) {
+        let user = await UserService.validateUserToken()
+  
+        if (user) {
+    
+          dispatch({
+              type: SET_USER,
+              payload: user
+          })
+
+          let payload = await RoomService.getRoomsForUser(user)
+
+          if (payload.length) {
+            dispatch({ type: SET_ROOMS, payload })
+            navigate(`/room/${payload[0].id}`)
+          }
+        }
+      }
+    }
+
+    if (!mounted.current) {
+      validate()
+      mounted.current = false
+    }
+    
+  }, [navigate, dispatch])
+
+  const PrivateRoute = ({ isAuth, children }) => {
+    return isAuth ? children : <Navigate to="/home" />;
+  };
+
   return (
         <Routes>
-          <Route path={"/"} element={<Navigate to={"/room/"} />} />
-          <Route path={"/room/"} element={<Rooms />} />
-          <Route path={"/room/:rid/*"} element={<Rooms />}>
+          <Route path={"/"} element={<Navigate to={"/home/"} />} />
+          <Route path={"/home/"} element={user ? <Navigate to={"/room/"} /> : <Home />} />
+          <Route path={"/room/"} element={<PrivateRoute isAuth={user}><Rooms /></PrivateRoute>} />
+          <Route path={"/room/:rid/*"} element={<PrivateRoute isAuth={user}><Rooms /></PrivateRoute>}>
             <Route path={"bookcase/:bcid/*"} element={<Bookcases />}>
               <Route path={"shelf/:shid/*"} element={<CurrentShelf />}>
                 <Route path={"book/:bid"} element={selected.toggle ? null : <NewBook />} />
@@ -27,7 +68,7 @@ console.log(selected)
               </Route>
             </Route>
           </Route>
-          <Route path={"*"} element={<div>Page not found... whoops!</div>}/>
+          <Route path={"*"} element={!user ? <Navigate to={"/home/"} /> : <div>Page not found... whoops!</div>}/>
         </Routes>
   );
 }
