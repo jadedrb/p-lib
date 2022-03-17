@@ -21,16 +21,20 @@ export const REMOVE_BOOK = "REMOVE_BOOK"
 
 export const QUEUE_UPDATE = "QUEUE_UPDATE"
 export const FINISH_UPDATE = "FINISH_UPDATE"
+export const SETUP_COMPLETE = "SETUP_COMPLETE"
+
 export const SET_USER = "SET_USER"
 
 export const TOGGLE_SELECT = "TOGGLE_SELECT"
 export const TOGGLE_BKCASE_SELECT = "TOGGLE_BKCASE_SELECT"
 
+
 let initialState = {
     books: [],
     rooms: [],
     user: false,
-    updates: 1,
+    updates: 0,
+    setup: false,
     selected: { toggle: false, highlight: [] },
     reposition: { toggle: false }
 }
@@ -170,7 +174,9 @@ function reducer(state, action) {
         case FINISH_UPDATE: {
             return { ...state, updates: state.updates - 1 }
         }
-
+        case SETUP_COMPLETE: {
+            return { ...state, setup: true }
+        }
 
         case SET_USER: {
             return { ...state, user: action.payload }
@@ -184,10 +190,10 @@ export function Provider(props) {
 
     let [state, dispatch] = useReducer(reducer, initialState)
 
-    let { books, rooms, user, selected, reposition } = state
+    let { books, rooms, user, selected, reposition, setup } = state
 
     return (
-        <Context.Provider value={{ books, rooms, user, selected, reposition, dispatch }}>
+        <Context.Provider value={{ books, rooms, user, selected, reposition, setup, dispatch }}>
             {props.children}
         </Context.Provider>
     )

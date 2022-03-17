@@ -8,7 +8,7 @@ import SearchResults from "./SearchResults"
 
 const Rooms = () => {
 
-    const { rooms, dispatch, user, reposition } = useContext(Context)
+    const { rooms, dispatch, user, reposition, setup } = useContext(Context)
 
     let { bcid, rid, bid, shid } = useParams()
     let wrapperRef = useRef()
@@ -276,6 +276,7 @@ const Rooms = () => {
                         bcid={Number(bcid)} 
                         rid={Number(rid)}
                         user={user}
+                        setup={setup}
                     />
                 </div> 
             }

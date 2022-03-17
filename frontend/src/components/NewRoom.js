@@ -35,13 +35,9 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
   let [edit, setEdit] = useState(false);
 
   let mapRef = useRef();
-  let mount = useRef();
-  let navAndSwitch = useRef();
-  let waitForSwitch = useRef()
+  let wrapper = useRef()
 
-  let pathname = path.pathname;
-
-  useEffect(() => {
+  const respondToRoomLengthChange = () => {
     if (rooms.length) {
       if (rid) {
         console.log('in here')
@@ -49,20 +45,36 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
         console.log(rid, idx)
         if (idx >= 0) {
           roomSetup(idx)
+        } else {
+          roomSetup(0)
+          navigate(utilPath(path, "room", rooms[0].id))
         }
+      } else {
+        roomSetup(0)
+        navigate(utilPath(path, "room", rooms[0].id))
       }
     } else {
       initialRoomSetup()
     }
+  }
+
+  const respondToRidChange = () => {
+    if (rooms.length) {
+      let idx = rooms.findIndex(r => r.id === Number(rid))
+      if (idx >= 0) {
+        roomSetup(idx)
+      }
+    } 
+  }
+
+  wrapper.current = { respondToRoomLengthChange, respondToRidChange }
+  
+  useEffect(() => {
+    wrapper.current.respondToRoomLengthChange()
   }, [rooms])
 
   useEffect(() => {
-    if (rooms.length) {
-        let idx = rooms.findIndex(r => r.id === Number(rid))
-        if (idx >= 0) {
-          roomSetup(idx)
-        }
-    } 
+    wrapper.current.respondToRidChange()
   }, [rid])
 
   const switchRoom = (value) => {
@@ -100,6 +112,9 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
   useEffect(() => {
     console.log("useEffect: bunch of stuff");
     let map = mapRef.current;
+
+    if (!map) return
+
     map.innerHTML = "";
     map.style.gridTemplateColumns = `repeat(${width}, ${tile}px)`;
     map.style.gridTemplateRows = `repeat(${height}, ${tile}px)`;
@@ -232,10 +247,6 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
     }
   }, [reposition, edit])
 
-  useEffect(() => {
-    return () => console.log('is this unmounting???')
-  }, [])
-
   const roomConstruct = (h, w, rn, ti, bc) => {
     return {
       height: h ? h : height,
@@ -245,8 +256,6 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
       bookcases: bc ? bc : bookcases,
     };
   };
-
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -261,7 +270,6 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
       let payload = await Rooms.addRoomForUser(room, user);
       navigate(utilPath(path, "room", payload.id));
       dispatch({ type: ADD_ROOM, payload });
-      waitForSwitch.current = "add"
       room = payload.id;
     }
     let bkcasesAdded = bookcases.filter(bk => !bk.hasOwnProperty("id"))
@@ -296,10 +304,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
       }
     }
   };
-  console.log(rooms.length, !currentRoom.id,rid)
-  if (rooms.length && !currentRoom.id && rid) {
-    return <p>No room selected</p>
-  }
+
   return (
     <div className="newroom">
       <h3>

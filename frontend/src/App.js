@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Context, FINISH_UPDATE, SET_ROOMS, SET_USER } from './context'
+import React, { useContext, useEffect, useRef } from 'react'
+import { Context, SETUP_COMPLETE, SET_ROOMS, SET_USER } from './context'
 import './App.css';
 
 import Rooms from './components/Rooms';
@@ -16,9 +16,7 @@ import RoomService from './services/RoomService';
 
 function App() {
 
-  let { selected, user, dispatch } = useContext(Context)
-
-  let [loading, setLoading] = useState(true)
+  let { selected, user, dispatch, setup } = useContext(Context)
 
   let navigate = useNavigate()
   let navigateRef = useRef()
@@ -45,16 +43,17 @@ function App() {
 
           if (payload.length) {
             dispatch({ type: SET_ROOMS, payload })
-            // navigateRef.current(`/room/${payload[0].id}`)
+            dispatch({ type: SETUP_COMPLETE })
+            return
           }
         }
         else { // if user validation failed with current token
           sessionStorage.removeItem("token")
-          setLoading(false)
+          dispatch({ type: SETUP_COMPLETE })
+          return
         }
-      } // if no token found
-      else 
-        setLoading(false)
+      } 
+      dispatch({ type: SETUP_COMPLETE })
     }
 
     if (!mounted.current) {
@@ -64,20 +63,12 @@ function App() {
     
   }, [dispatch])
 
-  useEffect(() => {
-    if (mounted.current) {
-      if (user) {
-        setLoading(false)
-      }
-    }
-  }, [user])
-
   return (
         <Routes>
-          <Route path={"/"} element={<Navigate to={"/home/"} />} />
+       
           <Route path={"/home/"} element={!user ? <Home /> : <Navigate to={"/room/"} />} />
-          <Route path={"/room/"} element={<PrivateRoute loading={loading} isAuth={user}><Rooms /></PrivateRoute>} />
-          <Route path={"/room/:rid/*"} element={<PrivateRoute loading={loading} isAuth={user}><Rooms /></PrivateRoute>}>
+          <Route path={"/room/"} element={<PrivateRoute setup={setup} isAuth={user}><Rooms /></PrivateRoute>} />
+          <Route path={"/room/:rid/*"} element={<PrivateRoute setup={setup} isAuth={user}><Rooms /></PrivateRoute>}>
             <Route path={"bookcase/:bcid/*"} element={<Bookcases />}>
               <Route path={"shelf/:shid/*"} element={<CurrentShelf />}>
                 <Route path={"book/:bid"} element={selected.toggle ? null : <NewBook />} />
@@ -85,7 +76,7 @@ function App() {
               </Route>
             </Route>
           </Route>
-          <Route path={"*"} element={!user && !loading ? <Navigate to={"/home/"} /> : <Navigate to={"/room/"} />}/>
+          <Route path={"*"} element={!user && setup ? <Navigate to={"/home/"} /> : <Navigate to={"/room/"} />}/>
         </Routes>
   );
 }

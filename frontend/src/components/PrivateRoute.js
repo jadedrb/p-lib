@@ -1,8 +1,9 @@
 import { Navigate } from "react-router-dom";
 
-// if there is no user set and if the page is no longer loading
-const PrivateRoute = ({ isAuth, loading, children }) => {
-    return !isAuth && !loading ? <Navigate to="/home" /> : children;
+// if there is no user set after setup
+const PrivateRoute = ({ isAuth, setup, children }) => {
+    console.log(isAuth, setup, !isAuth && setup)
+    return isAuth === false && setup ? <Navigate to="/home" /> : children;
 };
 
 export default PrivateRoute
