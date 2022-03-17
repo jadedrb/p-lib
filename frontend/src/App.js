@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { Context, SET_ROOMS, SET_USER } from './context'
+import { Context, FINISH_UPDATE, SET_ROOMS, SET_USER } from './context'
 import './App.css';
 
 import Rooms from './components/Rooms';

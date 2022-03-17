@@ -30,7 +30,7 @@ let initialState = {
     books: [],
     rooms: [],
     user: false,
-    updates: 0,
+    updates: 1,
     selected: { toggle: false, highlight: [] },
     reposition: { toggle: false }
 }

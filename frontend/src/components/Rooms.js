@@ -263,7 +263,7 @@ const Rooms = () => {
                     onChange={handleSearchChange}
                 />
             </label>
-            <br />
+           
 
             {showRooms &&
                 <div className="n-room">
