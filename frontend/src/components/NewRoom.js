@@ -36,12 +36,22 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
 
   let mapRef = useRef();
   let mount = useRef();
-  let waitForSwitch = useRef();
   let navAndSwitch = useRef();
+  let timeoutArr = useRef()
+
+  timeoutArr.current = []
 
   let pathname = path.pathname;
 
   const handlePathAndSwitchRoom = () => {
+
+    // let inNeedOfRedirect = rooms.length && !rooms.some(r => r.id === Number(rid))
+    // if (inNeedOfRedirect) {
+    //   console.log('in need of redirect')
+    //   setTimeout(() => navigate(`/room/${rooms[0].id}`), 1)
+    // }
+
+
     // mount keeps track of the index of the current room between renders
     // it will either be undefined (unmounted) or a number (mounted)
     //if (!user) return
@@ -90,7 +100,17 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
 
         // if user enters an invalid room id in url
         if (!rooms[indx]) {
-          if (rooms.length) navigate(utilPath(path, "room", rooms[0].id));
+          if (rooms.length) {
+            console.log("rid, indx: ", rid, indx)
+            setRIndex(0);
+            setCurrentRoom(rooms[0]);
+            setHeight(rooms[0].height);
+            setWidth(rooms[0].width);
+            setTile(rooms[0].tile);
+            setName(rooms[0].name);
+            setBookcases(rooms[0].bookcases);
+            setTimeout(() => { navigate("/room/" + rooms[0].id)}, 1)
+          }
           return;
         }
         
@@ -107,13 +127,16 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
 
   const handleSwitchAfterAddOrRemove = () => {
     // if (!user) return
-    if (waitForSwitch.current === "add") {
-      waitForSwitch.current = false;
-      switchRoom(rooms.length - 1 - rIndex, rooms);
-    } else if (waitForSwitch.current === "remove") {
-      waitForSwitch.current = false;
-      switchRoom(-1, rooms);
-    }
+    // console.log('?', waitForSwitch)
+    // if (waitForSwitch.current === "add") {
+    //   console.log('this is happening:')
+    //   waitForSwitch.current = false;
+    //   switchRoom(rooms.length - 1 - rIndex, rooms);
+    // } else if (waitForSwitch.current === "remove") {
+    //   console.log('this is happening2:')
+    //   waitForSwitch.current = false;
+    //   switchRoom(-1, rooms);
+    // }
   };
 
   // const handlePathBackToRoom = () => navigate("/room/");
@@ -140,6 +163,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
 
   useEffect(() => {
     console.log("useEffect: handleFunctins");
+    console.log(rooms)
     // const defaultRoom = { height: 10, width: 10, tile: 25, name: "New Room", bookcases: [] }
     navAndSwitch.current.handleCurrentRoomSetup();
 
@@ -147,6 +171,13 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
     // if a new room was added recently... or removed
     navAndSwitch.current.handleSwitchAfterAddOrRemove();
   }, [rooms, rid]);
+
+  useEffect(() => {
+    console.log("useEffect: rooms");
+    console.log(rooms)
+  }, [rooms]);
+
+
 
   useEffect(() => {
     console.log("useEffect: bunch of stuff");
@@ -283,6 +314,10 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
     }
   }, [reposition, edit])
 
+  useEffect(() => {
+    return () => console.log('is this unmounting???')
+  }, [])
+
   const roomConstruct = (h, w, rn, ti, bc) => {
     return {
       height: h ? h : height,
@@ -349,7 +384,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
     let payload = await Rooms.addRoomForUser(rm, user);
     navigate(utilPath(path, "room", payload.id));
     dispatch({ type: ADD_ROOM, payload });
-    waitForSwitch.current = "add";
+    switchRoom(rooms.length - 1 - rIndex, rooms);
   };
 
   const removeARoom = async () => {
@@ -357,7 +392,6 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
     if (!confirm) return
     await Rooms.removeRoomFromUser(rid, user);
     dispatch({ type: REMOVE_ROOM, payload: rid });
-    waitForSwitch.current = "remove";
   };
 
   return (

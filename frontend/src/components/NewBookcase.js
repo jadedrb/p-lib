@@ -104,6 +104,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
         {/* <h5>
           Room ID: {currentRoom?.id}, Bookcase ID: {currentBookcase?.id}
         </h5> */}
+        <br />
         <div className="bookcase" style={{ width: `${width}%`, border: currentBookcase.shelves.length ? '1px solid black' : '1px solid lightgrey' }}>
             {renderBookcases()}
         </div>

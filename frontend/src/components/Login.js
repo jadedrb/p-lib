@@ -52,21 +52,27 @@ function LoginAndRegister(props) {
         
         if (props.which) {
             console.log('logging in...')
+
             token = await UserService.loginUser({ username, password })
+            if (!validate(token)) return
+
+            sessionStorage.setItem("token", token)
+            console.log(sessionStorage.getItem("token"))
+
             let payload = await RoomService.getRoomsForUser(username)
+            console.log(payload)
             if (payload)
                 dispatch({ type: SET_ROOMS, payload })
+            
+            setTimeout(() => navigate(`/room/${payload[0] ? payload[0].id : ''}`), 1)
         }
         else {
             console.log('registering...')
             token = await UserService.registerUser({ username, password, email })
+            if (!validate(token)) return
+            sessionStorage.setItem("token", token)
+            navigate("/room")
         }
-
-        if (!validate(token)) return
-
-        sessionStorage.setItem("token", token)
-        console.log(sessionStorage.getItem("token"))
-        navigate("/room")
 
         dispatch({
             type: SET_USER,

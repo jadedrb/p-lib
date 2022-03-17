@@ -1,5 +1,4 @@
-import axios from 'axios'
-import { API } from './api'
+import { authAxios } from './api'
 import { loading, clearLoading } from './utility'
 
 class ShelfService {
@@ -11,21 +10,21 @@ class ShelfService {
     }
 
     getShelvesForBookcase(bookcase) {
-        return axios.get(API + `/shelves/${bookcase}`).then(r => this.format(r))
+        return authAxios().get(`/shelves/${bookcase}`).then(r => this.format(r))
     }
 
     addShelfForBookcase(shelf, bookcase) {
         loading(".new-bookcase")
-        return axios.post(API + `/shelves/${bookcase}`, shelf).then(r => this.format(r))
+        return authAxios().post(`/shelves/${bookcase}`, shelf).then(r => this.format(r))
     }
     
     removeShelfFromBookcase(id, bookcase) {
         loading(".sh-b")
-        return axios.delete(API + `/shelves/${id}/bookcases/${bookcase}`).then(r => this.format(r))
+        return authAxios().delete(`/shelves/${id}/bookcases/${bookcase}`).then(r => this.format(r))
     }
     
     updateShelfOfId(shelf, id) {
-        return axios.put(API + `/shelves/${id}`, shelf).then(r => this.format(r))
+        return authAxios().put(`/shelves/${id}`, shelf).then(r => this.format(r))
     }
 }
 
