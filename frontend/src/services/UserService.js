@@ -9,7 +9,7 @@ class UserService {
     }
 
     awaken() {
-        return axios.post(APILite + `/auth/awaken`, user).then(r => { alert('Server response: ' + r) })
+        return axios.post(APILite + `/auth/awaken`).then(r => { alert('Server response: ' + r) })
     }
 
     validateUserToken() {
