@@ -63,7 +63,7 @@ public class UserController {
 			throw new Exception("improper relationship with requested data");
 	}
 	
-	@GetMapping("/testing")
+	@GetMapping("/auth/awaken")
 	public String test() {
 		return "hello there!";
 	}
