@@ -15,7 +15,8 @@ import UserService from './services/UserService';
 import RoomService from './services/RoomService';
 
 function App() {
-
+console.log(process.env.NODE_ENV)
+console.log(process.env.REACT_APP_API)
   let { selected, user, dispatch, setup } = useContext(Context)
 
   let navigate = useNavigate()
