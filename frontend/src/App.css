@@ -556,3 +556,43 @@ select {
     color: black;
 }
 /* rgb(74, 74, 255); */
+
+/* .connection {
+    position: absolute;
+    margin: 10px;
+    height: 20px;
+    width: 100%;
+    border: 3px solid green;
+} */
+
+.connection {
+    position: absolute;
+    height: 20px;
+    width: 100vw;
+    text-align: center;
+    padding-top: 90px;
+    padding-left: 5px;
+}
+
+.load-area {
+    border: 3px solid black;
+    height: 100px;
+    width: 100%;
+    background-color: black;
+    z-index: 1;
+}
+
+.load-spot {
+    position: absolute;
+    /* top: -20px; */
+    top: 150px;
+    background-image: transparent;
+    height: 100px;
+    width: 100%;
+    z-index: 1;
+    opacity: .5;
+}
+
+.load-spot div:nth-child(1) {
+    background-color: transparent;
+}

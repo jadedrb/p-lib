@@ -11,6 +11,7 @@ function Home() {
             <h1><span>(P)</span>ersonal-<span>(LIB)</span>rary</h1>
             <br />
             <h3 style={{ opacity: ".5" }}>Organize your life.</h3>
+            <div className="load-spot"></div>
             <br /><br />
             <LoginAndRegister which={which} />
             <br /><br /><br />

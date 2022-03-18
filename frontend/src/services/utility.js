@@ -72,18 +72,48 @@ export function utilMsg(info) {
     }
 }
 
-export function loading(where) {
+let interval;
+
+export function loading(where, initial) {
     let el = document.querySelector(where)
     let prev = document.querySelector(".loading")
     if (!el || prev) return
-    let loading = document.createElement("div")
-    let loader = document.createElement("div")
+    let loading, loader, connection;
+    loading = document.createElement("div")
+    loader = document.createElement("div")
+    
+    if (initial) {
+        connection = document.createElement("div")
+        connection.setAttribute("class", `connection`)
+        loading.appendChild(connection)
+        let percent = 0
+        let perCount = 0
+        let red = 255
+        let blue = 255
+        interval = setInterval(() => {
+            perCount++
+            red-= .5
+            blue-= .5
+            if (perCount >= 3) {
+                perCount -= 3
+                percent++
+            }
+
+            if (percent > 99)
+                clearInterval(interval)
+            loader.style.backgroundColor = `rgb(${red}, 255, ${blue})`
+            connection.innerText = percent + "%"
+        }, 100)
+    }
+        
     loading.setAttribute("class", `loading ${where}`)
     loader.setAttribute("class", `loader`)
-    // console.log(loading, " loading")
+
     loading.appendChild(loader)
     el.appendChild(loading)
 }
+
+
 
 export function clearLoading() {
         let loading = document.querySelector(".loading")
@@ -91,7 +121,7 @@ export function clearLoading() {
         let parentClass = loading.classList[1]
         let parent = document.querySelector(parentClass)
         parent.removeChild(loading)
-        // console.log(loading, " finished loading")
+        clearInterval(interval)
 }
 
 export function utilOrder(results, order, toggle) {

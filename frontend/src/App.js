@@ -14,6 +14,8 @@ import Home from './components/Home';
 import UserService from './services/UserService';
 import RoomService from './services/RoomService';
 
+import { loading, clearLoading } from './services/utility'
+
 function App() {
 
   let { selected, user, dispatch, setup } = useContext(Context)
@@ -59,8 +61,19 @@ function App() {
     if (!mounted.current) {
       validate()
       mounted.current = true
-      console.log('v1.00')
-      UserService.awaken()
+      console.log('v1.01')
+
+      if (document.querySelector('.rooms'))
+        loading('.rooms', true)
+      else 
+        loading('.load-spot', true)
+
+      UserService
+        .awaken()
+        .then(r => {
+          console.log('Server response: ' + r.data)
+          clearLoading()
+        })
     }
     
   }, [dispatch])
