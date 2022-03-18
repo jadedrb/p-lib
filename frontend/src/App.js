@@ -13,7 +13,6 @@ import Home from './components/Home';
 
 import UserService from './services/UserService';
 import RoomService from './services/RoomService';
-import axios from 'axios';
 
 function App() {
 
