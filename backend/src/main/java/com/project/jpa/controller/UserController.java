@@ -63,6 +63,11 @@ public class UserController {
 			throw new Exception("improper relationship with requested data");
 	}
 	
+	@GetMapping("/testing")
+	public String test() {
+		return "hello there!";
+	}
+	
 	
 	@GetMapping("/auth/test")
 	public String testing(Authentication authentication) {
