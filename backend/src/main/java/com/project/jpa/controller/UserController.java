@@ -36,7 +36,7 @@ import com.project.jpa.model.User;
 import com.project.jpa.repository.RoomRepository;
 import com.project.jpa.repository.UserRepository;
 
-@CrossOrigin(origins="http://localhost:3000")
+@CrossOrigin//(origins="http://localhost:3000")
 @RestController("/")
 public class UserController {
 	

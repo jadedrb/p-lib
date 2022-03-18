@@ -59,6 +59,7 @@ function App() {
     if (!mounted.current) {
       validate()
       mounted.current = true
+      console.log('v1.00')
       UserService.awaken()
     }
     
