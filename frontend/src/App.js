@@ -13,10 +13,10 @@ import Home from './components/Home';
 
 import UserService from './services/UserService';
 import RoomService from './services/RoomService';
+import axios from 'axios';
 
 function App() {
-console.log(process.env.NODE_ENV)
-console.log(process.env.REACT_APP_API)
+
   let { selected, user, dispatch, setup } = useContext(Context)
 
   let navigate = useNavigate()
@@ -60,6 +60,7 @@ console.log(process.env.REACT_APP_API)
     if (!mounted.current) {
       validate()
       mounted.current = true
+      UserService.awaken()
     }
     
   }, [dispatch])

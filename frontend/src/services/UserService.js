@@ -8,6 +8,10 @@ class UserService {
         return d.data
     }
 
+    awaken() {
+        return axios.post(APILite + `/auth/awaken`, user).then(r => { alert('Server response: ' + r) })
+    }
+
     validateUserToken() {
         return authAxiosLite().get('/auth/test').then(r => this.format(r)).catch(e => console.log(e))
     }

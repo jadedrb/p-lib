@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const API = 'http://localhost:8080/api'
+export const API = process.env.NODE_ENV === "production" ? process.env.REACT_APP_API : process.env.REACT_APP_API_DEV
 export const APILite = API.slice(0,-4)
 
 export const authAxios = () => axios.create({
