@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.jpa.config.AuthRequest;
 import com.project.jpa.config.JwtUtil;
+import com.project.jpa.model.Room;
 //import com.project.jpa.config.JwtUtil;
 //import com.project.jpa.exception.AuthException;
 //import com.project.jpa.model.Book;
@@ -35,13 +37,12 @@ import com.project.jpa.repository.RoomRepository;
 import com.project.jpa.repository.UserRepository;
 
 @CrossOrigin(origins="http://localhost:3000")
-@RestController
-@RequestMapping("/api")
+@RestController("/")
 public class UserController {
 	
 	@Autowired
 	private JwtUtil jwtUtil;
-//	
+
 	@Autowired
     BCryptPasswordEncoder passwordEncoder;
 
@@ -54,10 +55,14 @@ public class UserController {
 	@Autowired
 	RoomRepository roomRepo;
 	
-	@GetMapping("/")
-	public String welcome() {
-		return "hello!";
+	public void validUserAccess(User user) throws Exception {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String incomingUser = auth.getName();
+		String outgoingUser = user.getUsername();
+		if (!incomingUser.equals(outgoingUser)) 
+			throw new Exception("improper relationship with requested data");
 	}
+	
 	
 	@GetMapping("/auth/test")
 	public String testing(Authentication authentication) {
@@ -105,114 +110,33 @@ public class UserController {
 		System.out.println("in here5");
 		return jwtUtil.generateToken(user.getUsername());
 	}
-
 	
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User request) {
-   
-    	System.out.println("here");
-//System.out.println(request);
-//System.out.println(request.getUsername());
-//System.out.println(request.getPassword());
-//        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
-//        System.out.println(token);
-//        System.out.println(token.getCredentials());
-//
-//        Authentication test = authenticationManager.authenticate(token);
-//        System.out.println(test);
-//        System.out.println(test.toString());
-//
-//        String jwt = jwtUtil.generate(request.getUsername());
-        return ResponseEntity.ok("wow");
-    }
+//	@GetMapping("/api/users")
+//	public List<User> getAllShelves(Authentication auth) {
+//		return userRepo.findAll(); // equivalent to SELECT * FROM students
+//	}
 	
-	@GetMapping("/users")
-	public List<User> getAllShelves(Authentication authentication) {
-		return userRepo.findAll(); // equivalent to SELECT * FROM students
-	}
-	
-	@GetMapping("/users/add/{user}")
-	public void addTest(@PathVariable String user) {
-		User userE = new User(user + "@gmail.com", user + "123", user, "");
-		userRepo.save(userE);
-	}
-	
-	@GetMapping("/users/{name}") 
-	public User findUserByName(@PathVariable String name)
-	{
-		try {
-			return userRepo.findByUsername(name).get(0);
-		} 
-		catch(Exception e) {
-			return null;
-		}
+	@GetMapping("/api/users/{name}") 
+	public User findUserByName(@PathVariable String name) throws Exception {
+		User user = userRepo.findByUsername(name).get(0);
+		validUserAccess(user);
+		return user;
 	}
 	
 	
-	@DeleteMapping("/users/{id}")
+	@DeleteMapping("/api/users/{id}")
 	public Map<String, Boolean> roomFromUser(@PathVariable Long id) {
+		Map<String, Boolean> res = new HashMap<>();
 		try {
 			User user = userRepo.findById(id).orElseThrow();
+			validUserAccess(user);
 			userRepo.delete(user);
-			Map<String, Boolean> res = new HashMap<>();
 			res.put("deleted", Boolean.TRUE);
 			return res;
 		}
 		catch(Exception e) {
-			return null;
+			res.put("deleted", Boolean.FALSE);
+			return res;
 		}
 	}
-
-	
-//	@GetMapping("/users/{user}/rooms")
-//	public List<Room> findRoomsForUser(@PathVariable String user) {
-//		//User userE = new User(user + "@gmail.com", user + "123", user);
-//		
-//		List<Room> l = null;
-//	
-//		try {
-//			List<User> u = userRepo.findByUsername(user);
-//			
-//			return u.get(0).getRooms();
-//			
-//		} catch(Exception e) {
-//			
-//			return l;
-//		}
-//	}
-//	
-//	@GetMapping("/test/{user}")
-//	public List<Room> test(@PathVariable String user) {
-//		List<User> ul = userRepo.joinUserAndRoom(user);
-//
-//		try {
-//			return ul.get(0).getRooms();
-//		}
-//		catch (Exception e) {
-//			return new ArrayList<>();
-//		}
-//	
-//	}
-	
-	
-	
-
 }
-
-
-
-
-
-
-//		for (User o : ul) {
-//			System.out.println("start");
-//			System.out.println(o.getUsername().equals(user));
-//			System.out.println(o.getUsername());
-//			System.out.println(user);
-//			System.out.println("end");
-//			if (o.getUsername().equals(user)) {
-//				System.out.println("ye");
-//			}
-//		}
-		// List<MyType> myList = new ArrayList<>()
-		// IndexOutOfBoundsException e

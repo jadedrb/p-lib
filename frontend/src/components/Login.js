@@ -57,7 +57,6 @@ function LoginAndRegister(props) {
             if (!validate(token)) return
 
             sessionStorage.setItem("token", token)
-            console.log(sessionStorage.getItem("token"))
 
             let payload = await RoomService.getRoomsForUser(username)
             console.log(payload)

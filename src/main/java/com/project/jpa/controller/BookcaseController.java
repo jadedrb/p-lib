@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,33 +35,38 @@ public class BookcaseController {
 	@Autowired
 	private BookcaseRepository bkcaseRepo;
 	
-	
-	
-	@GetMapping("/bookcases")
-	public List<Room> getAllBooks() {
-		return roomRepo.findAll(); // equivalent to SELECT * FROM students
+	public void validUserAccess(Bookcase bookcase) throws Exception {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String incomingUser = auth.getName();
+		String outgoingUser = bookcase.getRoom().getUser().getUsername();
+		if (!incomingUser.equals(outgoingUser)) 
+			throw new Exception("improper relationship with requested data");
 	}
+	
+//	@GetMapping("/bookcases")
+//	public List<Room> getAllBooks() {
+//		return roomRepo.findAll(); // equivalent to SELECT * FROM students
+//	}
 
 	
 	
 	
 		@GetMapping("/bookcases/{room}")
-		public List<Bookcase> bookcasesOfRoom(@PathVariable long room) {
-			try {
-				return roomRepo.findById(room).orElseThrow().getBookcases();
-			}
-			catch (Exception e) {
-				return new ArrayList<>();
-			}
+		public List<Bookcase> bookcasesOfRoom(@PathVariable long room) throws Exception {
+			List<Bookcase> bookcases = roomRepo.findById(room).orElseThrow().getBookcases();
+			if (!bookcases.isEmpty())
+				validUserAccess(bookcases.get(0));
+			return bookcases;
 		}
 		
 		
 		@PostMapping("/bookcases/{roomId}")
-		public List<Bookcase> bookcaseForRoom(@PathVariable long roomId, @RequestBody List<Bookcase> bookcases) {
+		public List<Bookcase> bookcaseForRoom(@PathVariable long roomId, @RequestBody List<Bookcase> bookcases) throws Exception {
 			Room room = roomRepo.findById(roomId).orElseThrow();
 			for (Bookcase bookcase : bookcases) {
-				room.addBookcase(bookcase);
 				bookcase.setRoom(room);
+				validUserAccess(bookcase);
+				room.addBookcase(bookcase);
 			}
 			return bkcaseRepo.saveAll(bookcases);
 		}
@@ -69,6 +76,7 @@ public class BookcaseController {
 			Map<String, Boolean> res = new HashMap<>();
 			try {
 				Bookcase bookcase = bkcaseRepo.findById(bkcaseId).orElseThrow();
+				validUserAccess(bookcase);
 				Room room = roomRepo.findById(roomId).orElseThrow();
 				room.removeBookcase(bookcase);
 				bkcaseRepo.delete(bookcase);
@@ -82,9 +90,11 @@ public class BookcaseController {
 
 
 		@PutMapping("/bookcases/{bkcaseId}")
-		public Bookcase updateBookcaseForRoom(@PathVariable long bkcaseId, @RequestBody Bookcase newBkcase) {
+		public Bookcase updateBookcaseForRoom(@PathVariable long bkcaseId, @RequestBody Bookcase newBkcase) throws Exception {
 			
 			Bookcase oldBkcase = bkcaseRepo.findById(bkcaseId).orElseThrow();
+			
+			validUserAccess(oldBkcase);
 			
 			if (newBkcase.getHeight() != 0) 
 				oldBkcase.setHeight(newBkcase.getHeight());

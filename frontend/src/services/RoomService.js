@@ -24,7 +24,7 @@ class RoomService {
     
     addRoomForUser(room, user) {
         loading(".newroom")
-        return authAxios().post(`/rooms/${user}`, room).then(r => this.format(r))
+        return authAxios().post(`/rooms/${user}`, room).then(r => this.format(r)).catch(() => { console.log('uhoh'); clearLoading(); return []; })
     }
     
     removeRoomFromUser(id, name) {

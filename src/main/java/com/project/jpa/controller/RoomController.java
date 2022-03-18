@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,42 +38,37 @@ public class RoomController {
 	@Autowired
 	private UserRepository userRepo;
 	
-	
-	
-	@GetMapping("/rooms")
-	public List<Room> getAllBooks(Authentication auth) throws Exception {
-		List<Room> rooms = roomRepo.findAll();
-		
-		if (!rooms.isEmpty()) {
-			String incomingUser = auth.getName();
-			String outgoingUser = rooms.get(0).getUser().getUsername();
-			if (!incomingUser.equals(outgoingUser)) {
-				throw new Exception(incomingUser + "does not have access to this information");
-			}
-		}
-		
-		return rooms; // equivalent to SELECT * FROM students
+	public void validUserAccess(Room room) throws Exception {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String incomingUser = auth.getName();
+		String outgoingUser = room.getUser().getUsername();
+		if (!incomingUser.equals(outgoingUser)) 
+			throw new Exception("improper relationship with requested data");
 	}
 	
 // This is used by getRoomsForUser from frontend
 	@GetMapping("/rooms/{user}")
-	public List<Room> roomsOfUser(@PathVariable String user) {
-		try {
+	public List<Room> roomsOfUser(@PathVariable String user) throws Exception {
+	
 			System.out.println("join user and rooms and order");
-			return roomRepo.joinUserAndRoom(user);
-//			 return userRepo.findByUsername(user).get(0).getRooms();
-		}
-		catch (Exception e) {
-			return new ArrayList<>();
-		}
+			List<Room> rooms = roomRepo.joinUserAndRoom(user);
+			
+			if (!rooms.isEmpty())
+				validUserAccess(rooms.get(0));
+				
+			return rooms;
 	}
 	
 // This is used by createRoomForUser from frontend
 	@PostMapping("/rooms/{name}")
-	public Room roomForUser(@PathVariable String name, @RequestBody Room room) {
+	public Room roomForUser(@PathVariable String name, @RequestBody Room room) throws Exception {
 		User user = userRepo.findByUsername(name).get(0);
-		user.addRoom(room);
 		room.setUser(user);
+		
+		validUserAccess(room);
+		
+		user.addRoom(room);
+		
 		return roomRepo.save(room);
 	}
 
@@ -83,6 +79,9 @@ public class RoomController {
 		try {
 			User user = userRepo.findByUsername(name).get(0);
 			Room room = roomRepo.findById(id).orElseThrow();
+			
+			validUserAccess(room);
+			
 			user.removeRoom(room);
 			roomRepo.delete(room);
 			res.put("deleted", Boolean.TRUE);
@@ -95,9 +94,11 @@ public class RoomController {
 	
 // This is the updateRoomForUser from frontend
 	@PutMapping("/rooms/{id}/users/{name}")
-	public Room updateRoomForUser(@PathVariable long id, @RequestBody Room newRoom) {
+	public Room updateRoomForUser(@PathVariable long id, @RequestBody Room newRoom) throws Exception {
 		
 		Room oldRoom = roomRepo.findById(id).orElseThrow();
+		
+		validUserAccess(oldRoom);
 		
 		oldRoom.setHeight(newRoom.getHeight());
 		oldRoom.setName(newRoom.getName());
@@ -109,14 +110,12 @@ public class RoomController {
 	
 	// This is used by getRoomsForUser from frontend
 		@GetMapping("/room/{id}")
-		public Room roomOfUser(@PathVariable long id) {
-			return roomRepo.findById(id).orElseThrow();
+		public Room roomOfUser(@PathVariable long id) throws Exception {
+			Room room = roomRepo.findById(id).orElseThrow();
+			validUserAccess(room);
+			return room;
 		}
 }
 
 
-//List<User> ul = roomRepo.joinUserAndRoom(user);
-
-
-// https://betterprogramming.pub/how-to-delete-child-records-in-onetomany-relationship-from-database-in-jpa-38d78e02d7a1
 // orphanRemoval = true ... auto deletes child entities while deleting parent

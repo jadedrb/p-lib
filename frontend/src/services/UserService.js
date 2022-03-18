@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { API, authAxios } from './api'
+import { APILite, authAxios, authAxiosLite } from './api'
 
 class UserService {
 
@@ -9,15 +9,15 @@ class UserService {
     }
 
     validateUserToken() {
-        return authAxios().get('/auth/test').then(r => this.format(r)).catch(e => console.log(e))
+        return authAxiosLite().get('/auth/test').then(r => this.format(r)).catch(e => console.log(e))
     }
 
     registerUser(user) {
-        return axios.post(API + `/auth/register`, user).then(r => this.format(r))
+        return axios.post(APILite + `/auth/register`, user).then(r => this.format(r))
     }
 
     loginUser(user) {
-        return axios.post(API + `/auth/login`, user).then(r => this.format(r))
+        return axios.post(APILite + `/auth/login`, user).then(r => this.format(r))
     }
 
     getUser(user) {

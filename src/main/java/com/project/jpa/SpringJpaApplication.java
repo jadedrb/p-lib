@@ -13,12 +13,5 @@ public class SpringJpaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringJpaApplication.class, args);
 	}
-	
-    // Creating a bean for password encryption
-//    @Bean
-//    public BCryptPasswordEncoder getBCryptPasswordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-	
 
 }

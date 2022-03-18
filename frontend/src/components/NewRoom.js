@@ -2,14 +2,13 @@ import { useState, useRef, useEffect } from "react";
 import { ADD_ROOM, REMOVE_ROOM, SET_ROOMS, TOGGLE_BKCASE_SELECT, UPDATE_ROOM } from "../context";
 import { randomNum, utilMsg, utilPath,rgbToHex } from "../services/utility";
 
-// import { test0, test1 } from "../services/tests";
-
 import Rooms from "../services/RoomService";
 import Bookcases from "../services/BookcaseService";
 
 const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path }) => {
+  
   let [rIndex, setRIndex] = useState(0);
-  // rid ? rooms.findIndex(r => r.id === rid) :
+
   let defaultRoom = {
     height: 10,
     width: 10,
@@ -18,6 +17,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
     bookcases: [],
     id: 0,
   };
+
   let [currentRoom, setCurrentRoom] = useState(
     !rid && rooms[0] ? rooms[0] : defaultRoom
   );
@@ -51,7 +51,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
         }
       } else {
         roomSetup(0)
-        navigate(utilPath(path, "room", rooms[0].id))
+       navigate(utilPath(path, "room", rooms[0].id))
       }
     } else {
       initialRoomSetup()
@@ -110,7 +110,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
   }
 
   useEffect(() => {
-    console.log("useEffect: bunch of stuff");
+   
     let map = mapRef.current;
 
     if (!map) return
@@ -308,7 +308,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
   return (
     <div className="newroom">
       <h3>
-        <span>{name}</span> ({rIndex})
+        <span>{name}</span> ({rIndex + 1})
       </h3>
       <div className="pm">
         <div className="pm-r ed" onClick={() => { 
@@ -389,24 +389,8 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
           <button>Save</button>
         </form>
       </div>}
-      
-      {/* For test purposes...
-      <button onClick={test0}>
-        TEST EVERYTHING!
-      </button>
-      <button onClick={test1}>
-        TEST Search
-      </button> */}
     </div>
   );
 };
 
 export default NewRoom;
-
-/*
-
-THINGS TO WORK ON:
-
-
-
-*/

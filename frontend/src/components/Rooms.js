@@ -245,6 +245,7 @@ const Rooms = () => {
         <div className="rooms">
             {(search && !typing && showResults) || results.length ? <SearchResults books={results} bid={Number(bid)} setShowResults={setShowResults} setResults={setResults} /> : null}
             <button className="logout" onClick={handleLogout}>Logout</button>
+            <h4 className="welcome"><span>{user && `welcome`}</span> {user}</h4>
             <div className="b-sec-center">
                 <button className="b-section" onClick={toggleRoomsView}>Room</button>
                 <div className="b-sec-line" style={{ display: showRooms ? "block" : "none" }}/>

@@ -36,7 +36,7 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
     }
 
     return (
-        <div className="table-contain booklist-r">
+        <div className={`table-contain booklist-r ${!renderedBooks.length && 'table-cc'}`}>
             {renderedBooks.length ? <h5>books: {renderedBooks.length}</h5> : null}
             {renderedBooks?.length ? 
                 <table className='booklist'>

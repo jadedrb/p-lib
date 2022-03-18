@@ -1,6 +1,8 @@
 body {
     margin: 0;
     padding: 0;
+    font-family: 'Fredoka', sans-serif;
+    font-family: 'Libre Baskerville', serif;
 }
 
 td {
@@ -25,7 +27,6 @@ tr:hover {
 .table-contain {
     display: flex;
     justify-content: center;
-    /* align-items: baseline; */
     position: relative;
     overflow: auto;
     height: 120%;
@@ -33,6 +34,10 @@ tr:hover {
     min-height: 50px;
     max-height: 350px;
     padding: 10px;
+}
+
+.table-cc {
+    align-items: center;
 }
 
 .booklist {
@@ -504,7 +509,8 @@ select {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: aliceblue;
+    background-image: linear-gradient(to right, white, rgb(180, 180, 250));
+    /* background-color: rgb(74, 74, 255); */
     height: 100vh;
 }
 
@@ -514,6 +520,20 @@ select {
 .home h1 span {
     color: rgb(65, 65, 65);
     
+}
+
+.welcome {
+    position: absolute;
+    top: -3px;
+    left: 100px;
+    background-color: white;
+    /* color: rgb(74, 74, 255); */
+    color: black;
+    border: none;
+}
+
+.welcome span {
+    color: rgb(144, 144, 144);
 }
 
 .logout {

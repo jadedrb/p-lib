@@ -54,7 +54,7 @@ const SearchResults = ({ books, bid, setResults, setShowResults }) => {
     })
 
     return (
-        <div className="table-contain search-c">
+        <div className={`table-contain search-c ${!renderedBooks.length && 'table-cc'}`}>
             <div className="pm-r min-room x-results" onClick={closeSearchResults}>X</div>
             {renderedBooks.length ? <h5>results: {renderedBooks.length}</h5> : null}
             {renderedBooks?.length ? 

@@ -1,4 +1,4 @@
-package com.project.jpa.services;
+package com.project.jpa.config;
 
 import java.util.ArrayList;
 import java.util.List;

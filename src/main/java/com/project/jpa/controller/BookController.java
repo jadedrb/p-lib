@@ -7,6 +7,8 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,52 +52,58 @@ public class BookController {
 	@Autowired
 	private UserRepository userRepo;
 	
-	
-	@GetMapping("/books")
-	public List<Book> getAllBooks() {
-		return bookRepo.findAll(); // equivalent to SELECT * FROM students
+	public void validUserAccess(Book book) throws Exception {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String incomingUser = auth.getName();
+		String outgoingUser = book.getUser().getUsername();
+		if (!incomingUser.equals(outgoingUser)) 
+			throw new Exception("improper relationship with requested data");
 	}
+	
+	
+//	@GetMapping("/books")
+//	public List<Book> getAllBooks() {
+//		return bookRepo.findAll(); // equivalent to SELECT * FROM students
+//	}
 
-	
-	@GetMapping("/books/search={piece}")
-	public List<Book> getByPiece(@PathVariable String piece) {
-		return bookRepo.findByTitleContainingIgnoreCase(piece);
-	}
-	
-	@Transactional
-	@DeleteMapping("/name/{name}")
-	public String deleteBookByName(@PathVariable String name) {
-		
-		
-		//studentRepository.delete(stu2);
-		try {
-			Book stu2 = bookRepo.findOneByTitle(name);
-			System.out.println(stu2.toString());
-			bookRepo.deleteByTitle(name);
-		}
-		catch (Exception e) {
-			return "cannot delete because there's more than one " + name;
-		}
-		
-		return "done deleting " + name;
-	}
-	
+//	
+//	@GetMapping("/books/search={piece}")
+//	public List<Book> getByPiece(@PathVariable String piece) {
+//		return bookRepo.findByTitleContainingIgnoreCase(piece);
+//	}
+//	
+//	@Transactional
+//	@DeleteMapping("/name/{name}")
+//	public String deleteBookByName(@PathVariable String name) {
+//		
+//		
+//		//studentRepository.delete(stu2);
+//		try {
+//			Book stu2 = bookRepo.findOneByTitle(name);
+//			System.out.println(stu2.toString());
+//			bookRepo.deleteByTitle(name);
+//		}
+//		catch (Exception e) {
+//			return "cannot delete because there's more than one " + name;
+//		}
+//		
+//		return "done deleting " + name;
+//	}
+//	
 	
 	// New Mappings
 	
-	@GetMapping("/books/{book}")
-	public List<Book> booksOfShelf(@PathVariable long book) {
-		try {
-			return shelfRepo.findById(book).orElseThrow().getBooks();
-		}
-		catch (Exception e) {
-			return new ArrayList<>();
-		}
+	@GetMapping("/books/{shelfId}")
+	public List<Book> booksOfShelf(@PathVariable long shelfId) throws Exception {
+		List<Book> books = shelfRepo.findById(shelfId).orElseThrow().getBooks();
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 
 	@PostMapping("/books/{shelfId}/users/{userId}")
-	public List<Book> bookForShelf(@PathVariable long shelfId, @PathVariable String userId, @RequestBody List<Book> books) {
+	public List<Book> bookForShelf(@PathVariable long shelfId, @PathVariable String userId, @RequestBody List<Book> books) throws Exception {
 //		Room room = roomRepo.findById(shelf.getBookcase().getRoom().getId()).orElseThrow();
 		Shelf shelf = shelfRepo.findById(shelfId).orElseThrow();
 		User user = userRepo.findByUsername(userId).get(0);		
@@ -103,16 +111,18 @@ public class BookController {
 		Bookcase bookcase = shelf.getBookcase();
 		
 		for (Book book : books) {
+			book.setUser(user);
+			
+			validUserAccess(book);
+			
+			book.setBookcase(bookcase);
+			book.setRoom(room);
+			book.setShelf(shelf);
 			
 			room.addBook(book);
 			shelf.addBook(book);
 			user.addBook(book);
 			bookcase.addBook(book);
-			
-			book.setBookcase(bookcase);
-			book.setRoom(room);
-			book.setUser(user);
-			book.setShelf(shelf);
 		}
 		
 		return bookRepo.saveAll(books);
@@ -122,10 +132,9 @@ public class BookController {
 	public Map<String, Boolean> bookFromShelf(@PathVariable Long bookId, @PathVariable Long shelfId, @PathVariable String userId) {
 		Map<String, Boolean> res = new HashMap<>();
 		try {
-			User user = userRepo.findByUsername(userId).get(0);
-//			Shelf shelf = shelfRepo.findById(shelfId).orElseThrow();
 			Book book = bookRepo.findById(bookId).orElseThrow();
-//			shelf.removeBook(book);
+			validUserAccess(book);
+			User user = userRepo.findByUsername(userId).get(0);
 			user.removeBook(book);
 			bookRepo.delete(book);
 			res.put("deleted", Boolean.TRUE);
@@ -138,9 +147,11 @@ public class BookController {
 
 
 	@PutMapping("/books/{bookId}")
-	public Book updateBookForShelf(@PathVariable long bookId, @RequestBody Book newBook) {
+	public Book updateBookForShelf(@PathVariable long bookId, @RequestBody Book newBook) throws Exception {
 		
 		Book oldBook = bookRepo.findById(bookId).orElseThrow();
+		
+		validUserAccess(oldBook);
 		
 		oldBook.setTitle(newBook.getTitle());
 		oldBook.setAuthor(newBook.getAuthor());
@@ -156,63 +167,91 @@ public class BookController {
 	// Search books for user 
 	
 	@GetMapping("/books/{username}/search/title={title}")
-	public List<Book> getByTitle(@PathVariable String username, @PathVariable String title) {
+	public List<Book> getByTitle(@PathVariable String username, @PathVariable String title) throws Exception {
 		System.out.println("search by title");
-		return bookRepo.findTitleForUser(title, username);
+		List<Book> books = bookRepo.findTitleForUser(title, username);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/{username}/search/genre={genre}")
-	public List<Book> getByGenre(@PathVariable String username, @PathVariable String genre) {
+	public List<Book> getByGenre(@PathVariable String username, @PathVariable String genre) throws Exception {
 		System.out.println("search by genre");
-		return bookRepo.findGenreForUser(genre, username);
+		List<Book> books = bookRepo.findGenreForUser(genre, username);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/{username}/search/genretitle={search}")
-	public List<Book> getByGenreAndTitle(@PathVariable String username, @PathVariable String search) {
+	public List<Book> getByGenreAndTitle(@PathVariable String username, @PathVariable String search) throws Exception {
 		System.out.println("search by genre and title");
-		return bookRepo.findTitleAndGenreForUser(search, username);
+		List<Book> books = bookRepo.findTitleAndGenreForUser(search, username);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/{username}/search/more={more}")
-	public List<Book> getByMore(@PathVariable String username, @PathVariable String more) {
+	public List<Book> getByMore(@PathVariable String username, @PathVariable String more) throws Exception {
 		System.out.println("search by more");
-		return bookRepo.findMoreForUser(more, username);
+		List<Book> books = bookRepo.findMoreForUser(more, username);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/{username}/search/all={all}")
-	public List<Book> getByAll(@PathVariable String username, @PathVariable String all) {
+	public List<Book> getByAll(@PathVariable String username, @PathVariable String all) throws Exception {
 		System.out.println("search by all");
-		return bookRepo.findAllForUser(all, username);
+		List<Book> books = bookRepo.findAllForUser(all, username);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/{username}/search/color={color}")
-	public List<Book> getByColor(@PathVariable String username, @PathVariable String color) {
+	public List<Book> getByColor(@PathVariable String username, @PathVariable String color) throws Exception {
 		System.out.println("search by color");
-		return bookRepo.findColorForUser(color, username);
+		List<Book> books = bookRepo.findColorForUser(color, username);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/{username}/search/author={author}")
-	public List<Book> getByAuthor(@PathVariable String username, @PathVariable String author) {
+	public List<Book> getByAuthor(@PathVariable String username, @PathVariable String author) throws Exception {
 		System.out.println("search by author");
-		return bookRepo.findAuthorForUser(author, username);
+		List<Book> books = bookRepo.findAuthorForUser(author, username);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/{username}/search/published={low}&{high}")
-	public List<Book> getByPublishDate(@PathVariable String username, @PathVariable int low, @PathVariable int high) {
+	public List<Book> getByPublishDate(@PathVariable String username, @PathVariable int low, @PathVariable int high) throws Exception {
 		System.out.println("search by publish date");
-		return bookRepo.findPublishDateForUser(low, high, username);
+		List<Book> books = bookRepo.findPublishDateForUser(low, high, username);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/{username}/search/pages={low}&{high}")
-	public List<Book> getByPages(@PathVariable String username, @PathVariable int low, @PathVariable int high) {
+	public List<Book> getByPages(@PathVariable String username, @PathVariable int low, @PathVariable int high) throws Exception {
 		System.out.println("search by pages");
-		return bookRepo.findPagesForUser(low, high, username);
+		List<Book> books = bookRepo.findPagesForUser(low, high, username);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/{id}/coord")
-	public Map<String, Long> getBookCoordinates(@PathVariable long id) {
+	public Map<String, Long> getBookCoordinates(@PathVariable long id) throws Exception {
 		System.out.println("search by all");
 		Book book = bookRepo.getById(id);
+		validUserAccess(book);
 		Map<String, Long> res = new HashMap<>();
 		res.put("book", book.getId());
 		res.put("shelf", book.getShelf().getId());
@@ -224,171 +263,257 @@ public class BookController {
 	// Search for books in room
 	
 	@GetMapping("/books/search/in/room/{id}/title={title}")
-	public List<Book> getByTitleInRoom(@PathVariable long id, @PathVariable String title) {
+	public List<Book> getByTitleInRoom(@PathVariable long id, @PathVariable String title) throws Exception {
 		System.out.println("search by title in room");
-		return bookRepo.findTitleInRoom(title, id);
+		List<Book> books = bookRepo.findTitleInRoom(title, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}	
 	
 	@GetMapping("/books/search/in/room/{id}/genre={genre}")
-	public List<Book> getByGenreInRoom(@PathVariable long id, @PathVariable String genre) {
+	public List<Book> getByGenreInRoom(@PathVariable long id, @PathVariable String genre) throws Exception {
 		System.out.println("search by title in room");
-		return bookRepo.findGenreInRoom(genre, id);
+		List<Book> books = bookRepo.findGenreInRoom(genre, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}	
 	
 	@GetMapping("/books/search/in/room/{id}/genretitle={search}")
-	public List<Book> getByGenreAndTitleInRoom(@PathVariable long id, @PathVariable String search) {
+	public List<Book> getByGenreAndTitleInRoom(@PathVariable long id, @PathVariable String search) throws Exception {
 		System.out.println("search by genre and title in room");
-		return bookRepo.findGenreAndTitleInRoom(search, id);
+		List<Book> books = bookRepo.findGenreAndTitleInRoom(search, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}	
 	
 	@GetMapping("/books/search/in/room/{id}/all={all}")
-	public List<Book> getByAllInRoom(@PathVariable long id, @PathVariable String all) {
+	public List<Book> getByAllInRoom(@PathVariable long id, @PathVariable String all) throws Exception {
 		System.out.println("search by more in room");
-		return bookRepo.findAllInRoom(all, id);
+		List<Book> books = bookRepo.findAllInRoom(all, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}	
 	
 	@GetMapping("/books/search/in/room/{id}/color={color}")
-	public List<Book> getByColorInRoom(@PathVariable long id, @PathVariable String color) {
+	public List<Book> getByColorInRoom(@PathVariable long id, @PathVariable String color) throws Exception {
 		System.out.println("search by color in room");
-		return bookRepo.findColorInRoom(color, id);
+		List<Book> books = bookRepo.findColorInRoom(color, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/search/in/room/{id}/author={author}")
-	public List<Book> getByAuthorInRoom(@PathVariable long id, @PathVariable String author) {
+	public List<Book> getByAuthorInRoom(@PathVariable long id, @PathVariable String author) throws Exception {
 		System.out.println("search by author in room");
-		return bookRepo.findAuthorInRoom(author, id);
+		List<Book> books = bookRepo.findAuthorInRoom(author, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/search/in/room/{id}/more={more}")
-	public List<Book> getByMoreInRoom(@PathVariable long id, @PathVariable String more) {
+	public List<Book> getByMoreInRoom(@PathVariable long id, @PathVariable String more) throws Exception {
 		System.out.println("search by more in room");
-		return bookRepo.findMoreInRoom(more, id);
+		List<Book> books = bookRepo.findMoreInRoom(more, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/search/in/room/{id}/published={low}&{high}")
-	public List<Book> getByPublishDateInRoom(@PathVariable long id, @PathVariable int low, @PathVariable int high) {
+	public List<Book> getByPublishDateInRoom(@PathVariable long id, @PathVariable int low, @PathVariable int high) throws Exception {
 		System.out.println("search by publish date in room");
-		return bookRepo.findPublishDateInRoom(low, high, id);
+		List<Book> books = bookRepo.findPublishDateInRoom(low, high, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/search/in/room/{id}/pages={low}&{high}")
-	public List<Book> getByPagesInRoom(@PathVariable long id, @PathVariable int low, @PathVariable int high) {
+	public List<Book> getByPagesInRoom(@PathVariable long id, @PathVariable int low, @PathVariable int high) throws Exception {
 		System.out.println("search by pages in room");
-		return bookRepo.findPagesInRoom(low, high, id);
+		List<Book> books = bookRepo.findPagesInRoom(low, high, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	
 	// Search for books in bookcase
 	
 	@GetMapping("/books/search/in/bookcase/{id}/title={title}")
-	public List<Book> getByTitleInBookcase(@PathVariable long id, @PathVariable String title) {
+	public List<Book> getByTitleInBookcase(@PathVariable long id, @PathVariable String title) throws Exception {
 		System.out.println("search by title in bookcase");
-		return bookRepo.findTitleInBookcase(title, id);
+		List<Book> books = bookRepo.findTitleInBookcase(title, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}	
 	
 	@GetMapping("/books/search/in/bookcase/{id}/genre={genre}")
-	public List<Book> getByGenreInBookcase(@PathVariable long id, @PathVariable String genre) {
+	public List<Book> getByGenreInBookcase(@PathVariable long id, @PathVariable String genre) throws Exception {
 		System.out.println("search by genre in bookcase");
-		return bookRepo.findGenreInBookcase(genre, id);
+		List<Book> books = bookRepo.findGenreInBookcase(genre, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}	
 	
 	@GetMapping("/books/search/in/bookcase/{id}/genretitle={search}")
-	public List<Book> getByGenreAndTitleInBookcase(@PathVariable long id, @PathVariable String search) {
+	public List<Book> getByGenreAndTitleInBookcase(@PathVariable long id, @PathVariable String search) throws Exception {
 		System.out.println("search by genre and title in bookcase");
-		return bookRepo.findGenreAndTitleInBookcase(search, id);
+		List<Book> books = bookRepo.findGenreAndTitleInBookcase(search, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}	
 	
 	@GetMapping("/books/search/in/bookcase/{id}/all={all}")
-	public List<Book> getByAllInBookcase(@PathVariable long id, @PathVariable String all) {
+	public List<Book> getByAllInBookcase(@PathVariable long id, @PathVariable String all) throws Exception {
 		System.out.println("search by all in bookcase");
-		return bookRepo.findAllInBookcase(all, id);
+		List<Book> books = bookRepo.findAllInBookcase(all, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}	
 	
 	@GetMapping("/books/search/in/bookcase/{id}/color={color}")
-	public List<Book> getByColorInBookcase(@PathVariable long id, @PathVariable String color) {
+	public List<Book> getByColorInBookcase(@PathVariable long id, @PathVariable String color) throws Exception {
 		System.out.println("search by color in bookcase");
-		return bookRepo.findColorInBookcase(color, id);
+		List<Book> books = bookRepo.findColorInBookcase(color, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/search/in/bookcase/{id}/author={author}")
-	public List<Book> getByAuthorInBookcase(@PathVariable long id, @PathVariable String author) {
+	public List<Book> getByAuthorInBookcase(@PathVariable long id, @PathVariable String author) throws Exception {
 		System.out.println("search by author in bookcase");
-		return bookRepo.findAuthorInBookcase(author, id);
+		List<Book> books = bookRepo.findAuthorInBookcase(author, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/search/in/bookcase/{id}/more={more}")
-	public List<Book> getByMoreInBookcase(@PathVariable long id, @PathVariable String more) {
+	public List<Book> getByMoreInBookcase(@PathVariable long id, @PathVariable String more) throws Exception {
 		System.out.println("search by more in bookcase");
-		return bookRepo.findMoreInBookcase(more, id);
+		List<Book> books = bookRepo.findMoreInBookcase(more, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/search/in/bookcase/{id}/published={low}&{high}")
-	public List<Book> getByPublishDateInBookcase(@PathVariable long id, @PathVariable int low, @PathVariable int high) {
+	public List<Book> getByPublishDateInBookcase(@PathVariable long id, @PathVariable int low, @PathVariable int high) throws Exception {
 		System.out.println("search by publish date in bookcase");
-		return bookRepo.findPublishDateInBookcase(low, high, id);
+		List<Book> books = bookRepo.findPublishDateInBookcase(low, high, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/search/in/bookcase/{id}/pages={low}&{high}")
-	public List<Book> getByPagesInBookcase(@PathVariable long id, @PathVariable int low, @PathVariable int high) {
+	public List<Book> getByPagesInBookcase(@PathVariable long id, @PathVariable int low, @PathVariable int high) throws Exception {
 		System.out.println("search by pages in bookcase");
-		return bookRepo.findPagesInBookcase(low, high, id);
+		List<Book> books = bookRepo.findPagesInBookcase(low, high, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 
 	
 	// Search for books in shelf
 	
 	@GetMapping("/books/search/in/shelf/{id}/title={title}")
-	public List<Book> getByTitleInShelf(@PathVariable long id, @PathVariable String title) {
+	public List<Book> getByTitleInShelf(@PathVariable long id, @PathVariable String title) throws Exception {
 		System.out.println("search by title in shelf");
-		return bookRepo.findTitleInShelf(title, id);
+		List<Book> books = bookRepo.findTitleInShelf(title, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}	
 	
 	@GetMapping("/books/search/in/shelf/{id}/genre={genre}")
-	public List<Book> getByGenreInShelf(@PathVariable long id, @PathVariable String genre) {
+	public List<Book> getByGenreInShelf(@PathVariable long id, @PathVariable String genre) throws Exception {
 		System.out.println("search by genre in shelf");
-		return bookRepo.findGenreInShelf(genre, id);
+		List<Book> books = bookRepo.findGenreInShelf(genre, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
+		
 	}	
 	
 	@GetMapping("/books/search/in/shelf/{id}/genretitle={search}")
-	public List<Book> getByGenreAndTitleInShelf(@PathVariable long id, @PathVariable String search) {
+	public List<Book> getByGenreAndTitleInShelf(@PathVariable long id, @PathVariable String search) throws Exception {
 		System.out.println("search by genre and title in shelf");
-		return bookRepo.findGenreAndTitleInShelf(search, id);
+		List<Book> books = bookRepo.findGenreAndTitleInShelf(search, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}	
 	
 	@GetMapping("/books/search/in/shelf/{id}/all={all}")
-	public List<Book> getByAllInShelf(@PathVariable long id, @PathVariable String all) {
+	public List<Book> getByAllInShelf(@PathVariable long id, @PathVariable String all) throws Exception {
 		System.out.println("search by all in shelf");
-		return bookRepo.findAllInShelf(all, id);
+		List<Book> books = bookRepo.findAllInShelf(all, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
+		
 	}	
 	
 	@GetMapping("/books/search/in/shelf/{id}/color={color}")
-	public List<Book> getByColorInShelf(@PathVariable long id, @PathVariable String color) {
+	public List<Book> getByColorInShelf(@PathVariable long id, @PathVariable String color) throws Exception {
 		System.out.println("search by color in shelf");
-		return bookRepo.findColorInShelf(color, id);
+		List<Book> books = bookRepo.findColorInShelf(color, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
+		
 	}
 	
 	@GetMapping("/books/search/in/shelf/{id}/author={author}")
-	public List<Book> getByAuthorInShelf(@PathVariable long id, @PathVariable String author) {
+	public List<Book> getByAuthorInShelf(@PathVariable long id, @PathVariable String author) throws Exception {
 		System.out.println("search by author in shelf");
-		return bookRepo.findAuthorInShelf(author, id);
+		List<Book> books = bookRepo.findAuthorInShelf(author, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
+		
 	}
 	
 	@GetMapping("/books/search/in/shelf/{id}/more={more}")
-	public List<Book> getByMoreInShelf(@PathVariable long id, @PathVariable String more) {
+	public List<Book> getByMoreInShelf(@PathVariable long id, @PathVariable String more) throws Exception {
 		System.out.println("search by more in shelf");
-		return bookRepo.findMoreInShelf(more, id);
+		List<Book> books = bookRepo.findMoreInShelf(more, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
+	
 	}
 	
 	@GetMapping("/books/search/in/shelf/{id}/published={low}&{high}")
-	public List<Book> getByPublishDateInShelf(@PathVariable long id, @PathVariable int low, @PathVariable int high) {
+	public List<Book> getByPublishDateInShelf(@PathVariable long id, @PathVariable int low, @PathVariable int high) throws Exception {
 		System.out.println("search by publish date in shelf");
-		return bookRepo.findPublishDateInShelf(low, high, id);
+		List<Book> books = bookRepo.findPublishDateInShelf(low, high, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 	
 	@GetMapping("/books/search/in/shelf/{id}/pages={low}&{high}")
-	public List<Book> getByPagesInShelf(@PathVariable long id, @PathVariable int low, @PathVariable int high) {
+	public List<Book> getByPagesInShelf(@PathVariable long id, @PathVariable int low, @PathVariable int high) throws Exception {
 		System.out.println("search by pages in shelf");
-		return bookRepo.findPagesInShelf(low, high, id);
+		List<Book> books = bookRepo.findPagesInShelf(low, high, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
 	}
 
 }
