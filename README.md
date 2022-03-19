@@ -7,7 +7,13 @@ Your own personal library - organized, demystified, and in the cloud.
 
 ## Description
 
-Do you have an ever-expanding and unwieldy personal library in your home? For those people who say *"I have that book somewhere around here..."* Now you can find *that book* faster and stay organized longer with [p-lib](https://p-lib.vercel.app/). 
+Do you have an ever-expanding and unwieldy personal library in your home? For those people who say *"I have that book somewhere around here..."* 
+
+Now you can find *that book* faster and stay organized longer with [p-lib](https://p-lib.vercel.app/). 
+
+Map out the location of bookcases in a grid representation of your room and assign book entries to virtual shelves. 
+
+By simply searching for a book and clicking on the right result, you'll see the room it's in, the bookcase it's on, the shelf, and even the position on that shelf (if it's organized of course). 
 
 *Disclaimer: data entry is required (...but you'll thank yourself later!)*
 
