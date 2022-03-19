@@ -40,9 +40,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
   const respondToRoomLengthChange = () => {
     if (rooms.length) {
       if (rid) {
-        console.log('in here')
         let idx = rooms.findIndex(r => r.id === Number(rid))
-        console.log(rid, idx)
         if (idx >= 0) {
           roomSetup(idx)
         } else {
