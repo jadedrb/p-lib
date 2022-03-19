@@ -190,8 +190,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
         navigate(utilPath(path, "bookcase", currentBookcase.id));
       return;
     }
-    console.log('got here at least')
-    console.log(reposition)
+
     if (!edit && !reposition.toggle) return
     if (!bcStart) {
       setBcStart([row, column]);

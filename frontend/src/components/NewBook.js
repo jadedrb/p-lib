@@ -58,7 +58,6 @@ const NewBook = ({ setCurrShelf }) => {
     let { name, value } = e.target;
     let newInputs = { ...inputs };
     newInputs[name] = value;
-    console.log(newInputs)
     setInputs(newInputs);
   };
 
@@ -68,7 +67,7 @@ const NewBook = ({ setCurrShelf }) => {
 
   const handleEnter = (e) => {
     if (!edit) return
-    console.log(firstInput)
+
     let nextInput;
 
     if (e.key === "Enter") {
@@ -114,7 +113,6 @@ const NewBook = ({ setCurrShelf }) => {
   const handleSaveCreate = async (e) => {
     if (bid) {
       let book = await BookService.updateBookForShelf(inputs, bid)
-      console.log(book)
       dispatch({
         type: UPDATE_BOOK,
         payload: { shid, rid, bcid, bid, book },

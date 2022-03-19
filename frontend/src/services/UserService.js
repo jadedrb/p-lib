@@ -4,7 +4,6 @@ import { APILite, authAxios, authAxiosLite } from './api'
 class UserService {
 
     format(d) {
-        // console.log(d.data)
         return d.data
     }
 

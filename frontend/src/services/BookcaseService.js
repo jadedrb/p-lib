@@ -4,7 +4,6 @@ import { loading, clearLoading } from './utility'
 class BookcaseService {
 
     format(d) {
-        console.log(d.data)
         clearLoading()
         return d.data
     }

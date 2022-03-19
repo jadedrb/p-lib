@@ -64,8 +64,6 @@ function reducer(state, action) {
             let { bcId, rmId, bc } = action.payload
             let { roomIndex, rooms, bkcaseIndex, bkcase } = utilitySelector(rmId, bcId, null, state.rooms)
             rooms[roomIndex].bookcases[bkcaseIndex] = { ...bkcase, ...bc }
-            console.log(rooms[roomIndex].bookcases[bkcaseIndex])
-            console.log(rooms)
             return { ...state, rooms }
         }
         case REMOVE_BOOKCASE: {
@@ -96,11 +94,6 @@ function reducer(state, action) {
             let { bcid, rid, shid, book } = action.payload
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms)
             let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
-            console.log(roomIndex, bkcaseIndex, shelfIndex)
-            console.log(book)
-            console.log(shelf.books)
-            console.log([...shelf.books])
-            console.log([ ...shelf.books, book])
             shelf.books = [ ...shelf.books, book]
             // setCurrShelf({ ...shelf })
             return { ...state, rooms }
@@ -110,20 +103,6 @@ function reducer(state, action) {
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms)
             let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
             shelf.books = [ ...shelf.books, ...books]
-            let trueLength = shelf.books.length
-            console.log(trueLength)
-            console.log(shelf.books.length)
-            console.log(rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books.length)
-            // while (rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books.length) {
-
-            // }
-            // setTimeout(() => {
-            //     console.log(shelf.books)
-            //     return state
-            // }, 3000)
-            // setCurrShelf({ ...shelf })
-            
-            console.log(rooms)
             return { ...state, rooms }
             // return { ...state, rooms: state.rooms
             //     .map(r => r.id === Number(roomIndex) ? {...r, bookcases: r.bookcases.
@@ -131,14 +110,10 @@ function reducer(state, action) {
             //             map(sh => sh.id === Number(shelfIndex) ? {...sh, books: sh.books.concat(books)} : sh)} : bk)} : r )}
         }
         case UPDATE_BOOK: {
-            console.log('updating...')
             let { bcid, rid, shid, book, bid } = action.payload
-            console.log(book)
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms, bid)
             let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
             shelf.books = shelf.books.map(b => b.id === Number(bid) ? book : b)
-            console.log(shelf.books)
-            console.log(shelf.books.map(b => b.id === bid ? book : b))
             return { ...state, rooms }
         }
         case REMOVE_BOOK: {
@@ -146,8 +121,6 @@ function reducer(state, action) {
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms, bid)
             let newBooks = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books.filter(b => b.id !== Number(bid))
             rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books = newBooks
-            console.log(rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books)
-            // console.log('rooms (after remove): ', rooms)
             return { ...state, rooms }
         }
 

@@ -87,7 +87,6 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
     useEffect(() => {
         wrapper.current.handleToggleMount(true)
         return () => {
-            console.log("dismounting")
             wrapper.current.handleToggleMount(false)
         }
     }, [])
@@ -119,15 +118,12 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
         e.preventDefault()
         if (action === "Copy") {
             if (from === "book") {
-                console.log('copy origin... 1')
                 await handleCopy([book])
             }
             else {
                 if (selBulk === "selected") {
-                    console.log('copy origin... 2')
                     await handleCopy(currShelf.filter(b => selected.highlight.includes(b.id + "")))
                 } else {
-                    console.log('copy origin... 3')
                     await handleCopy(currShelf)
                 }
                 let payload = await RoomService.getRoomOfId(selRoom)
@@ -136,17 +132,14 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
             navigate(utilPath(path, 'shelf', selShelf))
         } else {
             if (from === "book") {
-                console.log('copy/move origin... 4')
                 await handleCopy([book])
                 await handleMove(bid)
             } else {
                 if (selBulk === "selected") {
-                    console.log('copy origin... 5')
                     let filter = currShelf.filter(b => selected.highlight.includes(b.id + ""))
                     await handleCopy(filter)
                     await handleMove(filter)
                 } else {
-                    console.log('copy origin... 6')
                     await handleCopy(currShelf)
                     await handleMove(currShelf)
                 }
@@ -159,8 +152,6 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
 
     const handleBookcaseAdjust = async (e) => {
         e.preventDefault()
-        console.log(bkcase)
-        // navigate(utilPath(path, "room", rid))
         
         let bkcaseFinal = { ...reposition.newBc }
 
@@ -171,14 +162,13 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
         delete bkcaseFinal.reposition
     
         let nBk = await BookcaseService.updateBookcaseForRoom(bkcaseFinal, bcid)
-        console.log(nBk, ": updated bookcase")
+
         dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: Number(rid), bcId: Number(bcid), bc: nBk }})
   
         navigate(utilPath(path, "room", rid))
     }
 
     const handleCopy = async (bks) => {
-        console.log('copy running...')
  
         if (from === 'shelf') 
             bks = bks.map(bk => {
@@ -191,18 +181,9 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
             type: ADD_BULK,
             payload: { shid: selShelf, rid: selRoom, bcid: selBkcase, books },
         });
-        // for (let i = 0; i < books.length; i++) {
-        //     console.log(books[i], " : in loop")
-        //     dispatch({
-        //         type: ADD_BOOK,
-        //         payload: { shid: selShelf, rid: selRoom, bcid: selBkcase, book: books[i] },
-        //     });
-        // }
-        console.log('copy finishing...')
     }
 
     const handleMove = async (bks) => {
-        console.log('move/delete running...')
         for (let i = 0; i < bks.length; i++) {
             try {
                 await BookService.removeBookFromShelfAndUser(from === "book" ? bid : bks[i].id, shid, user)
@@ -214,10 +195,8 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
                 console.log(e)
             }
         }
-        console.log('move/delete finishing...')
     }
 
-console.log(reposition)
     return ( 
         <div>
             <p style={{ opacity: ".4" }}>I want to...</p>

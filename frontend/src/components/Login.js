@@ -6,6 +6,7 @@ import UserService from '../services/UserService'
 import RoomService from "../services/RoomService"
 
 import React, { useState } from 'react'
+import { loading, clearLoading } from "../services/utility"
 
 function LoginAndRegister(props) {
 
@@ -49,17 +50,19 @@ function LoginAndRegister(props) {
         if (!validate()) return
 
         let token;
-        
+
+        loading('.home')
+
         if (props.which) {
             console.log('logging in...')
-
+            
             token = await UserService.loginUser({ username, password })
             if (!validate(token)) return
 
             sessionStorage.setItem("token", token)
 
             let payload = await RoomService.getRoomsForUser(username)
-            console.log(payload)
+
             if (payload)
                 dispatch({ type: SET_ROOMS, payload })
             
@@ -72,6 +75,8 @@ function LoginAndRegister(props) {
             sessionStorage.setItem("token", token)
             navigate("/room")
         }
+
+        clearLoading()
 
         dispatch({
             type: SET_USER,

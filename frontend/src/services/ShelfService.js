@@ -5,7 +5,6 @@ class ShelfService {
 
     format(d) {
         clearLoading()
-        console.log(d.data)
         return d.data
     }
 

@@ -21,7 +21,6 @@ export function utilitySelector(rid, bcid, shid, rms, bid) {
 }
 
 export function utilPath(path, type, id) {
-    console.log("utilPath, " + type + " " + id)
     let index;
     switch (type) {
         case 'book':
@@ -37,7 +36,6 @@ export function utilPath(path, type, id) {
             index = 1
             break;
         case 'coord':
-            console.log(path)
             let { book, shelf, bookcase, room } = path 
             return `/room/${room}/bookcase/${bookcase}/shelf/${shelf}/book/${book}`
         default:
@@ -82,7 +80,7 @@ export function loading(where, initial) {
     loading = document.createElement("div")
     loader = document.createElement("div")
     
-    if (initial) {
+   // if (initial) {
         connection = document.createElement("div")
         connection.setAttribute("class", `connection`)
         loading.appendChild(connection)
@@ -102,9 +100,10 @@ export function loading(where, initial) {
             if (percent > 99)
                 clearInterval(interval)
             loader.style.backgroundColor = `rgb(${red}, ${blue}, 255)`
-            connection.innerText = percent + "%"
+
+            if (initial) connection.innerText = percent + "%"
         }, 100)
-    }
+  //  }
         
     loading.setAttribute("class", `loading ${where}`)
     loader.setAttribute("class", `loader`)
@@ -135,17 +134,14 @@ export function utilOrder(results, order, toggle) {
     if (originalOrder.includes("asc")) {
         toggle = true
         if (order !== "author") {
-            console.log('uno')
             order = order.split(" ")[0]
         }
     } else if (originalOrder.includes("desc")) {
         toggle = false
         if (order !== "author") {
-            console.log('dos')
             order = order.split(" ")[0]
         }
     }
-console.log(order)
     if (order === "author" || order === "title" || order === "color" || order === "more" || order === "genre") {
         return results.sort((a, b) => {
             let aa = { ...a }
@@ -153,7 +149,6 @@ console.log(order)
             if (originalOrder.includes("last")) {
                 aa.author = aa.author.split(" ").reverse().join(" ")
                 bb.author = bb.author.split(" ").reverse().join(" ")
-                console.log('we got here...')
             }
             if (toggle) {
                 if (aa[order] < bb[order])
@@ -184,7 +179,6 @@ console.log(order)
 
 // Did not write this function (copy pasted)
 export function componentToHex(c) {
-    console.log(c)
     var hex = c.toString(16);
     return hex.length === 1 ? "0" + hex : hex;
   }
@@ -197,21 +191,3 @@ export function rgbToHex(r, g, b) {
 export function extractRgb(str) {
     return str.slice(0, -1).slice(4).split(",").map(c => Number(c))
 }
-
-
-
-/*
-
-let newRooms = state.rooms.map(r => {
-                if (rid === r.id)
-                    return r.bookcases.map(bk => {
-                        if (bcid === bk.id)
-                            return null
-                        else 
-                            return bk
-                    })
-                else
-                    return r
-            })
-
-*/

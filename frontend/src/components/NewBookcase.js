@@ -48,7 +48,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
       setEdit(false)
 
       let nBk = await Bookcases.updateBookcaseForRoom(bkcase, bcid)
-      console.log(nBk, ": updated bookcase")
+  
       dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: nBk }})
 
       if (color.color !== color.orig)

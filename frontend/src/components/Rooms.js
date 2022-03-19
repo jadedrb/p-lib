@@ -83,7 +83,6 @@ const Rooms = () => {
         }
   
         if (!greater && !lesser && search.length > 0) {
-            console.log('ye')
             greater = Number(search.trim()) - 1
             lesser = Number(search.trim()) + 1
         } else if (greater && !lesser) {
@@ -91,7 +90,7 @@ const Rooms = () => {
         } else if (!greater && lesser) {
             greater = "0"
         }
-        console.log("greater: " + greater + ", lesser: " + lesser)
+
         return { greater: Number(greater), lesser: Number(lesser) }
     }
 
@@ -221,7 +220,6 @@ const Rooms = () => {
             if (searchType === "pages" || searchType === "published") {
                 let lastChar = value.charAt(value.length - 1)
                 let test = /[0-9]/.test(lastChar)
-                console.log(value)
                 if (test || value.length === 0 || lastChar === " " || lastChar === "<" || lastChar === ">" || value.charAt(0) === "#" || lastChar === "s") 
                     setSearch(value) 
             } else {

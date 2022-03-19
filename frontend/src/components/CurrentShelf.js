@@ -43,7 +43,6 @@ function CurrentShelf() {
         swap = wrapper.current.swapem()
     
         setShelfPos({ top, bot, swap })
-        console.log(shelf)
         setCurrShelf(shelf)
         setOrder(shelf?.organize ? shelf.organize : "lastname asc")
         setMove(false)
