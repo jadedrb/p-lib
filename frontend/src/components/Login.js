@@ -26,7 +26,7 @@ function LoginAndRegister(props) {
 
     const validate = (token) => {
         if (token && token.length < 50) {
-            alert(token)
+            setTimeout(() => alert(token), 100)
             return false
         }
         if (username.length < 3) {
@@ -57,7 +57,11 @@ function LoginAndRegister(props) {
             console.log('logging in...')
             
             token = await UserService.loginUser({ username, password })
-            if (!validate(token)) return
+            
+            if (!validate(token)) {
+                clearLoading()
+                return
+            }
 
             sessionStorage.setItem("token", token)
 
@@ -71,7 +75,12 @@ function LoginAndRegister(props) {
         else {
             console.log('registering...')
             token = await UserService.registerUser({ username, password, email })
-            if (!validate(token)) return
+            
+            if (!validate(token)) {
+                clearLoading()
+                return
+            }
+
             sessionStorage.setItem("token", token)
             navigate("/room")
         }

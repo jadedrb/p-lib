@@ -79,6 +79,7 @@ function App() {
           console.log(test)
           setTimeout(() => clearLoading(), 200)
         })
+        
     }
     
   }, [dispatch])

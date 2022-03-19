@@ -71,39 +71,48 @@ export function utilMsg(info) {
 }
 
 let interval;
+let percent = 0;
+let perCount = 0
+let red = 255
+let blue = 255
 
 export function loading(where, initial) {
+
     let el = document.querySelector(where)
     let prev = document.querySelector(".loading")
+
     if (!el || prev) return
+
     let loading, loader, connection;
     loading = document.createElement("div")
     loader = document.createElement("div")
     
-   // if (initial) {
-        connection = document.createElement("div")
-        connection.setAttribute("class", `connection`)
-        loading.appendChild(connection)
-        let percent = 0
-        let perCount = 0
-        let red = 255
-        let blue = 255
-        interval = setInterval(() => {
-            perCount++
-            red-= .5
-            blue-= .5
-            if (perCount >= 3) {
-                perCount -= 3
-                percent++
-            }
+    connection = document.createElement("div")
+    connection.setAttribute("class", `connection`)
+    loading.appendChild(connection)
 
-            if (percent > 99)
-                clearInterval(interval)
-            loader.style.backgroundColor = `rgb(${red}, ${blue}, 255)`
+    perCount = 0
+    red = 255
+    blue = 255
 
-            if (initial) connection.innerText = percent + "%"
-        }, 100)
-  //  }
+    interval = setInterval(() => {
+        perCount++
+        red-= .5
+        blue-= .5
+        
+        if (perCount >= 3) {
+            perCount -= 3
+            percent++
+        }
+
+        if (percent > 99)
+            clearInterval(interval)
+        
+        loader.style.backgroundColor = `rgb(${red}, ${blue}, 255)`
+
+        if (initial) 
+            connection.innerText = percent + "%"
+    }, 100)
         
     loading.setAttribute("class", `loading ${where}`)
     loader.setAttribute("class", `loader`)
@@ -117,10 +126,38 @@ export function loading(where, initial) {
 export function clearLoading() {
         let loading = document.querySelector(".loading")
         if (!loading) return
+
         let parentClass = loading.classList[1]
         let parent = document.querySelector(parentClass)
-        parent.removeChild(loading)
-        clearInterval(interval)
+        let connection = document.querySelector(".connection")
+   
+        if (connection.innerText && percent < 100) {
+            let interval2 = setInterval(() => {
+                percent++
+                red-= .5
+                blue-= .5
+
+                if (connection.innerText && percent < 30) 
+                    percent = 90
+
+                if (percent > 99) {
+
+                    clearInterval(interval)
+                    clearInterval(interval2)
+           
+                    for (let i = 0; i < parent.childNodes.length; i++) {
+                        if (parent?.childNodes[i]?.classList[0] === "loading") {
+                            parent.removeChild(loading)
+                        }
+                    }
+                    percent = 0
+                }
+            }, 40)
+        } else {
+            parent.removeChild(loading)
+            clearInterval(interval)
+            percent = 0
+        }
 }
 
 export function utilOrder(results, order, toggle) {
