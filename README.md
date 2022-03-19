@@ -1,5 +1,5 @@
 # p-lib
-Your own personal library - organized. 
+Your own personal library - organized, demystified, and in the cloud.
 
 ## 
 
