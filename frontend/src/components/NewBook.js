@@ -34,6 +34,7 @@ const NewBook = ({ setCurrShelf }) => {
 
   let [currentFocus, setCurrentFocus] = useState(null);
   let [shelfPres, setShelfPres] = useState(null);
+  let [currentBook, setCurrentBook] = useState(null);
 
   useEffect(() => {
     setCurrentFocus(firstInput.current);
@@ -50,6 +51,7 @@ const NewBook = ({ setCurrShelf }) => {
       setInputs(initialInputs.current)
     }
     setShelfPres(shelf)
+    setCurrentBook(book)
   }, [rid, bcid, shid, rooms, bid])
 
   const handleInput = (e) => {
@@ -90,13 +92,12 @@ const NewBook = ({ setCurrShelf }) => {
     }
 
     // If enter press on the last input OR if they click the Save button
-    if (nextInput?.name === "reset" || e.target.name === "save") {
+    if ((nextInput?.name === "reset" || e.target.name === "save") && (nextInput?.name !== e.target.name)) {
       handleSaveCreate()
     }
 
     // If enter press leads nowhere OR if Reset button is pressed
     if (nextInput === currentFocus || e.target.name === "reset") {
-      console.log(firstInput)
       firstInput.current.focus();
       setCurrentFocus(firstInput.current);
       navigate(utilPath(path, 'book', ""))
@@ -138,15 +139,28 @@ const NewBook = ({ setCurrShelf }) => {
     navigate(utilPath(path, 'shelf', shid))
   }
 
+  const lastUpdated = (date) => {
+    if (!date) return
+    let dateObj = new Date(date);
+    let year = String(dateObj.getFullYear()).slice(2)
+    let month = dateObj.getUTCMonth() + 1
+    let day = dateObj.getDate()
+    return `${month}/${day}/${year}`
+  }
+
   return (
     <div className="nb-contain">
       {shelfPres ?
-
+          <>
           <div className="pm">
                 {bid && <div className="pm-r ed" onClick={() => { setEdit(!edit); if(move) setMove(false); }}>=</div>}
                 {bid && edit && <div className="pm-r ed" onClick={() => setMove(!move)}>~</div>}
                 {bid && edit && <div className="pm-b" onClick={removeBook}>-</div>}
-          </div>: null}
+                
+          </div>
+          {bid && <div className="lst-up">Last updated: {lastUpdated(currentBook?.recorded_on)}</div>}
+          </>
+          : null}
 
         {(shelfPres && !move) || (move && !edit) ?
 

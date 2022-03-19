@@ -101,7 +101,7 @@ export function loading(where, initial) {
 
             if (percent > 99)
                 clearInterval(interval)
-            loader.style.backgroundColor = `rgb(${red}, 255, ${blue})`
+            loader.style.backgroundColor = `rgb(${red}, ${blue}, 255)`
             connection.innerText = percent + "%"
         }, 100)
     }

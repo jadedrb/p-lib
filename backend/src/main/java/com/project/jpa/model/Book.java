@@ -14,6 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -32,7 +33,7 @@ public class Book {
 	private String color;
 	private String more;
 	
-	@CreationTimestamp
+	@UpdateTimestamp
 	private Date recorded_on;
 	
 	@ManyToOne

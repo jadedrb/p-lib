@@ -61,18 +61,20 @@ function App() {
     if (!mounted.current) {
       validate()
       mounted.current = true
-      console.log('v1.01')
+      console.log('v1.02')
 
       if (document.querySelector('.rooms'))
         loading('.rooms', true)
-      else 
+      else if (document.querySelector('.load-spot'))
         loading('.load-spot', true)
+      else 
+        setTimeout(() => loading('.load-spot', true), 100)
 
       UserService
         .awaken()
         .then(r => {
           console.log('Server response: ' + r.data)
-          clearLoading()
+          setTimeout(() => clearLoading(), 200)
         })
     }
     
