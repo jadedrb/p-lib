@@ -38,6 +38,9 @@ class UserService {
     getUserDetails(name) {
         return authAxios().get(`/overview/${name}`).then(r => this.format(r))
     }
+    updateUserOfId(user, id) {
+        return authAxios().put(`/users/${id}`, user).then(r => this.format(r))
+    }
 }
 
 export default new UserService()

@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect, useRef } from "react"
 import NewRoom from "./NewRoom"
-import { Context, SET_USER } from '../context'
+import { Context, SET_USER, UPDATE_SETTINGS } from '../context'
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
 
 import Bookz from '../services/BookService'
@@ -8,11 +8,11 @@ import UserService from '../services/UserService'
 import SearchResults from "./SearchResults"
 import GeneralModal from "./GeneralModal"
 
-import { utilTime } from "../services/utility";
+import { clearLoading, loading, utilTime } from "../services/utility";
 
 const Rooms = () => {
 
-    const { rooms, dispatch, user, reposition, setup } = useContext(Context)
+    const { rooms, dispatch, user, reposition, setup, settings } = useContext(Context)
 
     let { bcid, rid, bid, shid } = useParams()
     let wrapperRef = useRef()
@@ -29,18 +29,6 @@ const Rooms = () => {
     let [searchType, setSearchType] = useState("title")
     let [showUserDet, setShowUserDet] = useState(false)
     let [userDetails, setUserDetails] = useState({})
-
-    useEffect(() => {
-        if (showUserDet) {
-            UserService
-                .getUserDetails(user)
-                .then(d => {
-                    console.log(d)
-                    setUserDetails(d.filter(ud => ud.hasOwnProperty(user))[0])
-                    console.log('done')
-                })
-        }
-    }, [showUserDet, user])
 
     useEffect(() => {
         let delay;
@@ -276,13 +264,51 @@ const Rooms = () => {
         }
     }
 
+    const handleOtherSettings = async (id, setting) => {
+        console.log('ok')
+        loading(".u-modal")
+        let currentSettings = await UserService.getUserByName(user)
+        console.log(currentSettings)
+        let other = {}
+
+        if (currentSettings.other)
+            other = JSON.parse(currentSettings.other)
+        
+        other = { ...other, [Object.keys(setting)[0]]: Object.values(setting)[0] }
+        await UserService.updateUserOfId({ other: JSON.stringify(other)}, id) 
+        
+        dispatch({
+            type: UPDATE_SETTINGS,
+            payload: other
+        })
+
+        clearLoading()
+    }
+
+    const handleShowDetails = async () => {
+        if (!showUserDet) {
+            setTimeout(() => loading(".u-modal"), 1)
+            setShowUserDet(!showUserDet)
+            let usr = await UserService.getUserDetails(user)
+            setUserDetails(usr.filter(ud => ud.hasOwnProperty(user))[0])
+            console.log(usr)
+            console.log('done')
+            clearLoading()
+        } else {
+            setShowUserDet(!showUserDet)
+        }
+    }
+
     const handleCreationTime = (ud) => utilTime(Object.keys(ud).filter(udp => /[0-9]/.test(udp))[0])
+
+    const lastFirst = settings.names === 'last, first'
+    const readWrite = settings.default === 'Read/Write'
 
     return (
         <div className="rooms">
             {(search && !typing && showResults) || results.length ? <SearchResults books={results} bid={Number(bid)} setShowResults={setShowResults} setResults={setResults} /> : null}
             <button className="logout" onClick={handleLogout}>Logout</button>
-            <h4 className="welcome"><span>{user && `welcome`}</span> <span onClick={() => setShowUserDet(!showUserDet)}>{user}</span></h4>
+            <h4 className="welcome"><span>{user && `welcome`}</span> <span onClick={handleShowDetails}>{user}</span></h4>
             <div className="b-sec-center">
                 <button className="b-section" onClick={toggleRoomsView}>Room</button>
                 <div className="b-sec-line" style={{ display: showRooms ? "block" : "none" }}/>
@@ -320,7 +346,7 @@ const Rooms = () => {
             }
 
             {showUserDet &&
-                <GeneralModal toggle={() => setShowUserDet(!showUserDet)}>
+                <GeneralModal toggle={handleShowDetails}>
                     <div className="u-modal">
                         <div>
                             <h3><span>{user}</span> <span>library</span> <span>settings</span></h3>
@@ -332,8 +358,17 @@ const Rooms = () => {
                                 <li>{userDetails.shelves} shelves</li>
                                 <li>{userDetails.books} books</li>
                             </ul>
-                            <p>Delete my personal library and account information</p>
-                            <button onClick={() => handleAccountDeletion(userDetails[user])}>Delete</button>
+                            <br/>
+                            <div className="u-modal-set">
+                                <p>Make {lastFirst ? "first" : "last"} names appear before {lastFirst ? "last" : "first"} names (Example: {lastFirst ? "George Washington" : "Washington, George"})</p>
+                                <button onClick={() => handleOtherSettings(userDetails[user], { names: lastFirst ? "first, last" : "last, first" })}>Switch</button>
+                                <p>Currently set to {settings.default} by default. Change default to {readWrite ? "Read Only" : "Read/Write"}</p>
+                                <button onClick={() => handleOtherSettings(userDetails[user], { default: readWrite ? "Read Only" : "Read/Write" })}>Read/Write</button>
+                                <p>Your account is {settings.default}. Temporarily switch to {readWrite ? "Read Only" : "Read/Write"}</p>
+                                <button>Read/Write</button>
+                                <p>Delete my personal library and account information</p>
+                                <button onClick={() => handleAccountDeletion(userDetails[user])}>Delete</button>
+                            </div>
                         </div>
                     </div>
                 </GeneralModal>

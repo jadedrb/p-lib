@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -167,10 +168,12 @@ public class UserController {
 	}
 	
 	@GetMapping("/api/users/{name}") 
-	public User findUserByName(@PathVariable String name) throws Exception {
+	public Map<String, String> findUserByName(@PathVariable String name) throws Exception {
 		User user = userRepo.findByUsername(name).get(0);
 		validUserAccess(user);
-		return user;
+		Map<String, String> res = new HashMap<>();
+		res.put("other", user.getOther());
+		return res;
 	}
 	
 	
@@ -194,5 +197,18 @@ public class UserController {
 			res.put("deleted", Boolean.FALSE);
 			return res;
 		}
+	}
+	
+	
+	@PutMapping("/api/users/{userId}")
+	public User updateBookcaseForRoom(@PathVariable long userId, @RequestBody User newUser) throws Exception {
+		
+		User oldUser = userRepo.findById(userId).orElseThrow();
+		
+		validUserAccess(oldUser);
+		
+		oldUser.setOther(newUser.getOther());
+		
+		return userRepo.save(oldUser);
 	}
 }

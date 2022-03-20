@@ -24,6 +24,7 @@ export const FINISH_UPDATE = "FINISH_UPDATE"
 export const SETUP_COMPLETE = "SETUP_COMPLETE"
 
 export const SET_USER = "SET_USER"
+export const UPDATE_SETTINGS = "UPDATE_SETTINGS"
 
 export const TOGGLE_SELECT = "TOGGLE_SELECT"
 export const TOGGLE_BKCASE_SELECT = "TOGGLE_BKCASE_SELECT"
@@ -33,6 +34,7 @@ let initialState = {
     books: [],
     rooms: [],
     user: false,
+    settings: {},
     updates: 0,
     setup: false,
     selected: { toggle: false, highlight: [] },
@@ -154,6 +156,12 @@ function reducer(state, action) {
         case SET_USER: {
             return { ...state, user: action.payload }
         }
+
+        case UPDATE_SETTINGS:
+            return {
+                ...state,
+                settings: { ...state.settings, ...action.payload }
+            }
         default:
             return state
     }
@@ -163,10 +171,19 @@ export function Provider(props) {
 
     let [state, dispatch] = useReducer(reducer, initialState)
 
-    let { books, rooms, user, selected, reposition, setup } = state
+    let { books, rooms, user, selected, reposition, setup, settings } = state
 
     return (
-        <Context.Provider value={{ books, rooms, user, selected, reposition, setup, dispatch }}>
+        <Context.Provider value={{ 
+            books, 
+            rooms, 
+            user, 
+            selected, 
+            reposition, 
+            setup, 
+            settings, 
+            dispatch 
+        }}>
             {props.children}
         </Context.Provider>
     )

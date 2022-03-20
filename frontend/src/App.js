@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react'
-import { Context, SETUP_COMPLETE, SET_ROOMS, SET_USER } from './context'
+import { Context, SETUP_COMPLETE, SET_ROOMS, SET_USER, UPDATE_SETTINGS } from './context'
 import './App.css';
 
 import Rooms from './components/Rooms';
@@ -42,6 +42,13 @@ function App() {
           })
 
           let payload = await RoomService.getRoomsForUser(user)
+          let currentSettings = await UserService.getUserByName(user)
+
+          if (currentSettings.other)
+            dispatch({
+              type: UPDATE_SETTINGS,
+              payload: JSON.parse(currentSettings.other)
+            })
 
           if (payload.length) {
             dispatch({ type: SET_ROOMS, payload })

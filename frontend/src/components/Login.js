@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react"
-import { Context, SET_ROOMS, SET_USER } from '../context'
+import { Context, SET_ROOMS, SET_USER, UPDATE_SETTINGS } from '../context'
 import { useNavigate } from "react-router-dom"
 
 import UserService from '../services/UserService'
@@ -66,6 +66,14 @@ function LoginAndRegister(props) {
             localStorage.setItem("token", token)
 
             let payload = await RoomService.getRoomsForUser(username)
+
+            let currentSettings = await UserService.getUserByName(username)
+
+            if (currentSettings.other)
+                dispatch({
+                    type: UPDATE_SETTINGS,
+                    payload: JSON.parse(currentSettings.other)
+                })
 
             if (payload)
                 dispatch({ type: SET_ROOMS, payload })
