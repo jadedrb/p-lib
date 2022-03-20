@@ -95,21 +95,20 @@ function LoginAndRegister(props) {
 
     return ( 
         <form onSubmit={handleSubmit}>
-            <br />
-            <label htmlFor='un-login'>Username</label>
-            <br />
-            <input id='un-login' value={username} onChange={(e) => setUsername(e.target.value)} />
-            <br /><br />
-            <label htmlFor='pw-login'>Password</label>
-            <br />
-            <input type="password" id='pw-login' value={password} onChange={(e) => setPassword(e.target.value)} />
-            <br /><br />
+            <div>
+                <label htmlFor="un-login">Username</label>
+                <input id='un-login' value={username} onChange={(e) => setUsername(e.target.value)} />
+            </div>
+            <div>
+                <label htmlFor="pw-login">Password</label>
+                <input type="password" id='pw-login' value={password} onChange={(e) => setPassword(e.target.value)} />
+            </div>
             {!props.which && 
             <>
-                <label htmlFor='em-register'>Email</label>
-                <br />
-                <input type="email" id='em-register' value={email} onChange={(e) => setEmail(e.target.value)} />
-                <br /><br />
+                <div>
+                    <label htmlFor="em-register">Password</label>
+                    <input type="email" id='em-register' value={email} onChange={(e) => setEmail(e.target.value)} />
+                </div>
             </>}
             <button>{props.which ? "LOGIN" : "REGISTER"}</button>
         </form>

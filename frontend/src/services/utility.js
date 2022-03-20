@@ -75,6 +75,7 @@ let percent = 0;
 let perCount = 0
 let red = 255
 let blue = 255
+let green = 255
 
 export function loading(where, initial) {
 
@@ -94,11 +95,13 @@ export function loading(where, initial) {
     perCount = 0
     red = 255
     blue = 255
+    // green = 255
 
     interval = setInterval(() => {
         perCount++
-        red-= .5
-        blue-= .5
+        red -= .5
+        blue -= .5
+        // green -= .5
         
         if (perCount >= 3) {
             perCount -= 3
