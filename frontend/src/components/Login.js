@@ -69,11 +69,13 @@ function LoginAndRegister(props) {
 
             let currentSettings = await UserService.getUserByName(username)
 
-            if (currentSettings.other)
+            if (currentSettings.other) {
+                let other = JSON.parse(currentSettings.other)
                 dispatch({
-                    type: UPDATE_SETTINGS,
-                    payload: JSON.parse(currentSettings.other)
+                  type: UPDATE_SETTINGS,
+                  payload: { ...other, temp: other.default === "Read Only" ? "Read Only" : "Read/Write" }
                 })
+              }
 
             if (payload)
                 dispatch({ type: SET_ROOMS, payload })
@@ -105,7 +107,12 @@ function LoginAndRegister(props) {
         <form onSubmit={handleSubmit}>
             <div>
                 <label htmlFor="un-login">Username</label>
-                <input id='un-login' value={username} onChange={(e) => setUsername(e.target.value)} />
+                <input 
+                    id='un-login' 
+                    value={username} 
+                    onChange={(e) => setUsername(e.target.value)} 
+                    spellCheck={false}
+                />
             </div>
             <div>
                 <label htmlFor="pw-login">Password</label>

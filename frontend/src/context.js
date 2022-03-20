@@ -160,7 +160,7 @@ function reducer(state, action) {
         case UPDATE_SETTINGS:
             return {
                 ...state,
-                settings: { ...state.settings, ...action.payload }
+                settings: {...state.settings, ...action.payload}
             }
         default:
             return state

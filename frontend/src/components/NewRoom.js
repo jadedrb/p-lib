@@ -5,7 +5,7 @@ import { randomNum, utilMsg, utilPath,rgbToHex } from "../services/utility";
 import Rooms from "../services/RoomService";
 import Bookcases from "../services/BookcaseService";
 
-const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path }) => {
+const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path, settings }) => {
   
   let [rIndex, setRIndex] = useState(0);
 
@@ -311,7 +311,9 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
         <div className="pm-r ed" onClick={() => { 
           if (bcStart) setBcStart("");
           if (bcEnd) setBcEnd("");
-          if (!reposition.toggle) setEdit(!edit)
+          if (!reposition.toggle && settings.temp !== "Read Only") {
+            setEdit(!edit)
+          }
         }}>
           =
         </div>

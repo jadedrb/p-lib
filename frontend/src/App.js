@@ -44,11 +44,14 @@ function App() {
           let payload = await RoomService.getRoomsForUser(user)
           let currentSettings = await UserService.getUserByName(user)
 
-          if (currentSettings.other)
+          if (currentSettings.other) {
+            let other = JSON.parse(currentSettings.other)
             dispatch({
               type: UPDATE_SETTINGS,
-              payload: JSON.parse(currentSettings.other)
+              payload: { ...other, temp: other.default === "Read Only" ? "Read Only" : "Read/Write" }
             })
+          }
+            
 
           if (payload.length) {
             dispatch({ type: SET_ROOMS, payload })
@@ -69,7 +72,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.06')
+      console.log('v1.07')
 
       if (document.querySelector('.rooms'))
         loading('.rooms', true)
@@ -88,7 +91,7 @@ function App() {
         })
         
     }
-    
+    return () => alert('ok')
   }, [dispatch])
 
   return (
