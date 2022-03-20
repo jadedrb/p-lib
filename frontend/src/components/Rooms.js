@@ -4,7 +4,11 @@ import { Context, SET_USER } from '../context'
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
 
 import Bookz from '../services/BookService'
+import UserService from '../services/UserService'
 import SearchResults from "./SearchResults"
+import GeneralModal from "./GeneralModal"
+
+import { utilTime } from "../services/utility";
 
 const Rooms = () => {
 
@@ -23,6 +27,20 @@ const Rooms = () => {
     let [showResults, setShowResults] = useState(true)
     let [searchIn, setSearchIn] = useState("library")
     let [searchType, setSearchType] = useState("title")
+    let [showUserDet, setShowUserDet] = useState(false)
+    let [userDetails, setUserDetails] = useState({})
+
+    useEffect(() => {
+        if (showUserDet) {
+            UserService
+                .getUserDetails(user)
+                .then(d => {
+                    console.log(d)
+                    setUserDetails(d.filter(ud => ud.hasOwnProperty(user))[0])
+                    console.log('done')
+                })
+        }
+    }, [showUserDet, user])
 
     useEffect(() => {
         let delay;
@@ -231,7 +249,7 @@ const Rooms = () => {
     wrapperRef.current = { determineSearchArea } 
 
     const handleLogout = () => {
-        sessionStorage.removeItem("token")
+        localStorage.removeItem("token")
         dispatch({
             type: SET_USER,
             payload: ""
@@ -239,11 +257,32 @@ const Rooms = () => {
         navigate("/home")
     }
 
+    const handleAccountDeletion = async (id) => {
+        console.log(id)
+        const confirm = window.confirm("Are you sure you want to delete your account?")
+        if (confirm) {
+            let confirmMsg = `Yes, I, ${user}, would like to delete my account`
+            const confirmAgain = window.prompt(`One more step. Please confirm by typing: ${confirmMsg}`)
+            if (confirmMsg === confirmAgain) {
+                let deletion = await UserService.removeUser(id)
+                if (deletion.deleted) {
+                    alert('Account deleted.')
+                    setShowUserDet(!showUserDet)
+                    handleLogout()
+                } else {
+                    alert('Attempt to delete account was unsuccessful.')
+                }
+            }
+        }
+    }
+
+    const handleCreationTime = (ud) => utilTime(Object.keys(ud).filter(udp => /[0-9]/.test(udp))[0])
+
     return (
         <div className="rooms">
             {(search && !typing && showResults) || results.length ? <SearchResults books={results} bid={Number(bid)} setShowResults={setShowResults} setResults={setResults} /> : null}
             <button className="logout" onClick={handleLogout}>Logout</button>
-            <h4 className="welcome"><span>{user && `welcome`}</span> {user}</h4>
+            <h4 className="welcome"><span>{user && `welcome`}</span> <span onClick={() => setShowUserDet(!showUserDet)}>{user}</span></h4>
             <div className="b-sec-center">
                 <button className="b-section" onClick={toggleRoomsView}>Room</button>
                 <div className="b-sec-line" style={{ display: showRooms ? "block" : "none" }}/>
@@ -278,6 +317,26 @@ const Rooms = () => {
                         setup={setup}
                     />
                 </div> 
+            }
+
+            {showUserDet &&
+                <GeneralModal toggle={() => setShowUserDet(!showUserDet)}>
+                    <div className="u-modal">
+                        <div>
+                            <h3><span>{user}</span> <span>library</span> <span>settings</span></h3>
+                            <h6>Account created on: {handleCreationTime(userDetails)}</h6>
+                            <ul>
+                                <li>Your library has:</li>
+                                <li>{userDetails.rooms} rooms</li>
+                                <li>{userDetails.bookcases} bookcases</li>
+                                <li>{userDetails.shelves} shelves</li>
+                                <li>{userDetails.books} books</li>
+                            </ul>
+                            <p>Delete my personal library and account information</p>
+                            <button onClick={() => handleAccountDeletion(userDetails[user])}>Delete</button>
+                        </div>
+                    </div>
+                </GeneralModal>
             }
             <Outlet />
         </div>

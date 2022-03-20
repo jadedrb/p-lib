@@ -563,7 +563,7 @@ select {
     border-radius: 10px;
     padding: 10px;
     border: 1px solid black;
-    width: 80px;
+    width: 100px;
 }
 
 .home button:hover {
@@ -582,8 +582,13 @@ select {
     border: none;
 }
 
-.welcome span {
+.welcome span:nth-child(1) {
     color: rgb(144, 144, 144);
+}
+
+.welcome span:nth-child(2):hover {
+    color: rgb(74, 74, 255);
+    cursor: pointer;
 }
 
 .logout {
@@ -653,4 +658,85 @@ select {
     left: 20px;
     opacity: .2;
     font-size: 12px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    opacity: .8;
+    height: 100vh;
+    width: 100vw;
+    background-color: white;
+    font-size: 30pt;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    z-index: 4;
+    border: 10px solid black;
+  }
+
+  .modal-cloud {
+    position: absolute;
+    top: 0;
+    background-color: white;
+    z-index: 4;
+    height: 100%;
+    width: 100vw;
+    opacity: .8;
+  }
+
+  .u-modal {
+        border: 2px solid black;
+        background-color: rgb(235, 235, 235);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        align-self: center;
+        z-index: 5;
+        width: 100vw;
+        overflow-y: scroll;
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        padding: 40px;
+  }
+
+  .u-modal h3 span:nth-child(2) {
+    color: rgb(133, 133, 133);
+  }
+
+  .u-modal h3 span:nth-child(3) {
+    color: rgb(194, 194, 194);
+  }
+
+  .u-modal p {
+      font-size: 15px;
+  }
+
+  .u-modal ul {
+      list-style: none;
+      position: absolute;
+      top: 0;
+      right: 50px;
+      font-size: 8pt;
+  }
+  .u-modal ul li {
+    padding-left: 10px;
+    opacity: .5;
+  }
+  
+  .u-modal ul li:nth-child(1) {
+      opacity: .7;
+      padding-left: 0px;
+      margin-bottom: 10px;
+  }
+
+  .u-modal h6 {
+    list-style: none;
+    position: absolute;
+    top: -15px;
+    left: 50px;
+    font-size: 8pt;
+    opacity: .3;
 }

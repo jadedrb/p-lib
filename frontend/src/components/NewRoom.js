@@ -49,7 +49,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path 
         }
       } else {
         roomSetup(0)
-       navigate(utilPath(path, "room", rooms[0].id))
+        navigate(utilPath(path, "room", rooms[0].id))
       }
     } else {
       initialRoomSetup()

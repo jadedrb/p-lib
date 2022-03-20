@@ -14,7 +14,7 @@ import java.util.function.Function;
 @Service
 public class JwtUtil {
 
-    private String secret = "plib";
+    private String secret = System.getenv("PLIB_SECRET");
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);

@@ -28,10 +28,10 @@ function App() {
 
   useEffect(() => {
     const validate = async () => {
-      let token = sessionStorage.getItem("token")
-      
+      let token = localStorage.getItem("token")
+
       if (token) {
-  
+        
         let user = await UserService.validateUserToken()
 
         if (user) {
@@ -50,7 +50,7 @@ function App() {
           }
         }
         else { // if user validation failed with current token
-          sessionStorage.removeItem("token")
+          localStorage.removeItem("token")
           dispatch({ type: SETUP_COMPLETE })
           return
         }
@@ -62,7 +62,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.05')
+      console.log('v1.06')
 
       if (document.querySelector('.rooms'))
         loading('.rooms', true)

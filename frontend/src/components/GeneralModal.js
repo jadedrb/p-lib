@@ -10,7 +10,7 @@ const GeneralModal = (props) => {
     useEffect(() => {
         modal.appendChild(el)
         return () => modal.removeChild(el)
-    }, [])
+    }, [el])
 
     let portalStuff = (
       <div className='g-modal'>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { ADD_BOOK, Context, REMOVE_BOOK, UPDATE_BOOK } from "../context";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { utilPath, utilitySelector, utilMsg } from "../services/utility";
+import { utilPath, utilitySelector, utilMsg, utilTime } from "../services/utility";
 
 import BookService from "../services/BookService"
 import Move from "./Move";
@@ -137,15 +137,6 @@ const NewBook = ({ setCurrShelf }) => {
     navigate(utilPath(path, 'shelf', shid))
   }
 
-  const lastUpdated = (date) => {
-    if (!date) return
-    let dateObj = new Date(date);
-    let year = String(dateObj.getFullYear()).slice(2)
-    let month = dateObj.getUTCMonth() + 1
-    let day = dateObj.getDate()
-    return `${month}/${day}/${year}`
-  }
-
   return (
     <div className="nb-contain">
       {shelfPres ?
@@ -156,7 +147,7 @@ const NewBook = ({ setCurrShelf }) => {
                 {bid && edit && <div className="pm-b" onClick={removeBook}>-</div>}
                 
           </div>
-          {bid && <div className="lst-up">Last updated: {lastUpdated(currentBook?.recorded_on)}</div>}
+          {bid && <div className="lst-up">Last updated: {utilTime(currentBook?.recorded_on)}</div>}
           </>
           : null}
 

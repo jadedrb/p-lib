@@ -75,7 +75,7 @@ let percent = 0;
 let perCount = 0
 let red = 255
 let blue = 255
-let green = 255
+// let green = 255
 
 export function loading(where, initial) {
 
@@ -230,4 +230,13 @@ export function rgbToHex(r, g, b) {
 
 export function extractRgb(str) {
     return str.slice(0, -1).slice(4).split(",").map(c => Number(c))
+}
+
+export const utilTime = (date) => {
+    if (!date) return
+    let dateObj = new Date(date);
+    let year = String(dateObj.getFullYear()).slice(2)
+    let month = dateObj.getUTCMonth() + 1
+    let day = dateObj.getDate()
+    return `${month}/${day}/${year}`
 }

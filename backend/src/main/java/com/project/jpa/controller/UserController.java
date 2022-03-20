@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.jpa.config.AuthRequest;
 import com.project.jpa.config.JwtUtil;
+import com.project.jpa.model.Bookcase;
 import com.project.jpa.model.Room;
 //import com.project.jpa.config.JwtUtil;
 //import com.project.jpa.exception.AuthException;
@@ -121,6 +122,50 @@ public class UserController {
 //		return userRepo.findAll(); // equivalent to SELECT * FROM students
 //	}
 	
+	@GetMapping("/api/overview/{name}") 
+	public List<Map<String, Integer>> findUserInformation(@PathVariable String name) throws Exception {
+		
+		User user = userRepo.findByUsername(name).get(0);
+		validUserAccess(user);
+		
+		boolean admin = false;
+		
+		if (name.equals(System.getenv("PLIB_ADMIN"))) 
+			admin = true;
+		
+		List<User> users = userRepo.findAll();
+		List<Map<String, Integer>> usersInfo = new ArrayList<>();
+		
+		for (User usr : users) {
+			
+			if (!admin && !usr.getUsername().equals(name))
+				continue;
+			
+			Map<String, Integer> res = new HashMap<>();
+			res.put(usr.getUsername(), (int) usr.getId());
+			res.put("rooms", usr.getRooms().size());
+			res.put("books", usr.getBooks().size());
+			res.put(usr.getCreated_on().toString(), null);
+			
+			int totalBkcases = 0; 
+			int totalShelves = 0;
+			
+			for (Room room : usr.getRooms()) {
+				totalBkcases += room.getBookcases().size();
+				for (Bookcase bkcase : room.getBookcases()) {
+					totalShelves += bkcase.getShelves().size();
+				}
+			}
+			res.put("bookcases", totalBkcases);
+			res.put("shelves", totalShelves);
+			
+			usersInfo.add(res);
+		}
+		
+
+		return usersInfo;
+	}
+	
 	@GetMapping("/api/users/{name}") 
 	public User findUserByName(@PathVariable String name) throws Exception {
 		User user = userRepo.findByUsername(name).get(0);
@@ -130,11 +175,17 @@ public class UserController {
 	
 	
 	@DeleteMapping("/api/users/{id}")
-	public Map<String, Boolean> roomFromUser(@PathVariable Long id) {
+	public Map<String, Boolean> roomFromUser(@PathVariable Long id, Authentication auth) {
 		Map<String, Boolean> res = new HashMap<>();
 		try {
 			User user = userRepo.findById(id).orElseThrow();
-			validUserAccess(user);
+			
+			if (auth.getName().equals(System.getenv("PLIB_ADMIN"))) {
+				res.put("admin", Boolean.TRUE);
+			} else {
+				validUserAccess(user);
+			}
+				
 			userRepo.delete(user);
 			res.put("deleted", Boolean.TRUE);
 			return res;

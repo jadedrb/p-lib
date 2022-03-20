@@ -2,6 +2,7 @@ package com.project.jpa.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -28,6 +31,9 @@ public class User {
 	private String password;
 	private String username;
 	private String other;
+	
+	@CreationTimestamp
+	private Date created_on;
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user") // , orphanRemoval = true
 	private List<Room> rooms = new ArrayList<>();
@@ -52,6 +58,14 @@ public class User {
 
 	public String getOther() {
 		return other;
+	}
+
+	public Date getCreated_on() {
+		return created_on;
+	}
+
+	public void setCreated_on(Date created_on) {
+		this.created_on = created_on;
 	}
 
 	public void setOther(String other) {

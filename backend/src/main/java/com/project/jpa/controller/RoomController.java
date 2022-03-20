@@ -51,6 +51,7 @@ public class RoomController {
 	public List<Room> roomsOfUser(@PathVariable String user) throws Exception {
 	
 			System.out.println("join user and rooms and order");
+
 			List<Room> rooms = roomRepo.joinUserAndRoom(user);
 			
 			if (!rooms.isEmpty())

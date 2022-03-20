@@ -63,7 +63,7 @@ function LoginAndRegister(props) {
                 return
             }
 
-            sessionStorage.setItem("token", token)
+            localStorage.setItem("token", token)
 
             let payload = await RoomService.getRoomsForUser(username)
 
@@ -81,7 +81,7 @@ function LoginAndRegister(props) {
                 return
             }
 
-            sessionStorage.setItem("token", token)
+            localStorage.setItem("token", token)
             navigate("/room")
         }
 
@@ -106,7 +106,7 @@ function LoginAndRegister(props) {
             {!props.which && 
             <>
                 <div>
-                    <label htmlFor="em-register">Password</label>
+                    <label htmlFor="em-register">Email</label>
                     <input type="email" id='em-register' value={email} onChange={(e) => setEmail(e.target.value)} />
                 </div>
             </>}

@@ -35,6 +35,9 @@ class UserService {
     removeUser(id) {
         return authAxios().delete(`/users/${id}`).then(r => this.format(r))
     }
+    getUserDetails(name) {
+        return authAxios().get(`/overview/${name}`).then(r => this.format(r))
+    }
 }
 
 export default new UserService()
