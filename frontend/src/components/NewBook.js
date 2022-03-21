@@ -56,6 +56,7 @@ const NewBook = ({ setCurrShelf }) => {
 
   const handleInput = (e) => {
     let { name, value } = e.target;
+    if ((name === 'pdate' || name === 'pages') && value.length > 9) return
     let newInputs = { ...inputs };
     newInputs[name] = value;
     setInputs(newInputs);
@@ -172,6 +173,7 @@ const NewBook = ({ setCurrShelf }) => {
             onChange={handleInput}
             onKeyPress={handleEnter}
             onClick={handleClick}
+            maxLength={255}
           />
           <label htmlFor="author">Author</label>
           <input
@@ -183,6 +185,7 @@ const NewBook = ({ setCurrShelf }) => {
             onChange={handleInput}
             onKeyPress={handleEnter}
             onClick={handleClick}
+            maxLength={255}
           />
           <label htmlFor="color">Color</label>
           <input
@@ -195,6 +198,7 @@ const NewBook = ({ setCurrShelf }) => {
             onChange={handleInput}
             onKeyPress={handleEnter}
             onClick={handleClick}
+            maxLength={255}
           />
           {edit &&
           <input 
@@ -213,6 +217,7 @@ const NewBook = ({ setCurrShelf }) => {
             onChange={handleInput}
             onKeyPress={handleEnter}
             onClick={handleClick}
+            maxLength={255}
           />
           <label htmlFor="pages">Pages</label>
           <input
@@ -233,6 +238,7 @@ const NewBook = ({ setCurrShelf }) => {
             placeholder="Publish Date"
             name="pdate"
             type="number"
+            max="999"
             value={inputs.pdate}
             onChange={handleInput}
             onKeyPress={handleEnter}
@@ -248,6 +254,7 @@ const NewBook = ({ setCurrShelf }) => {
             onChange={handleInput}
             onKeyPress={handleEnter}
             onClick={handleClick}
+            maxLength={255}
           />
           {edit &&
           <input 

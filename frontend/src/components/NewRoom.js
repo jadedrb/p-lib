@@ -6,7 +6,7 @@ import Rooms from "../services/RoomService";
 import Bookcases from "../services/BookcaseService";
 
 const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path, settings }) => {
-  
+
   let [rIndex, setRIndex] = useState(0);
 
   let defaultRoom = {

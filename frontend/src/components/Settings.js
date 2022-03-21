@@ -3,7 +3,7 @@ import GeneralModal from './GeneralModal'
 import UserService from '../services/UserService'
 import { UPDATE_SETTINGS } from '../context'
 
-function Settings({ user, settings, userDetails, dispatch, setShowUserDet, showUserDet, handleLogout, handleShowDetails }) {
+function Settings({ user, userDetails, dispatch, setShowUserDet, showUserDet, handleLogout, handleShowDetails, settings }) {
 
     const handleAccountDeletion = async (id) => {
         const confirm = window.confirm("Are you sure you want to delete your account?")

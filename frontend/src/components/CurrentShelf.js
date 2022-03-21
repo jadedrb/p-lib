@@ -71,7 +71,7 @@ function CurrentShelf() {
     let position = tob === 1 ? "1st" : tob === 2 ? "2nd" : tob === 3 ? "3rd" : tob + "th"
 
     return ( 
-        <div className='sh-b' onClick={() => console.log(rooms)}>
+        <div className='sh-b'>
             {showShelf && currShelf && <div className="pm">
                 <div className="pm-r ed" onClick={() => { 
                     if (settings.temp !== "Read Only")
