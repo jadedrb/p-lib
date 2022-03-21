@@ -6,7 +6,7 @@ import Bookcases from "../services/BookcaseService"
 import Shelves from "../services/ShelfService"
 import Move from "./Move";
 
-const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, shid, bid, bcid, rid, params, rooms }) => {
+const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, shid, bid, bcid, rid, params, rooms, settings }) => {
 
   let [location, setLocation] = useState("Bookcase Location");
   let [shelves, setShelves] = useState("");
@@ -110,7 +110,12 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
         </div>
 
         <div className="pm">
-          <div className="pm-r ed" onClick={() => { setEdit(!edit); if(move) setMove(false); }}>=</div>
+          <div className="pm-r ed" onClick={() => { 
+            if (settings.temp !== "Read Only")
+              setEdit(!edit); 
+            if(move) 
+              setMove(false); 
+          }}>=</div>
           {edit && <div className="pm-r ed" onClick={() => setMove(!move)}>~</div>}
           {edit && <div className="pm-r min-room" onClick={removeBookcase}>-</div>}
         </div>

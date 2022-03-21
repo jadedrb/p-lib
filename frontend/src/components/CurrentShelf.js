@@ -10,7 +10,7 @@ import Move from './Move';
 
 function CurrentShelf() {
 
-    let { rooms, dispatch, selected } = useContext(Context)
+    let { rooms, dispatch, selected, settings } = useContext(Context)
 
     let [showShelf, setShowShelf] = useState(true)
     let [currShelf, setCurrShelf] = useState(null)
@@ -73,7 +73,12 @@ function CurrentShelf() {
     return ( 
         <div className='sh-b' onClick={() => console.log(rooms)}>
             {showShelf && currShelf && <div className="pm">
-                <div className="pm-r ed" onClick={() => { setEdit(!edit); if(move) setMove(false); }}>=</div>
+                <div className="pm-r ed" onClick={() => { 
+                    if (settings.temp !== "Read Only")
+                        setEdit(!edit); 
+                    if(move) 
+                        setMove(false); 
+                }}>=</div>
                 {shid && edit && <div className="pm-r ed" onClick={() => setMove(!move)}>~</div>}
                 {edit && <div className="pm-r min-room" onClick={removeShelf}>-</div>}
             </div>}

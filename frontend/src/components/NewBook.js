@@ -7,7 +7,7 @@ import BookService from "../services/BookService"
 import Move from "./Move";
 
 const NewBook = ({ setCurrShelf }) => {
-  const { rooms, dispatch, user } = useContext(Context);
+  const { rooms, dispatch, user, settings } = useContext(Context);
 
   let params = useParams();
   let { shid, rid, bcid, bid } = params
@@ -142,7 +142,12 @@ const NewBook = ({ setCurrShelf }) => {
       {shelfPres ?
           <>
           <div className="pm">
-                {bid && <div className="pm-r ed" onClick={() => { setEdit(!edit); if(move) setMove(false); }}>=</div>}
+                {bid && <div className="pm-r ed" onClick={() => { 
+                  if (settings.temp !== "Read Only")
+                    setEdit(!edit); 
+                  if(move) 
+                    setMove(false); 
+          }}>=</div>}
                 {bid && edit && <div className="pm-r ed" onClick={() => setMove(!move)}>~</div>}
                 {bid && edit && <div className="pm-b" onClick={removeBook}>-</div>}
                 

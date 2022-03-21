@@ -5,7 +5,7 @@ import { Context } from "../context"
 import { utilitySelector, utilPath } from "../services/utility";
 
 const Bookcases = () => {
-    let { rooms, current, dispatch } = useContext(Context);
+    let { rooms, current, dispatch, settings } = useContext(Context);
     
     let params = useParams()
     let { rid, bcid, shid, bid } = params
@@ -45,6 +45,7 @@ const Bookcases = () => {
                         bid={Number(bid)}
                         bcid={Number(bcid)}
                         rid={Number(rid)}
+                        settings={settings}
                     />
                 </div> 
             }
