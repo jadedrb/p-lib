@@ -6,7 +6,7 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
     let [order, setOrder] = useState("")
     let [ascDesc, setAscDesc] = useState(true)
 
-    let [focusOn, setFocusOn] = useState(true)
+    let [focusOn, setFocusOn] = useState(false)
 
     let renderedBooks = utilOrder(books, order, ascDesc)
 
@@ -14,7 +14,11 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
 
     useEffect(() => {
    
-        setFocusOn(true)
+        if (bid) {
+            setFocusOn(true)
+        } else {
+            setFocusOn(false)
+        }
         
         if (intoViewRef.current) {
             const section = document.querySelector(`.bk-${bid}`);
@@ -37,7 +41,7 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
             >
                 <td>{b.title}</td>
                 <td>{b.author}</td>
-                <td>{b.color}</td>
+                <td style={{ color: bid === b?.id && focusOn ? b.color : 'black' }}>{b.color}</td>
                 <td>{b.genre}</td>
                 <td>{b.pages}</td>
                 <td>{b.pdate}</td>

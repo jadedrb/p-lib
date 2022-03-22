@@ -145,6 +145,8 @@ function CurrentShelf() {
             <div className="b-sec-center">
                 <button className="b-section" onClick={() => {
                     setShowBook(!showBook)
+                    if (!path.pathname.includes("/book/")) 
+                        navigate(utilPath(path, "book", ""))
                     // if (path.pathname.includes("/book/")) 
                     //     navigate(utilPath(path, "shelf", shid))
                     // else
