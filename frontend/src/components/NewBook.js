@@ -245,7 +245,7 @@ const NewBook = ({ setCurrShelf }) => {
             onClick={handleClick}
           />
           <label htmlFor="more">More</label>
-          <input
+          <textarea
             readOnly={edit ? false : true}
             id="more"
             placeholder="More"

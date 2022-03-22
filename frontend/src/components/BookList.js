@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { utilPath, utilOrder } from '../services/utility';
 
 const BookList = ({ books, bid, path, navigate, selected }) => {
@@ -6,16 +6,33 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
     let [order, setOrder] = useState("")
     let [ascDesc, setAscDesc] = useState(true)
 
+    let [focusOn, setFocusOn] = useState(true)
+
     let renderedBooks = utilOrder(books, order, ascDesc)
 
+    let intoViewRef = useRef(true)
     // console.log(renderedBooks)
+
+    useEffect(() => {
+   
+        setFocusOn(true)
+        
+        if (intoViewRef.current) {
+            const section = document.querySelector(`.bk-${bid}`);
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+       
+        } else {
+            intoViewRef.current = true
+        }
+    }, [bid])
 
     renderedBooks = renderedBooks?.map((b,i) => {
         return (
             <tr 
+                className={`bk-${b.id}`}
                 key={i} 
-                onClick={() => navigate(utilPath(path, 'book', b.id))} 
-                style={{ outline: selected.highlight.includes(b?.id + "") ? '3px solid rgb(74, 74, 255)' : bid === b?.id ? '3px solid black' : 'none' }}
+                onClick={() => { intoViewRef.current = false; navigate(utilPath(path, 'book', b.id)); }} 
+                style={{ outline: selected.highlight.includes(b?.id + "") ? '3px solid rgb(74, 74, 255)' : bid === b?.id ? '3px solid black' : 'none', opacity: (bid === b?.id || selected.highlight.includes(b?.id + "")) && focusOn ? '1' : !focusOn ? '1' : '.3' }}
             >
                 <td>{b.title}</td>
                 <td>{b.author}</td>
@@ -36,7 +53,7 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
     }
 
     return (
-        <div className={`table-contain booklist-r ${!renderedBooks.length && 'table-cc'}`}>
+        <div className={`table-contain booklist-r ${!renderedBooks.length && 'table-cc'}`} onClick={(e) => { if (e.target.type !== "td") setFocusOn(false) }}>
             {renderedBooks.length ? <h5>books: {renderedBooks.length}</h5> : null}
             {renderedBooks?.length ? 
                 <table className='booklist'>

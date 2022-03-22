@@ -18,7 +18,7 @@ import { loading, clearLoading } from './services/utility'
 
 function App() {
 
-  let { selected, user, dispatch, setup } = useContext(Context)
+  let { selected, user, dispatch, setup, settings } = useContext(Context)
 
   let navigate = useNavigate()
   let navigateRef = useRef()
@@ -72,7 +72,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.09')
+      console.log('v1.10')
 
       if (document.querySelector('.rooms'))
         loading('.rooms', true)
@@ -102,7 +102,7 @@ function App() {
             <Route path={"bookcase/:bcid/*"} element={<Bookcases />}>
               <Route path={"shelf/:shid/*"} element={<CurrentShelf />}>
                 <Route path={"book/:bid"} element={selected.toggle ? null : <NewBook />} />
-                <Route path={"book"} element={<NewBook />} />
+                {settings.temp !== "Read Only" && <Route path={"book"} element={<NewBook />} />}
               </Route>
             </Route>
           </Route>

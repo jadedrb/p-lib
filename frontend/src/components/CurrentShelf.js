@@ -13,6 +13,7 @@ function CurrentShelf() {
     let { rooms, dispatch, selected, settings } = useContext(Context)
 
     let [showShelf, setShowShelf] = useState(true)
+    let [showBook, setShowBook] = useState(true)
     let [currShelf, setCurrShelf] = useState(null)
     let [shelfPos, setShelfPos] = useState({})
 
@@ -143,14 +144,15 @@ function CurrentShelf() {
 
             <div className="b-sec-center">
                 <button className="b-section" onClick={() => {
-                    if (path.pathname.includes("/book/")) 
-                        navigate(utilPath(path, "shelf", shid))
-                    else
-                        navigate(utilPath(path, "book", ""))
+                    setShowBook(!showBook)
+                    // if (path.pathname.includes("/book/")) 
+                    //     navigate(utilPath(path, "shelf", shid))
+                    // else
+                    //     navigate(utilPath(path, "book", ""))
                 }}>Book</button>
                 <div className="b-sec-line" style={{ display: path.pathname.includes("/book/") ? "block" : "none" }}/>
             </div>
-            <Outlet />
+            {showBook && <Outlet />}
         </div>
     );
 }
