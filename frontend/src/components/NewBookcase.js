@@ -6,7 +6,7 @@ import Bookcases from "../services/BookcaseService"
 import Shelves from "../services/ShelfService"
 import Move from "./Move";
 
-const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, shid, bid, bcid, rid, params, rooms, settings }) => {
+const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, shid, bid, bcid, rid, params, rooms, settings, currentBook }) => {
 
   let [location, setLocation] = useState("Bookcase Location");
   let [shelves, setShelves] = useState("");
@@ -76,7 +76,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
               <span 
                 key={i} 
                 onClick={() => navigate(utilPath(path, 'book', b.id)) }
-                style={{ backgroundColor: bid === b?.id && b.color ? b.color : bid === b?.id && !b.color ? 'lightgrey' : 'white' }}
+                style={{ backgroundColor: bid === b?.id && b.color ? b.color : bid === b?.id && !b.color ? 'lightgrey' : bid !== b.id && currentBook?.color === "white" ? 'lightgrey' : "white" }}
               >
                 
               </span>

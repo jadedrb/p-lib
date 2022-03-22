@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { ADD_BOOK, Context, REMOVE_BOOK, UPDATE_BOOK } from "../context";
+import { ADD_BOOK, Context, CURRENT_BOOK, REMOVE_BOOK, UPDATE_BOOK } from "../context";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { utilPath, utilitySelector, utilMsg, utilTime } from "../services/utility";
 
@@ -52,7 +52,15 @@ const NewBook = ({ setCurrShelf }) => {
     }
     setShelfPres(shelf)
     setCurrentBook(book)
+
   }, [rid, bcid, shid, rooms, bid])
+
+  useEffect(() => {
+    dispatch({
+      type: CURRENT_BOOK,
+      payload: currentBook
+    })
+  }, [currentBook, dispatch])
 
   const handleInput = (e) => {
     let { name, value } = e.target;
@@ -165,7 +173,7 @@ const NewBook = ({ setCurrShelf }) => {
           <input
             readOnly={edit ? false : true}
             id="title"
-            autoFocus
+            // autoFocus
             placeholder="Title"
             name="title"
             ref={firstInput}

@@ -18,6 +18,7 @@ export const ADD_BOOK = "ADD_BOOK"
 export const ADD_BULK = "ADD_BULK"
 export const UPDATE_BOOK = "UPDATE_BOOK"
 export const REMOVE_BOOK = "REMOVE_BOOK"
+export const CURRENT_BOOK = "CURRENT_BOOK"
 
 export const QUEUE_UPDATE = "QUEUE_UPDATE"
 export const FINISH_UPDATE = "FINISH_UPDATE"
@@ -38,6 +39,7 @@ let initialState = {
     updates: 0,
     setup: false,
     selected: { toggle: false, highlight: [] },
+    currentBook: {},
     reposition: { toggle: false }
 }
 
@@ -125,7 +127,9 @@ function reducer(state, action) {
             rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books = newBooks
             return { ...state, rooms }
         }
-
+        case CURRENT_BOOK: {
+            return { ...state, currentBook: action.payload }
+        }
 
         case TOGGLE_SELECT: {
             if (typeof action.payload === "object")
@@ -171,7 +175,7 @@ export function Provider(props) {
 
     let [state, dispatch] = useReducer(reducer, initialState)
 
-    let { books, rooms, user, selected, reposition, setup, settings } = state
+    let { books, rooms, user, selected, reposition, setup, settings, currentBook } = state
 
     return (
         <Context.Provider value={{ 
@@ -182,6 +186,7 @@ export function Provider(props) {
             reposition, 
             setup, 
             settings, 
+            currentBook,
             dispatch 
         }}>
             {props.children}
