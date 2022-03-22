@@ -72,7 +72,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.10')
+      console.log('v1.11')
 
       if (document.querySelector('.rooms'))
         loading('.rooms', true)

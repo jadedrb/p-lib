@@ -11,7 +11,6 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
     let renderedBooks = utilOrder(books, order, ascDesc)
 
     let intoViewRef = useRef(true)
-    // console.log(renderedBooks)
 
     useEffect(() => {
    
@@ -19,7 +18,9 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
         
         if (intoViewRef.current) {
             const section = document.querySelector(`.bk-${bid}`);
-            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            if (section)
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
        
         } else {
             intoViewRef.current = true
