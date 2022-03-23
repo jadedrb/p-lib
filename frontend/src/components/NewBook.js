@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { ADD_BOOK, Context, CURRENT_BOOK, REMOVE_BOOK, UPDATE_BOOK } from "../context";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { utilPath, utilitySelector, utilMsg, utilTime } from "../services/utility";
+import { utilPath, utilitySelector, utilMsg, utilTime, loading, clearLoading } from "../services/utility";
 
 import BookService from "../services/BookService"
 import Move from "./Move";
+import axios from "axios";
 
 const NewBook = ({ setCurrShelf }) => {
   const { rooms, dispatch, user, settings } = useContext(Context);
@@ -146,6 +147,37 @@ const NewBook = ({ setCurrShelf }) => {
     navigate(utilPath(path, 'shelf', shid))
   }
 
+  const handleDataHelper = async () => {
+    let result, valid;
+    loading('.ff-contain')
+    try {
+      result = await axios.get(`${process.env.REACT_APP_GOOGLE_API}${inputs.title}`)
+    } catch (e) {
+      console.log(e)
+    }
+    clearLoading()
+
+      valid = result.data?.items?.reduce((acc, curr) => {
+        let obj = curr.volumeInfo
+        let pckge = {}
+        if (obj?.title === inputs.title) {
+          pckge.author = obj?.authors[0]
+          pckge.more = obj?.description
+          pckge.pages = obj?.pageCount
+          pckge.pdate = obj?.publishedDate?.length < 5 ? obj.publishedDate : obj.publishedDate.slice(0,4)
+          pckge.genre = obj?.categories?.[0]
+          return [...acc, pckge]
+        }
+        return acc
+      }, [])
+
+      if (inputs.author) {
+        valid = valid.filter(obj => obj.author === inputs.author)
+      }   
+      valid = valid[Math.floor(Math.random() * valid.length)]
+      setInputs({ ...inputs, ...valid });
+  }
+
   return (
     <div className="nb-contain">
       {shelfPres ?
@@ -165,15 +197,21 @@ const NewBook = ({ setCurrShelf }) => {
           </>
           : null}
 
+      
         {(shelfPres && !move) || (move && !edit) ?
 
       <div className="ff-contain">
         <form className="ff">
-          <label htmlFor="title">Title</label>
+          <label htmlFor="title">
+            Title 
+            {edit && inputs.title && 
+              <span onClick={handleDataHelper} className="get-details">
+                O
+              </span>}
+          </label>
           <input
             readOnly={edit ? false : true}
             id="title"
-            // autoFocus
             placeholder="Title"
             name="title"
             ref={firstInput}
@@ -195,7 +233,10 @@ const NewBook = ({ setCurrShelf }) => {
             onClick={handleClick}
             maxLength={255}
           />
-          <label htmlFor="color">Color</label>
+          <label htmlFor="color">
+            Color
+            {edit && <span onClick={() => setColorType(!colorType)} className="color-alt" />}
+          </label>
           <input
             readOnly={edit ? false : true}
             id="color"
@@ -208,13 +249,13 @@ const NewBook = ({ setCurrShelf }) => {
             onClick={handleClick}
             maxLength={255}
           />
-          {edit &&
+          {/* {edit &&
           <input 
             type="button"
             value=" "
             name="skip"
             onClick={() => setColorType(!colorType)}
-          />}
+          />} */}
           <label htmlFor="genre">Genre</label>
           <input
             readOnly={edit ? false : true}

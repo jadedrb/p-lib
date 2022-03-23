@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { utilPath, utilOrder } from '../services/utility';
 import Books from '../services/BookService';
@@ -8,15 +8,15 @@ const SearchResults = ({ books, bid, setResults, setShowResults }) => {
     let [order, setOrder] = useState("")
     let [ascDesc, setAscDesc] = useState(true)
 
-    let prevCoord = useRef()
+    // let prevCoord = useRef()
 
     let navigate = useNavigate()
 
     const whereIsThisBook = async (id) => {
-        if (prevCoord.current === id) return
+        if (bid === id) return
         let coord = await Books.getBookCoordinates(id)
         navigate(utilPath(coord, "coord"))
-        prevCoord.current = id
+        // prevCoord.current = id
     }
 
     const closeSearchResults = () => {

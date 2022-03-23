@@ -7,7 +7,7 @@ Your own personal library - organized, demystified, and in the cloud.
 
 ## Description
 
-Do you have an ever-expanding and unwieldy personal library in your home? For those people who say *"I have that book somewhere around here..."* 
+For those people who say *"I have that book somewhere around here..."* 
 
 Now you can find *that book* faster and stay organized longer with [p-lib](https://p-lib.vercel.app/). 
 

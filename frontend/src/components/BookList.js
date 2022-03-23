@@ -1,5 +1,7 @@
+import axios from 'axios';
 import React, { useState, useEffect, useRef } from 'react';
-import { utilPath, utilOrder } from '../services/utility';
+import { utilPath, utilOrder, loading, clearLoading } from '../services/utility';
+import GeneralModal from './GeneralModal'
 
 const BookList = ({ books, bid, path, navigate, selected }) => {
 
@@ -11,6 +13,8 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
     let renderedBooks = utilOrder(books, order, ascDesc)
 
     let intoViewRef = useRef(true)
+
+    let [modalPic, setModalPic] = useState(false)
 
     useEffect(() => {
    
@@ -36,7 +40,34 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
             <tr 
                 className={`bk-${b.id}`}
                 key={i} 
-                onClick={() => { intoViewRef.current = false; navigate(utilPath(path, 'book', b.id)); }} 
+                onClick={async () => { 
+                    intoViewRef.current = false; 
+                    navigate(utilPath(path, 'book', b.id)); 
+                    if (!focusOn && b.id === bid) {
+                        loading(`.sh-b`)
+                        let result;
+
+                        try {
+                            result = await axios.get(`${process.env.REACT_APP_GOOGLE_API}${b.title}`)
+                        } catch (e) {
+                            console.log(e)
+                        }
+                        
+                        let pics = result.data.items.reduce((acc, curr) => {
+                            if (curr.volumeInfo?.authors.includes(b.author)) {
+                                if (curr.volumeInfo?.title === b.title) {
+                                    let thumb = curr?.volumeInfo?.imageLinks?.thumbnail
+                                    if (thumb)
+                                        return [...acc, thumb]
+                                }
+                            }
+                            return acc
+                        }, [])
+
+                        setModalPic(pics[Math.floor(Math.random() * pics.length)])
+                        clearLoading()
+                    }
+                }} 
                 style={{ outline: selected.highlight.includes(b?.id + "") ? '3px solid rgb(74, 74, 255)' : bid === b?.id ? '3px solid black' : 'none', opacity: (bid === b?.id || selected.highlight.includes(b?.id + "")) && focusOn ? '1' : !focusOn ? '1' : '.3' }}
             >
                 <td>{b.title}</td>
@@ -78,6 +109,13 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
                     </tbody>    
                 </table>
             : <span>This shelf is empty</span>}
+
+            {modalPic && 
+            <GeneralModal toggle={() => setModalPic(false)}>
+             <div className="u-modal" style={{ backgroundColor: 'black', width: 'fit-content'}}>
+                        <img src={modalPic} alt={"cover"} />
+                    </div>
+            </GeneralModal>}
         </div>
     )
 }
