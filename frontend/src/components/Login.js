@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react"
-import { Context, SET_ROOMS, SET_USER, UPDATE_SETTINGS } from '../context'
+import { Context, SET_INITIAL_STATE, SET_ROOMS, SET_USER, UPDATE_SETTINGS } from '../context'
 import { useNavigate } from "react-router-dom"
 
 import UserService from '../services/UserService'
@@ -23,6 +23,10 @@ function LoginAndRegister(props) {
         setEmail('')
         setPassword('')
     }, [props.which])
+
+    useEffect(() => {
+        dispatch({ type: SET_INITIAL_STATE })
+    }, [dispatch])
 
     const validate = (token) => {
         if (token && token.length < 50) {

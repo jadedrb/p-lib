@@ -25,15 +25,42 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
         }
         
         if (intoViewRef.current) {
-            const section = document.querySelector(`.bk-${bid}`);
-
-            if (section)
-                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            setTimeout(() => {
+                const section = document.querySelector(`.bk-${bid}`);
+                
+                if (section)
+                    section.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100)
        
         } else {
             intoViewRef.current = true
         }
     }, [bid])
+
+    const thumbnailPreview = async (b) => {
+        loading(`.sh-b`)
+        let result;
+
+        try {
+            result = await axios.get(`${process.env.REACT_APP_GOOGLE_API}${b.title}`)
+        } catch (e) {
+            console.log(e)
+        }
+                        
+        let pics = result.data.items.reduce((acc, curr) => {
+        if (curr.volumeInfo?.authors.includes(b.author)) {
+            if (curr.volumeInfo?.title === b.title) {
+                let thumb = curr?.volumeInfo?.imageLinks?.thumbnail
+                if (thumb)
+                    return [...acc, thumb]
+                }
+            }
+            return acc
+        }, [])
+
+        setModalPic(pics[Math.floor(Math.random() * pics.length)])
+        clearLoading()
+    }
 
     renderedBooks = renderedBooks?.map((b,i) => {
         return (
@@ -43,36 +70,24 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
                 onClick={async () => { 
                     intoViewRef.current = false; 
                     navigate(utilPath(path, 'book', b.id)); 
-                    if (!focusOn && b.id === bid) {
-                        loading(`.sh-b`)
-                        let result;
-
-                        try {
-                            result = await axios.get(`${process.env.REACT_APP_GOOGLE_API}${b.title}`)
-                        } catch (e) {
-                            console.log(e)
-                        }
-                        
-                        let pics = result.data.items.reduce((acc, curr) => {
-                            if (curr.volumeInfo?.authors.includes(b.author)) {
-                                if (curr.volumeInfo?.title === b.title) {
-                                    let thumb = curr?.volumeInfo?.imageLinks?.thumbnail
-                                    if (thumb)
-                                        return [...acc, thumb]
-                                }
-                            }
-                            return acc
-                        }, [])
-
-                        setModalPic(pics[Math.floor(Math.random() * pics.length)])
-                        clearLoading()
-                    }
+                    if (!focusOn && b.id === bid) 
+                        thumbnailPreview(b)
                 }} 
                 style={{ outline: selected.highlight.includes(b?.id + "") ? '3px solid rgb(74, 74, 255)' : bid === b?.id ? '3px solid black' : 'none', opacity: (bid === b?.id || selected.highlight.includes(b?.id + "")) && focusOn ? '1' : !focusOn ? '1' : '.3' }}
             >
-                <td>{b.title}</td>
+                <td 
+                    onMouseOver={(e) => {
+                        if (b.id === bid) {
+                            if (b.color === "white" || b.color === "black") 
+                                e.target.style.backgroundColor = 'lightgrey'
+                            e.target.style.color = b.color
+                        }
+                    }}
+                    onMouseLeave={(e) => { e.target.style.color = 'black'; e.target.style.backgroundColor = 'inherit'}}
+                    onClick={(e) => { if (b.id === bid && e.target.style.color === b.color) thumbnailPreview(b); }}
+                >{b.title}</td>
                 <td>{b.author}</td>
-                <td style={{ color: bid === b?.id && focusOn ? b.color : 'black' }}>{b.color}</td>
+                <td style={{ color: bid === b?.id && focusOn ? b.color : 'black', backgroundColor: bid === b?.id && focusOn && b.color === "white" ? "lightgrey" : 'inherit' }}>{b.color}</td>
                 <td>{b.genre}</td>
                 <td>{b.pages}</td>
                 <td>{b.pdate}</td>

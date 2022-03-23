@@ -30,6 +30,8 @@ export const UPDATE_SETTINGS = "UPDATE_SETTINGS"
 export const TOGGLE_SELECT = "TOGGLE_SELECT"
 export const TOGGLE_BKCASE_SELECT = "TOGGLE_BKCASE_SELECT"
 
+export const SET_INITIAL_STATE = "SET_INITIAL_STATE"
+
 
 let initialState = {
     books: [],
@@ -166,6 +168,9 @@ function reducer(state, action) {
                 ...state,
                 settings: {...state.settings, ...action.payload}
             }
+        
+        case SET_INITIAL_STATE:
+            return initialState
         default:
             return state
     }
