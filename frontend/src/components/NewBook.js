@@ -161,7 +161,7 @@ const NewBook = ({ setCurrShelf }) => {
         let obj = curr.volumeInfo
         let pckge = {}
         if (obj?.title === inputs.title) {
-          pckge.author = obj?.authors[0]
+          pckge.author = obj?.authors?.[0]
           pckge.more = obj?.description
           pckge.pages = obj?.pageCount
           pckge.pdate = obj?.publishedDate?.length < 5 ? obj.publishedDate : obj.publishedDate.slice(0,4)

@@ -48,7 +48,7 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
         }
                         
         let pics = result.data.items.reduce((acc, curr) => {
-        if (curr.volumeInfo?.authors.includes(b.author)) {
+        if (curr.volumeInfo?.authors?.includes(b.author)) {
             if (curr.volumeInfo?.title === b.title) {
                 let thumb = curr?.volumeInfo?.imageLinks?.thumbnail
                 if (thumb)
