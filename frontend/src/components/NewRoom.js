@@ -36,6 +36,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
 
   let mapRef = useRef();
   let wrapper = useRef()
+  let afterDeletionRef = useRef();
 
   const respondToRoomLengthChange = () => {
     if (rooms.length) {
@@ -43,17 +44,29 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
         let idx = rooms.findIndex(r => r.id === Number(rid))
         if (idx >= 0) {
           roomSetup(idx)
-        } else {
+        } else if (!afterDeletionRef.current) {
+          /* 
+            Handles situations where the typed URL has an id that doesn't correspond to an existing room.
+            In that case, default to the first room. The afterDeletionRef is to prevent this from 
+            also happening when a room is deleted - it sees the old id as a non-existing room. Without this, 
+            it will always switch to the first room after deleting any other room, which is not ideal.
+          */
           roomSetup(0)
           navigate(utilPath(path, "room", rooms[0].id))
         }
       } else {
         roomSetup(0)
-        navigate(utilPath(path, "room", rooms[0].id))
+        // The timeout is to trick React and prevent the warning about using useNavigate on first render
+        setTimeout(() => navigate(utilPath(path, "room", rooms[0].id)), 1)
+        // navigate(utilPath(path, "room", rooms[0].id))
       }
     } else {
+      if (rid)
+        setTimeout(() => navigate(utilPath(path, "room", "")), 1)
       initialRoomSetup()
     }
+    if (afterDeletionRef.current) 
+      afterDeletionRef.current = false
   }
 
   const respondToRidChange = () => {
@@ -289,7 +302,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
     if (!confirm) return
     await Rooms.removeRoomFromUser(rid, user);
     dispatch({ type: REMOVE_ROOM, payload: rid });
-    
+    afterDeletionRef.current = true
     if (rIndex)
       switchRoom(-1)
     else {

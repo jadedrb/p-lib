@@ -270,7 +270,10 @@ tr:hover {
 .sh-b {
     position: relative;
     text-align: center;
-    /* border: 3px solid plum; */
+}
+
+.sh-b .loading {
+    height: 700px;
 }
 
 .sh-b h4 {
