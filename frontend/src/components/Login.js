@@ -55,7 +55,7 @@ function LoginAndRegister(props) {
 
         let token;
 
-        loading('.home')
+        loading('.home', 'maybe')
 
         if (props.which) {
             console.log('logging in...')

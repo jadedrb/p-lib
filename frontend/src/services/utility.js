@@ -113,7 +113,7 @@ export function loading(where, initial) {
         
         loader.style.backgroundColor = `rgb(${red}, ${blue}, 255)`
 
-        if (initial) 
+        if (initial === true || (initial === 'maybe' && percent > 15)) 
             connection.innerText = percent + "%"
     }, 100)
         
@@ -127,6 +127,7 @@ export function loading(where, initial) {
 
 
 export function clearLoading() {
+
         let loading = document.querySelector(".loading")
         if (!loading) return
 

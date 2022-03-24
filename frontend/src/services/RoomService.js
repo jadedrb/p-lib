@@ -8,7 +8,7 @@ class RoomService {
         return d.data
     }
 
-    getRooms(user) {
+    getRooms() {
         return authAxios().get('/rooms').then(r => this.format(r))
     }
 

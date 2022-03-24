@@ -14,7 +14,7 @@ import Home from './components/Home';
 import UserService from './services/UserService';
 import RoomService from './services/RoomService';
 
-import { loading, clearLoading } from './services/utility'
+import { loading } from './services/utility'
 
 function App() {
 
@@ -72,7 +72,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.16')
+      console.log('v1.17')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))
@@ -88,7 +88,7 @@ function App() {
         .then(r => {
           console.log('Server response: ' + r.data)
           console.timeEnd('time')
-          setTimeout(() => clearLoading(), 200)
+          // setTimeout(() => clearLoading(), 200)
         })
         
     }
