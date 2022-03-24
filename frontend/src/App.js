@@ -72,21 +72,22 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.15')
+      console.log('v1.16')
 
-      if (document.querySelector('.rooms'))
-        loading('.rooms', true)
-      else if (document.querySelector('.load-spot'))
-        loading('.load-spot', true)
-      else 
-        setTimeout(() => loading('.load-spot', true), 100)
+      setTimeout(() => {
+        if (document.querySelector('.rooms'))
+          loading('.rooms', true)
+        else if (document.querySelector('.load-spot'))
+          loading('.load-spot', true)
+        else 
+          loading('.load-spot', true)
+      }, 100)
 
       UserService
         .awaken()
         .then(r => {
           console.log('Server response: ' + r.data)
-          let test = console.timeEnd('time')
-          console.log(test)
+          console.timeEnd('time')
           setTimeout(() => clearLoading(), 200)
         })
         

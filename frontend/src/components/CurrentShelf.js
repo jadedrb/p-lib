@@ -3,7 +3,7 @@ import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Context, REMOVE_SHELF, UPDATE_SHELF } from "../context"
 import { utilitySelector, utilMsg } from '../services/utility';
 import BookList from './BookList';
-// import NewBook from './NewBook';
+
 import { utilPath } from '../services/utility';
 import Shelves from '../services/ShelfService'
 import Move from './Move';
@@ -144,15 +144,25 @@ function CurrentShelf() {
 
             <div className="b-sec-center">
                 <button className="b-section" onClick={() => {
-                    setShowBook(!showBook)
-                    if (!path.pathname.includes("/book/")) 
+                    if (!path.pathname.includes("/book/"))  {
+                        setShowBook(true)
                         navigate(utilPath(path, "book", ""))
-                    // if (path.pathname.includes("/book/")) 
-                    //     navigate(utilPath(path, "shelf", shid))
-                    // else
-                    //     navigate(utilPath(path, "book", ""))
+
+                        setTimeout(() => {
+                            let section = document.querySelector('.ff')
+                            section?.scrollIntoView()
+                        }, 100) 
+                    } else
+                        setShowBook(!showBook)
+                    
+                    if (!showBook) {
+                        setTimeout(() => {
+                            let section = document.querySelector('.ff')
+                            section?.scrollIntoView()
+                        }, 100)    
+                    }
                 }}>Book</button>
-                <div className="b-sec-line" style={{ display: path.pathname.includes("/book/") ? "block" : "none" }}/>
+                <div className="b-sec-line" style={{ display: showBook && path.pathname.includes("/book/") ? "block" : "none" }}/>
             </div>
             {showBook && <Outlet />}
         </div>
