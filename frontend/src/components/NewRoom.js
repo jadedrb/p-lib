@@ -5,7 +5,7 @@ import { randomNum, utilMsg, utilPath,rgbToHex } from "../services/utility";
 import Rooms from "../services/RoomService";
 import Bookcases from "../services/BookcaseService";
 
-const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path, settings }) => {
+const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path, settings, setup }) => {
 
   let [rIndex, setRIndex] = useState(0);
 
@@ -61,7 +61,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
         // navigate(utilPath(path, "room", rooms[0].id))
       }
     } else {
-      if (rid)
+      if (rid && setup)
         setTimeout(() => navigate(utilPath(path, "room", "")), 1)
       initialRoomSetup()
     }
@@ -82,7 +82,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
   
   useEffect(() => {
     wrapper.current.respondToRoomLengthChange()
-  }, [rooms])
+  }, [rooms, setup])
 
   useEffect(() => {
     wrapper.current.respondToRidChange()
