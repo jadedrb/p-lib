@@ -272,7 +272,7 @@ tr:hover {
     text-align: center;
 }
 
-.sh-b .loading {
+.sh-b .thumb {
     height: 700px;
 }
 
@@ -378,12 +378,17 @@ Search
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    animation: spin .5s linear infinite;
+    animation: spin .5s linear infinite, purp 30s forwards;
 }
 
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+@keyframes purp {
+    0% { background-color: transparent; }
+    100% { background-color: rgb(74, 74, 255); }
 }
   
 .b-section {

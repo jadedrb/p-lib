@@ -38,7 +38,7 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
     }, [bid])
 
     const thumbnailPreview = async (b) => {
-        loading(`.sh-b`)
+        loading(`.sh-b`, false, 'thumb')
         let result;
 
         try {

@@ -73,11 +73,11 @@ export function utilMsg(info) {
 let interval;
 let percent = 0;
 let perCount = 0
-let red = 255
-let blue = 255
+// let red = 255
+// let blue = 255
 // let green = 255
 
-export function loading(where, initial) {
+export function loading(where, initial, extra) {
 
     let el = document.querySelector(where)
     let prev = document.querySelector(".loading")
@@ -93,14 +93,14 @@ export function loading(where, initial) {
     loading.appendChild(connection)
 
     perCount = 0
-    red = 255
-    blue = 255
+    // red = 255
+    // blue = 255
     // green = 255
 
     interval = setInterval(() => {
         perCount++
-        red -= .5
-        blue -= .5
+        // red -= .5
+        // blue -= .5
         // green -= .5
         
         if (perCount >= 3) {
@@ -111,13 +111,13 @@ export function loading(where, initial) {
         if (percent > 99)
             clearInterval(interval)
         
-        loader.style.backgroundColor = `rgb(${red}, ${blue}, 255)`
+        // loader.style.backgroundColor = `rgb(${red}, ${blue}, 255)`
 
         if (initial === true || (initial === 'maybe' && percent > 15)) 
             connection.innerText = percent + "%"
     }, 100)
-        
-    loading.setAttribute("class", `loading ${where}`)
+
+    loading.setAttribute("class", `loading ${where}${extra ? ' ' + extra : ''}`)
     loader.setAttribute("class", `loader`)
 
     loading.appendChild(loader)
@@ -130,7 +130,7 @@ export function clearLoading() {
 
         let loading = document.querySelector(".loading")
         if (!loading) return
-
+// console.trace()
         let parentClass = loading.classList[1]
         let parent = document.querySelector(parentClass)
         let connection = document.querySelector(".connection")
@@ -138,8 +138,8 @@ export function clearLoading() {
         if (connection.innerText && percent < 100) {
             let interval2 = setInterval(() => {
                 percent++
-                red-= .5
-                blue-= .5
+                // red-= .5
+                // blue-= .5
 
                 if (connection.innerText && percent < 30) 
                     percent = 90
