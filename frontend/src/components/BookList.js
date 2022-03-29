@@ -48,16 +48,16 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
         }
                         
         let pics = result.data.items.reduce((acc, curr) => {
-        if (curr.volumeInfo?.authors?.includes(b.author)) {
-            if (curr.volumeInfo?.title === b.title) {
-                let thumb = curr?.volumeInfo?.imageLinks?.thumbnail
-                if (thumb)
-                    if (!thumb.includes("https"))
-                        thumb = `https${thumb.slice(4)}`
-                    return [...acc, thumb]
+            if (curr.volumeInfo?.authors?.includes(b.author)) {
+                if (curr.volumeInfo?.title === b.title) {
+                    let thumb = curr?.volumeInfo?.imageLinks?.thumbnail
+                    if (thumb)
+                        if (!thumb.includes("https"))
+                            thumb = `https${thumb.slice(4)}`
+                        return [...acc, thumb]
+                    }
                 }
-            }
-            return acc
+                return acc
         }, [])
 
         setModalPic(pics[Math.floor(Math.random() * pics.length)])

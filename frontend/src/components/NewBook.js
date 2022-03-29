@@ -121,7 +121,7 @@ const NewBook = ({ setCurrShelf }) => {
   }
 
   const handleSaveCreate = async (e) => {
-    loading(`.sh-b`, false, 'thumb')
+    // loading(`.sh-b`, false, 'thumb')
     if (bid) {
       let book = await BookService.updateBookForShelf(inputs, bid)
       dispatch({
@@ -136,7 +136,7 @@ const NewBook = ({ setCurrShelf }) => {
         payload: { shid, rid, bcid, setCurrShelf, book },
       });
     }
-    clearLoading()
+    // clearLoading()
     if (e?.target?.value) // to determine whether they clicked a button or pressed Enter
       navigate(utilPath(path, 'shelf', shid))
   }
@@ -222,6 +222,7 @@ const NewBook = ({ setCurrShelf }) => {
             onKeyPress={handleEnter}
             onClick={handleClick}
             maxLength={255}
+            style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
           <label htmlFor="author">Author</label>
           <input
@@ -234,6 +235,7 @@ const NewBook = ({ setCurrShelf }) => {
             onKeyPress={handleEnter}
             onClick={handleClick}
             maxLength={255}
+            style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
           <label htmlFor="color">
             Color
@@ -250,6 +252,7 @@ const NewBook = ({ setCurrShelf }) => {
             onKeyPress={handleEnter}
             onClick={handleClick}
             maxLength={255}
+            style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
           {/* {edit &&
           <input 
@@ -269,6 +272,7 @@ const NewBook = ({ setCurrShelf }) => {
             onKeyPress={handleEnter}
             onClick={handleClick}
             maxLength={255}
+            style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
           <label htmlFor="pages">Pages</label>
           <input
@@ -281,6 +285,7 @@ const NewBook = ({ setCurrShelf }) => {
             onChange={handleInput}
             onKeyPress={handleEnter}
             onClick={handleClick}
+            style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
           <label htmlFor="pdate">Published</label>
           <input
@@ -294,6 +299,7 @@ const NewBook = ({ setCurrShelf }) => {
             onChange={handleInput}
             onKeyPress={handleEnter}
             onClick={handleClick}
+            style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
           <label htmlFor="more">More</label>
           <textarea
@@ -306,6 +312,7 @@ const NewBook = ({ setCurrShelf }) => {
             onKeyPress={handleEnter}
             onClick={handleClick}
             maxLength={255}
+            style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
           {edit &&
           <input 
