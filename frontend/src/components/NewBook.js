@@ -121,6 +121,7 @@ const NewBook = ({ setCurrShelf }) => {
   }
 
   const handleSaveCreate = async (e) => {
+    loading(`.sh-b`, false, 'thumb')
     if (bid) {
       let book = await BookService.updateBookForShelf(inputs, bid)
       dispatch({
@@ -135,6 +136,7 @@ const NewBook = ({ setCurrShelf }) => {
         payload: { shid, rid, bcid, setCurrShelf, book },
       });
     }
+    clearLoading()
     if (e?.target?.value) // to determine whether they clicked a button or pressed Enter
       navigate(utilPath(path, 'shelf', shid))
   }
