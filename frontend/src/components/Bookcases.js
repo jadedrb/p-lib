@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react"
 import NewBookcase from "./NewBookcase"
 import { useParams, useNavigate, useLocation, Outlet } from 'react-router-dom'
-import { Context } from "../context"
+import { Context, CURRENT_BOOK } from "../context"
 import { utilitySelector, utilPath } from "../services/utility";
 
 const Bookcases = () => {
@@ -19,10 +19,18 @@ const Bookcases = () => {
 
 
     useEffect(() => {
-        let { room, bkcase } = utilitySelector(rid, bcid, shid, rooms)
+        let { room, bkcase, book } = utilitySelector(rid, bcid, shid, rooms, bid)
         setCurrentRoom(room)
         setCurrentBookcase(bkcase)
-    }, [shid, rid, bcid, rooms])
+
+        if (bid && book && book.id !== currentBook?.id) {
+            dispatch({
+                type: CURRENT_BOOK,
+                payload: book
+            })
+        } 
+
+    }, [shid, rid, bcid, rooms, bid, dispatch, currentBook])
 
     return (
         <div className="bookcases">

@@ -346,11 +346,19 @@ Search
 .search-lib input:focus {
     outline: 3px solid rgb(224, 223, 223);
 }
-
+/* 
 .x-results {
     position: absolute;
     right: 6px;
     top: 1px;
+    font-size: 1rem;
+} */
+
+
+.x-results {
+    position: fixed;
+    right: 45px;
+    top: 55px;
     font-size: 1rem;
 }
 
