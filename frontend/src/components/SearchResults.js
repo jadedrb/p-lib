@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { utilPath, utilOrder } from '../services/utility';
 import Books from '../services/BookService';
@@ -8,7 +8,7 @@ const SearchResults = ({ books, bid, setResults, setShowResults }) => {
     let [order, setOrder] = useState("")
     let [ascDesc, setAscDesc] = useState(true)
 
-    // let prevCoord = useRef()
+    let resultRef = useRef()
 
     let navigate = useNavigate()
 
@@ -55,10 +55,10 @@ const SearchResults = ({ books, bid, setResults, setShowResults }) => {
 
     return (
         <div className={`table-contain search-c ${!renderedBooks.length && 'table-cc'}`}>
-            <div className="pm-r min-room x-results" onClick={closeSearchResults}>X</div>
+            <div className='x-results-wrapper' style={{ height: resultRef?.current?.offsetHeight ? `${resultRef.current.offsetHeight}px` : '100px' }}><div className="pm-r min-room x-results" onClick={closeSearchResults}>X</div></div>
             {renderedBooks.length ? <h5>results: {renderedBooks.length}</h5> : null}
             {renderedBooks?.length ? 
-                <table className='booklist'>
+                <table className='booklist' ref={resultRef}>
                     <thead>
                         <tr style={{ backgroundColor: "lightgrey", fontSize: "13px" }}>
                             <th onClick={() => handleOrder("title")}>title</th>

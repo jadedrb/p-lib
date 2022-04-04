@@ -356,10 +356,16 @@ Search
 
 
 .x-results {
-    position: fixed;
-    right: 45px;
-    top: 55px;
+    position: sticky;
+    top: -10px;
+    height: 20px;
     font-size: 1rem;
+}
+
+.x-results-wrapper {
+    position: absolute;
+    right: 3px;
+    top: 0;
 }
 
 .search-lib select {
