@@ -25,6 +25,7 @@ const Rooms = () => {
     let [results, setResults] = useState([])
     let [typing, setTyping] = useState(false)
     let [showResults, setShowResults] = useState(true)
+    let [searchParams, setSearchParams] = useState('')
     let [searchIn, setSearchIn] = useState("library")
     let [searchType, setSearchType] = useState("title")
     let [showUserDet, setShowUserDet] = useState(false)
@@ -178,7 +179,7 @@ const Rooms = () => {
                 if (searchType === "title" || searchType === "genre" || searchType === "color" || searchType === "author" || searchType === "more") 
                     return results.filter((b) => b[searchType].toLowerCase().includes(search.toLowerCase()))
                 if (searchType === "all") 
-                    return results.filter((b) => b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase()) || b.genre.toLowerCase().includes(search.toLowerCase()) || b.more.toLowerCase().includes(search.toLowerCase()))
+                    return results.filter((b) => b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase()) || b.genre.toLowerCase().includes(search.toLowerCase()) || b.more.toLowerCase().includes(search.toLowerCase()) || b.color.toLowerCase().includes(search.toLowerCase()))
                 if (searchType === "published" || searchType === "pages") {
                     let { greater, lesser } = parsePagesAndDate(search)
                     if (searchType === "published")
@@ -232,6 +233,10 @@ const Rooms = () => {
                 setSearch(value)
             }
         }
+    }
+
+    const recordSearchParams = () => {
+        setSearchParams(`${search} in ${searchType}`)
     }
 
     wrapperRef.current = { determineSearchArea } 
