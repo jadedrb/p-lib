@@ -36,7 +36,7 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 	@Query("select b from User u JOIN u.books b WHERE u.username = :un AND lower(b.title) LIKE lower(concat('%', :gt,'%')) OR lower(b.genre) LIKE lower(concat('%', :gt,'%'))")
 	List<Book> findTitleAndGenreForUser(@Param("gt") String genretitle, @Param("un") String username);
 	
-	@Query("select b from User u JOIN u.books b WHERE u.username = :un AND lower(b.more) LIKE lower(concat('%', :a,'%')) OR lower(b.title) LIKE lower(concat('%', :a,'%')) OR lower(b.genre) LIKE lower(concat('%', :a,'%')) OR lower(b.author) LIKE lower(concat('%', :a,'%'))")
+	@Query("select b from User u JOIN u.books b WHERE u.username = :un AND lower(b.more) LIKE lower(concat('%', :a,'%')) OR lower(b.title) LIKE lower(concat('%', :a,'%')) OR lower(b.genre) LIKE lower(concat('%', :a,'%')) OR lower(b.author) LIKE lower(concat('%', :a,'%')) OR lower(b.color) LIKE lower(concat('%', :a,'%'))")
 	List<Book> findAllForUser(@Param("a") String all, @Param("un") String username);
 	
 	@Query("select b from User u JOIN u.books b WHERE u.username = :un AND b.pdate < :low AND b.pdate > :high")
@@ -64,7 +64,7 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 	@Query("select b from Room r JOIN r.books b WHERE b.room.id = :id AND lower(b.title) LIKE lower(concat('%', :gt,'%')) OR lower(b.genre) LIKE lower(concat('%', :gt,'%'))")
 	List<Book> findGenreAndTitleInRoom(@Param("gt") String genretitle, @Param("id") long id);
 	
-	@Query("select b from Room r JOIN r.books b WHERE b.room.id = :id AND lower(b.more) LIKE lower(concat('%', :a,'%')) OR lower(b.title) LIKE lower(concat('%', :a,'%')) OR lower(b.genre) LIKE lower(concat('%', :a,'%')) OR lower(b.author) LIKE lower(concat('%', :a,'%'))")
+	@Query("select b from Room r JOIN r.books b WHERE b.room.id = :id AND lower(b.more) LIKE lower(concat('%', :a,'%')) OR lower(b.title) LIKE lower(concat('%', :a,'%')) OR lower(b.genre) LIKE lower(concat('%', :a,'%')) OR lower(b.author) LIKE lower(concat('%', :a,'%')) OR lower(b.color) LIKE lower(concat('%', :a,'%'))")
 	List<Book> findAllInRoom(@Param("a") String all, @Param("id") long id);
 	
 	@Query("select b from Room r JOIN r.books b WHERE b.room.id = :id AND lower(b.color) LIKE lower(concat('%', :c,'%'))")
@@ -93,7 +93,7 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 	@Query("select b from Bookcase bk JOIN bk.books b WHERE b.bookcase.id = :id AND lower(b.title) LIKE lower(concat('%', :gt,'%')) OR lower(b.genre) LIKE lower(concat('%', :gt,'%'))")
 	List<Book> findGenreAndTitleInBookcase(@Param("gt") String genretitle, @Param("id") long id);
 	
-	@Query("select b from Bookcase bk JOIN bk.books b WHERE b.bookcase.id = :id AND lower(b.more) LIKE lower(concat('%', :a,'%')) OR lower(b.title) LIKE lower(concat('%', :a,'%')) OR lower(b.genre) LIKE lower(concat('%', :a,'%')) OR lower(b.author) LIKE lower(concat('%', :a,'%'))")
+	@Query("select b from Bookcase bk JOIN bk.books b WHERE b.bookcase.id = :id AND lower(b.more) LIKE lower(concat('%', :a,'%')) OR lower(b.title) LIKE lower(concat('%', :a,'%')) OR lower(b.genre) LIKE lower(concat('%', :a,'%')) OR lower(b.author) LIKE lower(concat('%', :a,'%')) OR lower(b.color) LIKE lower(concat('%', :a,'%'))")
 	List<Book> findAllInBookcase(@Param("a") String all, @Param("id") long id);
 	
 	@Query("select b from Bookcase bk JOIN bk.books b WHERE b.bookcase.id = :id AND lower(b.color) LIKE lower(concat('%', :c,'%'))")
@@ -122,7 +122,7 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 	@Query("select b from Shelf sh JOIN sh.books b WHERE b.shelf.id = :id AND lower(b.title) LIKE lower(concat('%', :gt,'%')) OR lower(b.genre) LIKE lower(concat('%', :gt,'%'))")
 	List<Book> findGenreAndTitleInShelf(@Param("gt") String genretitle, @Param("id") long id);
 	
-	@Query("select b from Shelf sh JOIN sh.books b WHERE b.shelf.id = :id AND lower(b.more) LIKE lower(concat('%', :a,'%')) OR lower(b.title) LIKE lower(concat('%', :a,'%')) OR lower(b.genre) LIKE lower(concat('%', :a,'%')) OR lower(b.author) LIKE lower(concat('%', :a,'%'))")
+	@Query("select b from Shelf sh JOIN sh.books b WHERE b.shelf.id = :id AND lower(b.more) LIKE lower(concat('%', :a,'%')) OR lower(b.title) LIKE lower(concat('%', :a,'%')) OR lower(b.genre) LIKE lower(concat('%', :a,'%')) OR lower(b.author) LIKE lower(concat('%', :a,'%')) OR lower(b.color) LIKE lower(concat('%', :a,'%'))")
 	List<Book> findAllInShelf(@Param("a") String all, @Param("id") long id);
 	
 	@Query("select b from Shelf sh JOIN sh.books b WHERE b.shelf.id = :id AND lower(b.color) LIKE lower(concat('%', :c,'%'))")

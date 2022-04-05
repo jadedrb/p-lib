@@ -178,7 +178,7 @@ const Rooms = () => {
                 if (searchType === "title" || searchType === "genre" || searchType === "color" || searchType === "author" || searchType === "more") 
                     return results.filter((b) => b[searchType].toLowerCase().includes(search.toLowerCase()))
                 if (searchType === "all") 
-                    return results.filter((b) => b.title.toLowerCase().includes(search.toLowerCase()))
+                    return results.filter((b) => b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase()) || b.genre.toLowerCase().includes(search.toLowerCase()) || b.more.toLowerCase().includes(search.toLowerCase()))
                 if (searchType === "published" || searchType === "pages") {
                     let { greater, lesser } = parsePagesAndDate(search)
                     if (searchType === "published")
