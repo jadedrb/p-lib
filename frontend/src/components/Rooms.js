@@ -25,7 +25,7 @@ const Rooms = () => {
     let [results, setResults] = useState([])
     let [typing, setTyping] = useState(false)
     let [showResults, setShowResults] = useState(true)
-    let [searchParams, setSearchParams] = useState('')
+    // let [searchParams, setSearchParams] = useState('')
     let [searchIn, setSearchIn] = useState("library")
     let [searchType, setSearchType] = useState("title")
     let [showUserDet, setShowUserDet] = useState(false)
@@ -235,14 +235,15 @@ const Rooms = () => {
         }
     }
 
-    const recordSearchParams = () => {
-        setSearchParams(`${search} in ${searchType}`)
-    }
+    // const recordSearchParams = () => {
+    //     setSearchParams(`${search} in ${searchType}`)
+    // }
 
     wrapperRef.current = { determineSearchArea } 
 
     const handleLogout = () => {
         localStorage.removeItem("token")
+        localStorage.removeItem("time")
         dispatch({
             type: SET_USER,
             payload: ""
@@ -268,7 +269,7 @@ const Rooms = () => {
             {(search && !typing && showResults) || results.length ? <SearchResults books={results} bid={Number(bid)} setShowResults={setShowResults} setResults={setResults} /> : null}
             <button className="logout" onClick={handleLogout}>Logout</button>
             <h4 className="welcome"><span>{user && `welcome`}</span> <span onClick={handleShowDetails}>{user}</span></h4>
-            <div className="b-sec-center">
+            <div className={user ? "b-sec-center" : "b-sec-center b-sec-fade"}>
                 <button className="b-section" onClick={toggleRoomsView}>Room</button>
                 <div className="b-sec-line" style={{ display: showRooms ? "block" : "none" }}/>
             </div>

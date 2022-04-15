@@ -68,6 +68,7 @@ function LoginAndRegister(props) {
             }
 
             localStorage.setItem("token", token)
+            localStorage.setItem("time", new Date())
 
             let payload = await RoomService.getRoomsForUser(username)
 
@@ -96,6 +97,7 @@ function LoginAndRegister(props) {
             }
 
             localStorage.setItem("token", token)
+            localStorage.setItem("time", new Date())
             navigate("/room")
         }
 

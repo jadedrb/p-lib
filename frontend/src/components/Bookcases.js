@@ -5,7 +5,7 @@ import { Context, CURRENT_BOOK } from "../context"
 import { utilitySelector, utilPath } from "../services/utility";
 
 const Bookcases = () => {
-    let { rooms, current, dispatch, settings, currentBook } = useContext(Context);
+    let { rooms, current, dispatch, settings, currentBook, user } = useContext(Context);
     
     let params = useParams()
     let { rid, bcid, shid, bid } = params
@@ -34,7 +34,7 @@ const Bookcases = () => {
 
     return (
         <div className="bookcases">
-            <div className="b-sec-center">
+            <div className={user ? "b-sec-center" : "b-sec-center b-sec-fade"}>
                 <button className="b-section" onClick={() => setShowBookcases(!showBookcases)} onDoubleClick={() => { navigate(utilPath(path, "room", rid)); setShowBookcases(false) } }>Bookcase</button>
                 <div className="b-sec-line" style={{ display: showBookcases ? "block" : "none" }}/>
             </div>

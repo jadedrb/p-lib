@@ -10,7 +10,7 @@ import Move from './Move';
 
 function CurrentShelf() {
 
-    let { rooms, dispatch, selected, settings } = useContext(Context)
+    let { rooms, dispatch, selected, settings, user } = useContext(Context)
 
     let [showShelf, setShowShelf] = useState(true)
     let [showBook, setShowBook] = useState(true)
@@ -83,7 +83,7 @@ function CurrentShelf() {
                 {shid && edit && <div className="pm-r ed" onClick={() => setMove(!move)}>~</div>}
                 {edit && <div className="pm-r min-room" onClick={removeShelf}>-</div>}
             </div>}
-            <div className="b-sec-center">
+            <div className={user ? "b-sec-center" : "b-sec-center b-sec-fade"}>
                 <button className="b-section" onClick={() => setShowShelf(!showShelf)} onDoubleClick={() => { navigate(utilPath(path, "bookcase", bcid)); setShowShelf(false) } }>Shelf</button>
                 <div className="b-sec-line" style={{ display: showShelf ? "block" : "none" }}/>
             </div>
@@ -142,7 +142,7 @@ function CurrentShelf() {
             }
 
 
-            <div className="b-sec-center">
+            <div className={user ? "b-sec-center" : "b-sec-center b-sec-fade"}>
                 <button className="b-section" onClick={() => {
                     if (!path.pathname.includes("/book/"))  {
                         setShowBook(true)

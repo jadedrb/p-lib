@@ -29,6 +29,13 @@ function App() {
   useEffect(() => {
     const validate = async () => {
       let token = localStorage.getItem("token")
+      let time = localStorage.getItem("time")
+
+      if ((new Date() - new Date(time)) > (1000 * 60 * 60 * 10)) {
+        token = false
+        localStorage.removeItem("token")
+        localStorage.removeItem("time")
+      }
 
       if (token) {
         
@@ -61,6 +68,7 @@ function App() {
         }
         else { // if user validation failed with current token
           localStorage.removeItem("token")
+          localStorage.removeItem("time")
           dispatch({ type: SETUP_COMPLETE })
           return
         }
@@ -72,7 +80,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.25')
+      console.log('v1.26')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))

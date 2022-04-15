@@ -431,6 +431,10 @@ Search
 .new-bookcase {
     margin-top: 30px;
 } */
+.b-sec-fade {
+    pointer-events: none;
+    opacity: .3;
+}
 
 .b-sec-center {
     position: relative;
