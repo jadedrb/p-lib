@@ -3,7 +3,7 @@ import GeneralModal from './GeneralModal'
 import UserService from '../services/UserService'
 import { UPDATE_SETTINGS } from '../context'
 
-function Settings({ user, userDetails, dispatch, setShowUserDet, showUserDet, handleLogout, handleShowDetails, settings }) {
+function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUserDet, handleLogout, handleShowDetails, settings }) {
 
     const handleAccountDeletion = async (id) => {
         const confirm = window.confirm("Are you sure you want to delete your account?")
@@ -49,6 +49,10 @@ function Settings({ user, userDetails, dispatch, setShowUserDet, showUserDet, ha
         })
     }
 
+    const handleJumpChange = (e) => {
+        handleOtherSettings(userDetails[user], { jump: e.target.value })
+    }
+
     const handleCreationTime = (ud) => utilTime(Object.keys(ud).filter(udp => /[0-9]/.test(udp))[0])
 
      // const lastFirst = settings.names === 'last, first'
@@ -75,6 +79,18 @@ function Settings({ user, userDetails, dispatch, setShowUserDet, showUserDet, ha
                                 <button onClick={() => handleOtherSettings(userDetails[user], { default: !readWrite ? "Read Only" : "Read/Write" })}>{!readWrite ? "Read Only" : "Read/Write"}</button>
                                 <p>Your account is {settings.temp ? settings.temp : "Read/Write"}. Temporarily switch to {settings.temp === "Read/Write" ? "Read Only" : "Read/Write"}</p>
                                 <button onClick={handleTempReadWrite}>{settings.temp === "Read/Write"  ? "Read Only" : "Read/Write"}</button>
+                                {rooms.length ?
+                                <>
+                                    <p>Jump to {rooms[settings.jump] ? rooms[settings.jump].name : rooms[0]?.name} on login</p>
+                                
+                                    <select value={settings.jump} onChange={handleJumpChange}>
+                                        {rooms.map((room, i) => 
+                                            <option key={room.id} value={i}>
+                                                {`${room.name} (${i + 1})`}
+                                            </option>
+                                        )}
+                                    </select>
+                                </> : ''}
                                 <p>Delete my personal library and account information</p>
                                 <button onClick={() => handleAccountDeletion(userDetails[user])}>Delete</button>
                             </div>

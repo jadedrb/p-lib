@@ -76,6 +76,7 @@ function LoginAndRegister(props) {
 
             if (currentSettings.other) {
                 let other = JSON.parse(currentSettings.other)
+
                 dispatch({
                   type: UPDATE_SETTINGS,
                   payload: { ...other, temp: other.default === "Read Only" ? "Read Only" : "Read/Write" }
@@ -84,8 +85,8 @@ function LoginAndRegister(props) {
 
             if (payload)
                 dispatch({ type: SET_ROOMS, payload })
-            
-            setTimeout(() => navigate(`/room/${payload[0] ? payload[0].id : ''}`), 1)
+        
+            // setTimeout(() => navigate(`/room/${payload[initialJumpIndex] ? payload[initialJumpIndex].id : ''}`), 1)
         }
         else {
             console.log('registering...')

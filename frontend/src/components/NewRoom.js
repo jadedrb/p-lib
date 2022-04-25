@@ -40,6 +40,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
 
   const respondToRoomLengthChange = () => {
     if (rooms.length) {
+      let initialJumpIndex = settings.jump ? settings.jump : 0
       if (rid) {
         let idx = rooms.findIndex(r => r.id === Number(rid))
         if (idx >= 0) {
@@ -52,12 +53,12 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
             it will always switch to the first room after deleting any other room, which is not ideal.
           */
           roomSetup(0)
-          navigate(utilPath(path, "room", rooms[0].id))
+          navigate(utilPath(path, "room", rooms[initialJumpIndex].id))
         }
       } else {
         roomSetup(0)
         // The timeout is to trick React and prevent the warning about using useNavigate on first render
-        setTimeout(() => navigate(utilPath(path, "room", rooms[0].id)), 1)
+        setTimeout(() => navigate(utilPath(path, "room", rooms[initialJumpIndex].id)), 1)
         // navigate(utilPath(path, "room", rooms[0].id))
       }
     } else {

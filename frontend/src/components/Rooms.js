@@ -307,7 +307,8 @@ const Rooms = () => {
             }
 
             {showUserDet && 
-                <Settings 
+                <Settings
+                    rooms={rooms} 
                     settings={settings} 
                     user={user}
                     dispatch={dispatch}
