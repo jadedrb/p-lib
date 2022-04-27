@@ -263,10 +263,17 @@ const Rooms = () => {
         }
     }
 
-
     return (
         <div className="rooms">
-            {(search && !typing && showResults) || results.length ? <SearchResults books={results} bid={Number(bid)} setShowResults={setShowResults} setResults={setResults} /> : null}
+            {(search && !typing && showResults) || results.length || (!results.length && searchIn === 'results') ? 
+                <SearchResults 
+                    search={search} 
+                    searchType={searchType} 
+                    books={results} bid={Number(bid)} 
+                    setShowResults={setShowResults} 
+                    searchIn={searchIn}
+                    setResults={setResults} /> 
+            : null}
             <button className="logout" onClick={handleLogout}>Logout</button>
             <h4 className="welcome"><span>{user && `welcome`}</span> <span onClick={handleShowDetails}>{user}</span></h4>
             <div className={user ? "b-sec-center" : "b-sec-center b-sec-fade"}>

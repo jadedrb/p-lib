@@ -1,16 +1,44 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { utilPath, utilOrder } from '../services/utility';
 import Books from '../services/BookService';
 
-const SearchResults = ({ books, bid, setResults, setShowResults }) => {
+const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, setShowResults }) => {
 
     let [order, setOrder] = useState("")
+    let [recordedSearch, setRecordedSearch] = useState([])
+    let [recordedSearchType, setRecordedSearchType] = useState([])
     let [ascDesc, setAscDesc] = useState(true)
 
     let resultRef = useRef()
 
+    const recordWrap = useRef()
+
     let navigate = useNavigate()
+
+    const recordSetup = () => {
+        if (searchIn !== 'results' && books.length) {
+            console.log(books)
+            console.log(books.length)
+            setRecordedSearch([search])
+            setRecordedSearchType([searchType])
+        } else {
+            console.log(recordedSearch, recordedSearchType)
+            setRecordedSearch([...recordedSearch, search])
+            setRecordedSearchType([...recordedSearchType, searchType])
+        }
+        console.log('hmmm')
+    }
+
+    recordWrap.current = { recordSetup }
+
+    useEffect(() => {
+        recordWrap.current.recordSetup()
+    }, [books])
+
+    useEffect(() => {
+        console.log('first render')
+    }, [])
 
     const whereIsThisBook = async (id) => {
         if (bid === id) return
@@ -57,6 +85,7 @@ const SearchResults = ({ books, bid, setResults, setShowResults }) => {
         <div className={`table-contain search-c ${!renderedBooks.length && 'table-cc'}`}>
             <div className='x-results-wrapper' style={{ height: resultRef?.current?.offsetHeight ? `${resultRef.current.offsetHeight}px` : '100px' }}><div className="pm-r min-room x-results" onClick={closeSearchResults}>X</div></div>
             {renderedBooks.length ? <h5>results: {renderedBooks.length}</h5> : null}
+            <h6>{recordedSearch.map((rec, i, arr) => <span key={i}>{`"${rec}" in ${recordedSearchType[i]}`}{arr.length > 1 && i !== arr.length -1 ? ' & ' : ''}</span>)}</h6>
             {renderedBooks?.length ? 
                 <table className='booklist' ref={resultRef}>
                     <thead>
