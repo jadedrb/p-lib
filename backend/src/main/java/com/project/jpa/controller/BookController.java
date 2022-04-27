@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -259,6 +260,24 @@ public class BookController {
 		res.put("room", book.getShelf().getBookcase().getRoom().getId());
 		return res;
 	}
+	
+	@GetMapping("/books/{name}/roll") 
+	public Book findRandomBookForUser(@PathVariable String name) throws Exception {
+		
+		User user = userRepo.findByUsername(name).get(0);
+		List<Book> books = user.getBooks();
+		
+		Random random = new Random();
+		Book book = books.get(random.nextInt(books.size()));
+		
+		System.out.println(book.toString());
+		
+		validUserAccess(book);
+		
+
+		return book;
+	}
+	
 	
 	// Search for books in room
 	

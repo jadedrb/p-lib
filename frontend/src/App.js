@@ -42,7 +42,7 @@ function App() {
         let user = await UserService.validateUserToken()
 
         if (user) {
-    
+
           dispatch({
               type: SET_USER,
               payload: user
@@ -80,7 +80,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.28')
+      console.log('v1.29')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))

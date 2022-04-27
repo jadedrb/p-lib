@@ -18,16 +18,12 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
 
     const recordSetup = () => {
         if (searchIn !== 'results' && books.length) {
-            console.log(books)
-            console.log(books.length)
             setRecordedSearch([search])
             setRecordedSearchType([searchType])
         } else {
-            console.log(recordedSearch, recordedSearchType)
             setRecordedSearch([...recordedSearch, search])
             setRecordedSearchType([...recordedSearchType, searchType])
         }
-        console.log('hmmm')
     }
 
     recordWrap.current = { recordSetup }

@@ -2,8 +2,11 @@ import { utilTime, loading, clearLoading } from "../services/utility"
 import GeneralModal from './GeneralModal'
 import UserService from '../services/UserService'
 import { UPDATE_SETTINGS } from '../context'
+import { useState } from "react"
 
 function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUserDet, handleLogout, handleShowDetails, settings }) {
+
+    let [misc, setMisc] = useState(false)
 
     const handleAccountDeletion = async (id) => {
         const confirm = window.confirm("Are you sure you want to delete your account?")
@@ -30,7 +33,7 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
 
         if (currentSettings.other)
             other = JSON.parse(currentSettings.other)
-        
+  console.log(other)      
         other = { ...other, [Object.keys(setting)[0]]: Object.values(setting)[0] }
         await UserService.updateUserOfId({ other: JSON.stringify(other)}, id) 
         
@@ -83,7 +86,7 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
                                 <>
                                     <p>Jump to {rooms[settings.jump] ? rooms[settings.jump].name : rooms[0]?.name} on login</p>
                                 
-                                    <select value={settings.jump} onChange={handleJumpChange}>
+                                    <select value={settings.jump} onChange={handleJumpChange} style={{ backgroundColor: 'lightgrey'}}>
                                         {rooms.map((room, i) => 
                                             <option key={room.id} value={i}>
                                                 {`${room.name} (${i + 1})`}
@@ -91,8 +94,25 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
                                         )}
                                     </select>
                                 </> : ''}
+
+                                <p>{!settings.roll || settings.roll === "Don't Roll" ? "Don't roll" : "Roll"} to a random book by default</p>
+                                <button onClick={() => handleOtherSettings(userDetails[user], { roll: !settings.roll || settings.roll === "Don't Roll" ? "Roll" : "Don't Roll" })}>{!settings.roll || settings.roll === "Don't Roll" ? "Roll" : "Don't Roll"}</button>
+
                                 <p>Delete my personal library and account information</p>
                                 <button onClick={() => handleAccountDeletion(userDetails[user])}>Delete</button>
+                                
+                                <h5 style={{ cursor: "pointer" }} onClick={() => setMisc(!misc)}>Learn More</h5>
+
+                                {misc &&
+                                   <ol style={{ fontSize: '12px'}}>
+                                        <li>When searching for a book, you can choose a different search parameter other than title by typing hashtag (#) and then the category (Example: <i>#author</i> or <i>#published</i>).</li>
+                                        <li>Discover a completely random book from your library by typing <i>#roll</i> in the search box.</li>
+                                        <li>Search multiple categories with <i>#all</i></li>
+                                        <li>You can use the greater than symbol ({'>'}) and the less than symbol ({'<'}) with publish date and pages. You can also combine them to find in-between values (Example: <i>{'>'} 1920</i> or <i>{'>'} 100 {'<'} 300</i>) </li>
+                                        <li>For publish date and pages, you can add the letter <i>s</i> at the end to search a ten year period or a span of one hundred pages. (Example: <i>1980s</i> or <i>400s</i>) </li>
+                                    </ol>
+                                }
+
                             </div>
                         </div>
                     </div>

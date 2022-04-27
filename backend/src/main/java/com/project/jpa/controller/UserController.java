@@ -118,10 +118,6 @@ public class UserController {
 		return jwtUtil.generateToken(user.getUsername());
 	}
 	
-//	@GetMapping("/api/users")
-//	public List<User> getAllShelves(Authentication auth) {
-//		return userRepo.findAll(); // equivalent to SELECT * FROM students
-//	}
 	
 	@GetMapping("/api/overview/{name}") 
 	public List<Map<String, Integer>> findUserInformation(@PathVariable String name) throws Exception {

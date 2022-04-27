@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { ADD_ROOM, REMOVE_ROOM, SET_ROOMS, TOGGLE_BKCASE_SELECT, UPDATE_ROOM } from "../context";
-import { randomNum, utilMsg, utilPath,rgbToHex } from "../services/utility";
+import { randomNum, utilMsg, utilPath, rgbToHex } from "../services/utility";
 
 import Rooms from "../services/RoomService";
 import Bookcases from "../services/BookcaseService";
+import BookService from "../services/BookService";
 
 const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path, settings, setup }) => {
 
@@ -38,6 +39,12 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
   let wrapper = useRef()
   let afterDeletionRef = useRef();
 
+  const rollRandomBook = async () => {
+    let book = await BookService.getRandomBookForUser(user)
+    let coord = await BookService.getBookCoordinates(book.id)
+    navigate(utilPath(coord, "coord"))
+  }
+
   const respondToRoomLengthChange = () => {
     if (rooms.length) {
       let initialJumpIndex = settings.jump ? settings.jump : 0
@@ -53,12 +60,23 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
             it will always switch to the first room after deleting any other room, which is not ideal.
           */
           roomSetup(0)
-          navigate(utilPath(path, "room", rooms[initialJumpIndex].id))
+
+          // Depends on the "roll" and "jump" settings
+          if (!settings.roll || settings.roll === "Don't Roll") {
+            navigate(utilPath(path, "room", rooms[initialJumpIndex].id))
+          } else {
+            rollRandomBook()
+          }
         }
       } else {
         roomSetup(0)
         // The timeout is to trick React and prevent the warning about using useNavigate on first render
-        setTimeout(() => navigate(utilPath(path, "room", rooms[initialJumpIndex].id)), 1)
+        // Depends on the "roll" and "jump" settings
+        if (!settings.roll || settings.roll === "Don't Roll") {
+          setTimeout(() => navigate(utilPath(path, "room", rooms[initialJumpIndex].id)), 1)
+        } else {
+          setTimeout(() => rollRandomBook(), 1)     
+        }
         // navigate(utilPath(path, "room", rooms[0].id))
       }
     } else {

@@ -7,8 +7,9 @@ import Bookz from '../services/BookService'
 import UserService from '../services/UserService'
 import SearchResults from "./SearchResults"
 
-import { clearLoading, loading } from "../services/utility";
+import { clearLoading, loading, utilPath } from "../services/utility";
 import Settings from "./Settings"
+import BookService from "../services/BookService"
 
 const Rooms = () => {
 
@@ -197,6 +198,12 @@ const Rooms = () => {
         setShowRooms(!showRooms)
     }
 
+    const rollRandomBook = async () => {
+        let book = await BookService.getRandomBookForUser(user)
+        let coord = await BookService.getBookCoordinates(book.id)
+        navigate(utilPath(coord, "coord"))
+    }
+
     const handleSearchChange = (e) => {
         let { value } = e.target
         if (value === "#genre") {
@@ -223,6 +230,10 @@ const Rooms = () => {
         } else if (value === "#pages") {
             setSearchType("pages")
             setSearch("")
+        } else if (value === "#roll") {
+            console.log('roll')
+            setSearch("")
+            rollRandomBook() 
         } else {
             if (searchType === "pages" || searchType === "published") {
                 let lastChar = value.charAt(value.length - 1)

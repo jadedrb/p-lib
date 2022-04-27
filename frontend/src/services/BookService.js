@@ -79,6 +79,10 @@ class BookService {
         return authAxios().get(`/books/${id}/coord`).then(r => this.format(r))
     }
 
+    getRandomBookForUser(user) {
+        return authAxios().get(`/books/${user}/roll`).then(r => this.format(r)) 
+    }
+
     ///
 
     getTitleInRoom(title, id) {
