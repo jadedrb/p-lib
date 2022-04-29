@@ -32,10 +32,6 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
         recordWrap.current.recordSetup()
     }, [books])
 
-    useEffect(() => {
-        console.log('first render')
-    }, [])
-
     const whereIsThisBook = async (id) => {
         if (bid === id) return
         let coord = await Books.getBookCoordinates(id)

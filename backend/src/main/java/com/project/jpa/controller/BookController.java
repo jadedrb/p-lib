@@ -263,19 +263,19 @@ public class BookController {
 	
 	@GetMapping("/books/{name}/roll") 
 	public Book findRandomBookForUser(@PathVariable String name) throws Exception {
-		System.out.println("1");
+
 		User user = userRepo.findByUsername(name).get(0);
-		System.out.println("2");
+	
 		List<Book> books = user.getBooks();
-		System.out.println("3");
+	
 		Random random = new Random();
-		System.out.println("4");
+		
 		Book book = books.get(random.nextInt(books.size()));
-		System.out.println("5");
+
 		System.out.println(book.toString());
-		System.out.println("6");
+		
 		validUserAccess(book);
-		System.out.println("7");
+	
 
 		return book;
 	}

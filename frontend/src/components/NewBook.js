@@ -37,6 +37,8 @@ const NewBook = ({ setCurrShelf }) => {
   let [shelfPres, setShelfPres] = useState(null);
   let [currentBook, setCurrentBook] = useState(null);
 
+  // let [extraData, setExtraData] = useState('');
+
   useEffect(() => {
     setCurrentFocus(firstInput.current);
   }, []);
@@ -163,11 +165,12 @@ const NewBook = ({ setCurrShelf }) => {
         let obj = curr.volumeInfo
         let pckge = {}
         if (obj?.title === inputs.title) {
-          pckge.author = obj?.authors?.[0]
+          pckge.author = obj?.authors?.[0] ? obj?.authors?.[0] : ''
           pckge.more = obj?.description?.length <= 255 ? obj?.description : obj?.description ? obj?.description?.slice(0,252) + '...' : ''
-          pckge.pages = obj?.pageCount
+          pckge.pages = obj?.pageCount ? obj?.pageCount : ''
           pckge.pdate = obj.publishedDate & obj?.publishedDate?.length < 5 ? obj.publishedDate : obj.publishedDate?.slice(0,4)
-          pckge.genre = obj?.categories?.[0]
+          pckge.genre = obj?.categories?.[0] ? obj?.categories?.[0] : ''
+          // pckge.extraData = obj?.description?.length <= 255 ? '' : obj?.description
           return [...acc, pckge]
         }
         return acc
@@ -177,6 +180,13 @@ const NewBook = ({ setCurrShelf }) => {
         valid = valid.filter(obj => obj.author === inputs.author)
       }   
       valid = valid[Math.floor(Math.random() * valid.length)]
+      
+      // if (valid?.extraData) 
+      //   setExtraData(valid.extraData)
+      
+      // if (valid)
+      //   delete valid.extraData
+
       setInputs({ ...inputs, ...valid });
   }
 
@@ -239,7 +249,7 @@ const NewBook = ({ setCurrShelf }) => {
           />
           <label htmlFor="color">
             Color
-            {edit && <span onClick={() => setColorType(!colorType)} className="color-alt" />}
+            {edit && <span style={{ backgroundColor: inputs.color }} onClick={() => setColorType(!colorType)} className="color-alt" />}
           </label>
           <input
             readOnly={edit ? false : true}
@@ -314,6 +324,13 @@ const NewBook = ({ setCurrShelf }) => {
             maxLength={255}
             style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
+          {/* {extraData &&
+            <textarea
+              readOnly={true}
+              value={extraData}
+              style={{ backgroundColor: '#ECECEC' }}
+          />
+          } */}
           {edit &&
           <input 
             type="button"

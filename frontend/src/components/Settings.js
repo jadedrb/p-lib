@@ -33,7 +33,7 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
 
         if (currentSettings.other)
             other = JSON.parse(currentSettings.other)
-  console.log(other)      
+   
         other = { ...other, [Object.keys(setting)[0]]: Object.values(setting)[0] }
         await UserService.updateUserOfId({ other: JSON.stringify(other)}, id) 
         

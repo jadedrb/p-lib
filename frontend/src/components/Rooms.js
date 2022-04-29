@@ -231,7 +231,6 @@ const Rooms = () => {
             setSearchType("pages")
             setSearch("")
         } else if (value === "#roll") {
-            console.log('roll')
             setSearch("")
             rollRandomBook() 
         } else {
