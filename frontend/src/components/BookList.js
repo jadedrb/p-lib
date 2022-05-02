@@ -93,7 +93,7 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
                 <td>{b.genre}</td>
                 <td>{b.pages}</td>
                 <td>{b.pdate}</td>
-                <td>{b.more}</td>
+                <td className={`${b.id !== bid ? 'bk-more' : ''}`}>{b.more}</td>
             </tr>
         )
     })

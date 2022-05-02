@@ -68,7 +68,7 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
                 <td>{b.genre}</td>
                 <td>{b.pages}</td>
                 <td>{b.pdate}</td>
-                <td>{b.more}</td>
+                <td className='bk-more'>{b.more}</td>
             </tr>
         )
     })

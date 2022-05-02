@@ -26,7 +26,7 @@ const Rooms = () => {
     let [results, setResults] = useState([])
     let [typing, setTyping] = useState(false)
     let [showResults, setShowResults] = useState(true)
-    // let [searchParams, setSearchParams] = useState('')
+    let [extraStuff, setExtraStuff] = useState(false)
     let [searchIn, setSearchIn] = useState("library")
     let [searchType, setSearchType] = useState("title")
     let [showUserDet, setShowUserDet] = useState(false)
@@ -284,6 +284,36 @@ const Rooms = () => {
                     searchIn={searchIn}
                     setResults={setResults} /> 
             : null}
+
+            {!extraStuff &&
+            <svg style={{ zIndex: '1' }} onClick={() => setExtraStuff(!extraStuff)} xmlns="http://www.w3.org/2000/svg" className="extra-stuff" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>}
+
+            {extraStuff &&
+            <svg onClick={() => setExtraStuff(!extraStuff)} xmlns="http://www.w3.org/2000/svg" className="extra-stuff" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>}
+
+            {extraStuff &&
+            <div className="extra-stuff-clicked" onClick={(e) => e.target.classList.contains('extra-stuff-clicked') ? setExtraStuff(!extraStuff) : null}>
+                
+            </div>
+            }
+
+            {extraStuff &&
+            <>
+                <div className="top-extra"></div>
+                <div className="dropdown-extra">
+                    <div className="drop" onClick={() => {
+                        setExtraStuff(!extraStuff)
+                        handleShowDetails()
+                    }}>Settings</div>
+                    <div className="drop" onClick={handleLogout}>Logout</div>
+                </div>
+            </>
+            }
+
             <button className="logout" onClick={handleLogout}>Logout</button>
             <h4 className="welcome"><span>{user && `welcome`}</span> <span onClick={handleShowDetails}>{user}</span></h4>
             <div className={user ? "b-sec-center" : "b-sec-center b-sec-fade"}>
