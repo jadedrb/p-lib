@@ -9,6 +9,7 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
     let [recordedSearch, setRecordedSearch] = useState([])
     let [recordedSearchType, setRecordedSearchType] = useState([])
     let [ascDesc, setAscDesc] = useState(true)
+    let [height, setHeight] = useState(50)
 
     let resultRef = useRef()
 
@@ -30,6 +31,10 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
 
     useEffect(() => {
         recordWrap.current.recordSetup()
+        
+        let height = resultRef.current.clientHeight
+        height = height < 50 ? 50 : height < 350 ? height : 350
+        setHeight(height)
     }, [books])
 
     const whereIsThisBook = async (id) => {
@@ -73,8 +78,10 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
         )
     })
 
+    // const height =  !renderedBooks.length ? 50 : renderedBooks.length * 90 < 350 ? renderedBooks.length * 90 : 350 
+
     return (
-        <div className={`table-contain search-c ${!renderedBooks.length && 'table-cc'}`}>
+        <div style={{ height }} className={`table-contain search-c ${!renderedBooks.length && 'table-cc'}`}>
             <div className='x-results-wrapper' style={{ height: resultRef?.current?.offsetHeight ? `${resultRef.current.offsetHeight}px` : '100px' }}><div className="pm-r min-room x-results" onClick={closeSearchResults}>X</div></div>
             {renderedBooks.length ? <h5>results: {renderedBooks.length}</h5> : null}
             <h6>{recordedSearch.map((rec, i, arr) => <span key={i}>{`"${rec}" in ${recordedSearchType[i]}`}{arr.length > 1 && i !== arr.length -1 ? ' & ' : ''}</span>)}</h6>

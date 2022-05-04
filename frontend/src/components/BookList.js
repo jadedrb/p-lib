@@ -16,6 +16,7 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
 
     let [modalPic, setModalPic] = useState(false)
 
+
     useEffect(() => {
    
         if (bid) {
@@ -105,8 +106,10 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
             setOrder(o)
     }
 
+    const height =  !renderedBooks.length ? 50 : renderedBooks.length * 50 < 350 ? renderedBooks.length * 50 : 350 
+
     return (
-        <div className={`table-contain booklist-r ${!renderedBooks.length && 'table-cc'}`} onClick={(e) => { if (e.target.type !== "td") setFocusOn(false) }}>
+        <div style={{ height }} className={`table-contain booklist-r ${!renderedBooks.length && 'table-cc'}`} onClick={(e) => { if (e.target.type !== "td") setFocusOn(false) }}>
             {renderedBooks.length ? <h5>books: {renderedBooks.length}</h5> : null}
             {renderedBooks?.length ? 
                 <table className='booklist'>
