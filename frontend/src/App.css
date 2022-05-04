@@ -336,14 +336,16 @@ Search
     justify-content: space-around;
     position: absolute;
     right: 0;
-    top: 20px;
+    top: 15px;
     width: 300px;
+    
 }
 .search-lib input {
     border: none;
     background-color: rgb(226, 225, 214);
     border-radius: 5px;
     height: 18px;
+    padding: 3px;
 }
 .search-lib input:focus {
     outline: 3px solid rgb(224, 223, 223);
@@ -362,12 +364,15 @@ Search
     top: -10px;
     height: 20px;
     font-size: 1rem;
+  
+    padding: 1px;
 }
 
 .x-results-wrapper {
     position: absolute;
     right: 3px;
     top: 0;
+    z-index: 100;
 }
 
 .search-lib select {
@@ -908,5 +913,16 @@ tr td:nth-child(7) {
     }
     .extra-stuff {
         display: flex;
+    }
+    .search-lib {
+        width: 100%;
+        justify-content: center;
+    }
+    .search-lib input {
+        margin-left: 10px;
+        width: 120px;
+    }
+    td {
+        font-size: 12px;
     }
 }

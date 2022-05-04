@@ -27,6 +27,7 @@ const Rooms = () => {
     let [typing, setTyping] = useState(false)
     let [showResults, setShowResults] = useState(true)
     let [extraStuff, setExtraStuff] = useState(false)
+    let [extraStuffHeight, setExtraStuffHeight] = useState(false)
     let [searchIn, setSearchIn] = useState("library")
     let [searchType, setSearchType] = useState("title")
     let [showUserDet, setShowUserDet] = useState(false)
@@ -286,7 +287,11 @@ const Rooms = () => {
             : null}
 
             {!extraStuff &&
-            <svg style={{ zIndex: '1' }} onClick={() => setExtraStuff(!extraStuff)} xmlns="http://www.w3.org/2000/svg" className="extra-stuff" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg style={{ zIndex: '1' }} onClick={() => {
+                setExtraStuff(!extraStuff)
+                let body = document.querySelector('body')
+                setExtraStuffHeight(body.clientHeight > window.innerHeight ? body.clientHeight + 100 : window.innerHeight)
+            }} xmlns="http://www.w3.org/2000/svg" className="extra-stuff" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>}
 
@@ -296,7 +301,10 @@ const Rooms = () => {
             </svg>}
 
             {extraStuff &&
-            <div className="extra-stuff-clicked" onClick={(e) => e.target.classList.contains('extra-stuff-clicked') ? setExtraStuff(!extraStuff) : null}>
+            <div style={{ height: extraStuffHeight }} className="extra-stuff-clicked" onClick={(e) => {
+                if (e.target.classList.contains('extra-stuff-clicked')) 
+                    setExtraStuff(!extraStuff) 
+            }}>
                 
             </div>
             }
