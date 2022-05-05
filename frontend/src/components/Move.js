@@ -129,7 +129,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
                 let payload = await RoomService.getRoomOfId(selRoom)
                 dispatch({ type: UPDATE_ROOM, payload });
             }
-            navigate(utilPath(path, 'shelf', selShelf))
+            // navigate(utilPath(path, 'shelf', selShelf))
         } else {
             if (from === "book") {
                 await handleCopy([book])
@@ -147,7 +147,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
                 dispatch({ type: UPDATE_ROOM, payload });
             }
         }
-       // 
+        navigate(utilPath(path, 'shelf', selShelf))
     }
 
     const handleBookcaseAdjust = async (e) => {
