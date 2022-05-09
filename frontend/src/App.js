@@ -31,7 +31,7 @@ function App() {
       let token = localStorage.getItem("token")
       let time = localStorage.getItem("time")
 
-      if ((new Date() - new Date(time)) > (1000 * 60 * 60 * 10)) {
+      if ((new Date() - new Date(time)) > (1000 * 60 * 60 * 72)) {
         token = false
         localStorage.removeItem("token")
         localStorage.removeItem("time")
@@ -80,7 +80,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.33')
+      console.log('v1.35')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))

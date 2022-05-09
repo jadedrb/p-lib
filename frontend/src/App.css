@@ -402,6 +402,11 @@ Search
     animation: spin .5s linear infinite, purp 30s forwards;
 }
 
+/* Because it's being weird */
+.u-modal .loading .loader {
+    display: none;
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
@@ -741,6 +746,7 @@ select {
         transform: translate(-50%, -50%);
         padding: 40px;
   }
+  
 
   .u-modal div {
       position: absolute;
@@ -770,6 +776,19 @@ select {
       flex-direction: column;
       justify-content: center;
   }
+
+  .u-modal-set select {
+    align-self: center;
+    padding: 3px;
+    width: 50%;
+    text-align: center;
+  }
+
+  /* #loading-area-thing {
+      border: 15px solid black;
+      height: 200px;
+
+  } */
 
   .u-modal button {
       align-self: center;

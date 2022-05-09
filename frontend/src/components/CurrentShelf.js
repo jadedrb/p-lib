@@ -15,6 +15,7 @@ function CurrentShelf() {
     let [showShelf, setShowShelf] = useState(true)
     let [showBook, setShowBook] = useState(true)
     let [currShelf, setCurrShelf] = useState(null)
+    // let [currBkcase, setCurrBkcase] = useState(null)
     let [shelfPos, setShelfPos] = useState({})
 
     let wrapper = useRef()
@@ -45,6 +46,7 @@ function CurrentShelf() {
     
         setShelfPos({ top, bot, swap })
         setCurrShelf(shelf)
+        // setCurrBkcase(bkcase)
         setOrder(shelf?.organize ? shelf.organize : "lastname asc")
         setMove(false)
     }, [shid, rid, bcid, rooms])

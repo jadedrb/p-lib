@@ -24,6 +24,7 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
     }
 
     const handleOtherSettings = async (id, setting) => {
+
         loading(".u-modal")
         let currentSettings = await UserService.getUserByName(user)
         let other = {}

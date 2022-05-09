@@ -16,7 +16,6 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
 
     let [modalPic, setModalPic] = useState(false)
 
-
     useEffect(() => {
    
         if (bid) {

@@ -78,7 +78,7 @@ let perCount = 0
 // let green = 255
 
 export function loading(where, initial, extra) {
-
+console.trace()
     let el = document.querySelector(where)
     let prev = document.querySelector(".loading")
 

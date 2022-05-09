@@ -7,7 +7,7 @@ import Bookz from '../services/BookService'
 import UserService from '../services/UserService'
 import SearchResults from "./SearchResults"
 
-import { clearLoading, loading, utilPath } from "../services/utility";
+import { utilPath } from "../services/utility";
 import Settings from "./Settings"
 import BookService from "../services/BookService"
 
@@ -264,11 +264,11 @@ const Rooms = () => {
 
     const handleShowDetails = async () => {
         if (!showUserDet) {
-            setTimeout(() => loading(".u-modal"), 1)
+            // setTimeout(() => loading(".u-modal"), 1)
             setShowUserDet(!showUserDet)
             let usr = await UserService.getUserDetails(user)
             setUserDetails(usr.filter(ud => ud.hasOwnProperty(user))[0])
-            clearLoading()
+            // clearLoading()
         } else {
             setShowUserDet(!showUserDet)
         }
