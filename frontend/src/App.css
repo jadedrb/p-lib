@@ -338,7 +338,7 @@ Search
     right: 0;
     top: 15px;
     width: 300px;
-    
+
 }
 .search-lib input {
     border: none;
@@ -350,6 +350,35 @@ Search
 .search-lib input:focus {
     outline: 3px solid rgb(224, 223, 223);
 }
+.cat-deet {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 100px;
+    top: 24px;
+    right: 10px;
+    width: 116px;
+    border: 1px solid black;
+    background-color: rgb(231, 231, 231);
+    z-index: 110;
+    overflow: hidden;
+    white-space: nowrap;
+    padding-left: 20px;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+.cat-deet div {
+    padding: 5px;
+    cursor: pointer;
+}
+.cat-deet span {
+    position: absolute;
+    padding-top: 2px;
+    left: 0;
+    font-size: 12px;
+    color: rgb(164, 164, 164);
+}
+
 /* 
 .x-results {
     position: absolute;
@@ -974,5 +1003,9 @@ tr td:nth-child(7) {
     }
     .u-modal ul li:nth-child(1) {
         display: none;
+    }
+    .cat-deet {
+        width: 100px;
+        right: 20%;
     }
 }

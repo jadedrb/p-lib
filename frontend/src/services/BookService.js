@@ -83,6 +83,10 @@ class BookService {
         return authAxios().get(`/books/${user}/roll`).then(r => this.format(r)) 
     }
 
+    getUserCategoryCount(user, category) {
+        return authAxios().get(`/books/${user}/${category}`).then(r => this.format(r)) 
+    }
+
     ///
 
     getTitleInRoom(title, id) {

@@ -32,12 +32,13 @@ const Rooms = () => {
     let [searchType, setSearchType] = useState("title")
     let [showUserDet, setShowUserDet] = useState(false)
     let [userDetails, setUserDetails] = useState({})
+    let [categoryDetails, setCategoryDetails] = useState(null)
 
     useEffect(() => {
         let delay;
         setTyping(true)
         setShowResults(true)
-        if (search.charAt(0) === "#") return
+        if (search.charAt(0) === "#" || search.charAt(0) === "?") return
         if (search) {
             delay = setTimeout(async () => {
                 let res = await wrapperRef.current.determineSearchArea(search, user)
@@ -207,33 +208,16 @@ const Rooms = () => {
 
     const handleSearchChange = (e) => {
         let { value } = e.target
-        if (value === "#genre") {
-            setSearchType("genre")
-            setSearch("")
-        } else if (value === "#all") {
-            setSearchType("all")
-            setSearch("")
-        } else if (value === "#title") {
-            setSearchType("title")
-            setSearch("")
-        } else if (value === "#more") {
-            setSearchType("more")
-            setSearch("")
-        } else if (value === "#color") {
-            setSearchType("color")
-            setSearch("")
-        } else if (value === "#author") {
-            setSearchType("author")
-            setSearch("")
-        } else if (value === "#published") {
-            setSearchType("published")
-            setSearch("")
-        } else if (value === "#pages") {
-            setSearchType("pages")
+        if (value === "#genre" || value === "#all" || value === "#title" || value === "#more" || value === "#color" || value === "#author" || value === "#published" || value === "#pages") {
+            setSearchType(value.slice(1))
             setSearch("")
         } else if (value === "#roll") {
             setSearch("")
             rollRandomBook() 
+        } else if (value === "?genres" || value === "?authors" || value === "?colors") {
+            BookService.getUserCategoryCount(user, value.slice(1)).then(details => setCategoryDetails(details))
+            setSearchType(value.slice(1, value.length - 1))
+            setSearch("")
         } else {
             if (searchType === "pages" || searchType === "published") {
                 let lastChar = value.charAt(value.length - 1)
@@ -243,6 +227,8 @@ const Rooms = () => {
             } else {
                 setSearch(value)
             }
+            if (categoryDetails) 
+                setCategoryDetails(null)
         }
     }
 
@@ -341,6 +327,19 @@ const Rooms = () => {
                     placeholder={searchType}
                     onChange={handleSearchChange}
                 />
+                {categoryDetails &&
+                <div className="cat-deet">
+                    {Object.keys(categoryDetails).map((details, i) =>
+                        <div style={{ color: searchType === 'color' ? details : null }} key={i} onClick={() => {
+                            setSearch(details)
+                            setCategoryDetails(null)
+                        }}>
+                            <span>({categoryDetails[details]})</span>
+                            {details}
+                        </div> 
+                    )}
+                </div>
+                }
             </label>
            
 
