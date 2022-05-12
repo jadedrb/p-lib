@@ -8,6 +8,7 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
     let [order, setOrder] = useState("")
     let [recordedSearch, setRecordedSearch] = useState([])
     let [recordedSearchType, setRecordedSearchType] = useState([])
+    let [recordedSearchIn, setRecordedSearchIn] = useState('')
     let [ascDesc, setAscDesc] = useState(true)
     let [height, setHeight] = useState(50)
     let [right, setRight] = useState(0)
@@ -25,6 +26,9 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
         } else {
             setRecordedSearch([...recordedSearch, search])
             setRecordedSearchType([...recordedSearchType, searchType])
+        }
+        if (searchIn !== 'library' && searchIn !== 'results') {
+            setRecordedSearchIn(searchIn)
         }
     }
 
@@ -86,7 +90,7 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
         <div style={{ height }} className={`table-contain search-c ${!renderedBooks.length && 'table-cc'}`} onScroll={(e) => setRight(e.target.scrollLeft)}>
             <div className='x-results-wrapper' style={{ height: resultRef?.current?.offsetHeight ? `${resultRef.current.offsetHeight}px` : '100px', right: `-${Math.floor(right)}px` }}><div className="pm-r min-room x-results" onClick={closeSearchResults}>X</div></div>
             {renderedBooks.length ? <h5>results: {renderedBooks.length}</h5> : null}
-            <h6>{recordedSearch.map((rec, i, arr) => <span key={i}>{`"${rec}" in ${recordedSearchType[i]}`}{arr.length > 1 && i !== arr.length -1 ? ' & ' : ''}</span>)}</h6>
+            <h6>{recordedSearch.map((rec, i, arr) => <span key={i}>{`"${rec}" in ${recordedSearchType[i]}`}{arr.length > 1 && i !== arr.length -1 ? ' & ' : ''}</span>)}{recordedSearchIn ? ` from ${recordedSearchIn}` : ''}</h6>
             {renderedBooks?.length ? 
                 <table className='booklist' ref={resultRef}>
                     <thead>
