@@ -1,6 +1,7 @@
 package com.project.jpa.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -278,6 +279,64 @@ public class BookController {
 	
 
 		return book;
+	}
+	
+	
+	@GetMapping("/books/{name}/{category}") 
+	public Map<String, Integer> findCountForEachCategory(@PathVariable String name, @PathVariable String category) throws Exception {
+		
+		User user = userRepo.findByUsername(name).get(0);
+		
+		List<Book> books = user.getBooks();
+		
+		validUserAccess(books.get(0));
+		
+		Map<String, Integer> catInfoDraft = new HashMap<>();
+		Map<String, Integer> catInfoFinal = new HashMap<>();
+		
+		for (Book book : books) {
+			
+			String key = "";
+			
+			if (category.equals("authors"))
+				key = book.getAuthor();
+			
+			if (category.equals("colors"))
+				key = book.getColor();
+			
+			if (category.equals("genres"))
+				key = book.getGenre();
+			
+			if (key.contains("/")) {
+				for (String k : key.split("/")) {
+					k = k.trim();
+					catInfoDraft.put(k, catInfoDraft.getOrDefault(k, 0) + 1);
+					
+					if (catInfoDraft.get(k) >= 3 || !category.equals("authors")) 
+						catInfoFinal.put(k, catInfoDraft.get(k));
+				}
+			}
+			else if (key.contains("&")) {
+				for (String k : key.split("&")) {
+					k = k.trim();
+					catInfoDraft.put(k, catInfoDraft.getOrDefault(k, 0) + 1);
+					
+					if (catInfoDraft.get(k) >= 3 || !category.equals("authors")) 
+						catInfoFinal.put(k, catInfoDraft.get(k));
+				}
+			}
+			else {
+				catInfoDraft.put(key, catInfoDraft.getOrDefault(key, 0) + 1);
+				
+				if (catInfoDraft.get(key) >= 3 || !category.equals("authors")) 
+					catInfoFinal.put(key, catInfoDraft.get(key));
+			}
+				
+		
+		}
+		
+
+		return catInfoFinal;
 	}
 	
 	
