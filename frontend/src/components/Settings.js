@@ -107,6 +107,8 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
                                         <li>Search multiple categories with <i>#all</i></li>
                                         <li>You can use the greater than symbol ({'>'}) and the less than symbol ({'<'}) with publish date and pages. You can also combine them to find in-between values (Example: <i>{'>'} 1920</i> or <i>{'>'} 100 {'<'} 300</i>) </li>
                                         <li>For publish date and pages, you can add the letter <i>s</i> at the end to search a ten year period or a span of one hundred pages. (Example: <i>1980s</i> or <i>400s</i>) </li>
+                                        <li>Type <i>?authors</i>, <i>?genres</i>, or <i>?colors</i> to see a list of potential search options for each category.</li>
+                                        <li>Feel free to separate authors and genres with an ampersand ({'&'}) or a slash (/) when inputting data.</li>
                                     </ol>
                                 </details>
 
