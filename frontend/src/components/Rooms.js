@@ -323,7 +323,7 @@ const Rooms = () => {
                     {results.length && <option value="results">Search Results:</option>}
                 </select>
                 <input 
-                    onBlur={() => setCategoryDetails(null)}
+                    onBlur={() => setTimeout(() => setCategoryDetails(null), 100)}
                     value={search} 
                     placeholder={searchType}
                     onChange={handleSearchChange}
