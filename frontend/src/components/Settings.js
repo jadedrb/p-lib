@@ -102,6 +102,7 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
                                 <details>
                                     <summary>Learn More</summary>
                                     <ol style={{ fontSize: '12px'}}>
+                                        <li>The <i>color</i> of a book is meant to correspond to the color of its spine, which is what you'd see first on the shelf.</li>
                                         <li>When searching for a book, you can choose a different search parameter other than title by typing hashtag (#) and then the category (Example: <i>#author</i> or <i>#published</i>).</li>
                                         <li>Discover a completely random book from your library by typing <i>#roll</i> in the search box.</li>
                                         <li>Search multiple categories with <i>#all</i></li>
