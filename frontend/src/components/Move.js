@@ -218,7 +218,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
                 <option value="contents">Every book on this shelf</option>
                 <option value="selected">Selected books from this shelf</option>
             </select> :
-            <p style={{ fontWeight: "bold" }}>{bkcase.location ? 'wow' : "Untitled Bookcase"} (id: {bkcase.id})</p>
+            <p style={{ fontWeight: "bold" }}>{bkcase.location ? bkcase.location : "Untitled Bookcase"} (id: {bkcase.id})</p>
             }
             <p style={{ opacity: ".4" }}>{from !== "bkcase" ? "To..." : "In..."}</p>
 

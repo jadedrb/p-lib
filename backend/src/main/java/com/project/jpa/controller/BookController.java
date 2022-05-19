@@ -162,6 +162,7 @@ public class BookController {
 		oldBook.setPdate(newBook.getPdate());
 		oldBook.setColor(newBook.getColor());
 		oldBook.setMore(newBook.getMore());
+		oldBook.setLang(newBook.getLang());
 		
 		return bookRepo.save(oldBook);
 	}

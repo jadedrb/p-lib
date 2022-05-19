@@ -32,6 +32,7 @@ public class Book {
 	private int pdate;
 	private String color;
 	private String more;
+	private String lang;
 	
 	@UpdateTimestamp
 	private Date recorded_on;
@@ -54,7 +55,7 @@ public class Book {
 	
 	public Book() {}
 
-	public Book(String title, String author, String genre, int pages, int pdate, String color, String more) {
+	public Book(String lang, String title, String author, String genre, int pages, int pdate, String color, String more) {
 		super();
 		this.title = title;
 		this.author = author;
@@ -63,6 +64,7 @@ public class Book {
 		this.pdate = pdate;
 		this.color = color;
 		this.more = more;
+		this.lang = lang;
 	}
 	
 	
@@ -169,6 +171,14 @@ public class Book {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public String getLang() {
+		return lang;
+	}
+
+	public void setLang(String lang) {
+		this.lang = lang;
 	}
 
 	

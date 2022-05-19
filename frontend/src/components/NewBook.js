@@ -24,7 +24,8 @@ const NewBook = ({ setCurrShelf }) => {
     pages: "",
     pdate: "",
     color: "",
-    more: ""
+    more: "",
+    lang: ""
   })
 
   let [edit, setEdit] = useState(bid ? false : true)
@@ -47,8 +48,8 @@ const NewBook = ({ setCurrShelf }) => {
     let { book, shelf } = utilitySelector(rid, bcid, shid, rooms, bid)
     if (bid) {
       if (book) { 
-        let { title, author, genre, pages, pdate, color, more } = book
-        setInputs({ title, author, genre, pages, pdate, color, more })
+        let { title, author, genre, pages, pdate, color, more, lang } = book
+        setInputs({ title, author, genre, pages, pdate, color, more, lang })
       }
     } else {
       setInputs(initialInputs.current)
@@ -284,14 +285,14 @@ const NewBook = ({ setCurrShelf }) => {
             maxLength={255}
             style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
-          <label htmlFor="pages">Pages</label>
+          <label htmlFor="lang">Language</label>
           <input
             readOnly={edit ? false : true}
-            id="pages"
-            placeholder="Page Count"
-            name="pages"
-            type="number"
-            value={inputs.pages}
+            id="lang"
+            placeholder="Language"
+            name="lang"
+            maxLength={255}
+            value={inputs.lang}
             onChange={handleInput}
             onKeyPress={handleEnter}
             onClick={handleClick}
@@ -306,6 +307,19 @@ const NewBook = ({ setCurrShelf }) => {
             type="number"
             max="999"
             value={inputs.pdate}
+            onChange={handleInput}
+            onKeyPress={handleEnter}
+            onClick={handleClick}
+            style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
+          />
+          <label htmlFor="pages">Pages</label>
+          <input
+            readOnly={edit ? false : true}
+            id="pages"
+            placeholder="Page Count"
+            name="pages"
+            type="number"
+            value={inputs.pages}
             onChange={handleInput}
             onKeyPress={handleEnter}
             onClick={handleClick}
