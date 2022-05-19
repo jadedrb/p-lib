@@ -51,6 +51,9 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 	@Query("select b from User u JOIN u.books b WHERE u.username = :un AND lower(b.author) LIKE lower(concat('%', :a,'%'))")
 	List<Book> findAuthorForUser(@Param("a") String author, @Param("un") String username);
 	
+	@Query("select b from User u JOIN u.books b WHERE u.username = :un AND lower(b.lang) LIKE lower(concat('%', :l,'%'))")
+	List<Book> findLangForUser(@Param("l") String lang, @Param("un") String username);
+	
 	// u.books is a collection and books is a property of the user object
 	
 	// Find within a room ("...WHERE r.id = :id" would also work, but I did it the other way just to prove to myself I could)
@@ -75,6 +78,9 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 	
 	@Query("select b from Room r JOIN r.books b WHERE b.room.id = :id AND lower(b.more) LIKE lower(concat('%', :m,'%'))")
 	List<Book> findMoreInRoom(@Param("m") String more, @Param("id") long id);
+	
+	@Query("select b from Room r JOIN r.books b WHERE b.room.id = :id AND lower(b.lang) LIKE lower(concat('%', :l,'%'))")
+	List<Book> findLangInRoom(@Param("l") String lang, @Param("id") long id);
 	
 	@Query("select b from Room r JOIN r.books b WHERE b.room.id = :id AND b.pdate < :low AND b.pdate > :high")
 	List<Book> findPublishDateInRoom(@Param("low") int low, @Param("high") int high, @Param("id") long id);
@@ -105,6 +111,9 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 	@Query("select b from Bookcase bk JOIN bk.books b WHERE b.bookcase.id = :id AND lower(b.more) LIKE lower(concat('%', :m,'%'))")
 	List<Book> findMoreInBookcase(@Param("m") String more, @Param("id") long id);
 	
+	@Query("select b from Bookcase bk JOIN bk.books b WHERE b.bookcase.id = :id AND lower(b.lang) LIKE lower(concat('%', :l,'%'))")
+	List<Book> findLangInBookcase(@Param("l") String lang, @Param("id") long id);
+	
 	@Query("select b from Bookcase bk JOIN bk.books b WHERE b.bookcase.id = :id AND b.pdate < :low AND b.pdate > :high")
 	List<Book> findPublishDateInBookcase(@Param("low") int low, @Param("high") int high, @Param("id") long id);
 	
@@ -133,6 +142,9 @@ public interface BookRepository extends JpaRepository<Book,Long> {
 	
 	@Query("select b from Shelf sh JOIN sh.books b WHERE b.shelf.id = :id AND lower(b.more) LIKE lower(concat('%', :m,'%'))")
 	List<Book> findMoreInShelf(@Param("m") String more, @Param("id") long id);
+	
+	@Query("select b from Shelf sh JOIN sh.books b WHERE b.shelf.id = :id AND lower(b.lang) LIKE lower(concat('%', :l,'%'))")
+	List<Book> findLangInShelf(@Param("l") String lang, @Param("id") long id);
 	
 	@Query("select b from Shelf sh JOIN sh.books b WHERE b.shelf.id = :id AND b.pdate < :low AND b.pdate > :high")
 	List<Book> findPublishDateInShelf(@Param("low") int low, @Param("high") int high, @Param("id") long id);

@@ -91,8 +91,9 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
                 <td>{b.author}</td>
                 <td style={{ color: bid === b?.id && focusOn ? b.color : 'black', backgroundColor: bid === b?.id && focusOn && b.color === "white" ? "lightgrey" : 'inherit' }}>{b.color}</td>
                 <td>{b.genre}</td>
-                <td>{b.pages}</td>
+                <td>{b.lang}</td>
                 <td>{b.pdate}</td>
+                <td>{b.pages}</td>
                 <td className={`${b.id !== bid ? 'bk-more' : ''}`}>{b.more}</td>
             </tr>
         )
@@ -118,8 +119,9 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
                             <th onClick={() => handleOrder("author")}>author</th>
                             <th onClick={() => handleOrder("color")}>color</th>
                             <th onClick={() => handleOrder("genre")}>genre</th>
-                            <th onClick={() => handleOrder("pages")}>pages</th>
+                            <th onClick={() => handleOrder("lang")}>language</th>
                             <th onClick={() => handleOrder("pdate")}>published</th>
+                            <th onClick={() => handleOrder("pages")}>pages</th>
                             <th onClick={() => handleOrder("more")}>more</th>
                         </tr>
                     </thead>

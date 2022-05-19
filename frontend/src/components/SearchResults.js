@@ -77,8 +77,9 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
                 <td>{b.author}</td>
                 <td>{b.color}</td>
                 <td>{b.genre}</td>
-                <td>{b.pages}</td>
+                <td>{b.lang}</td>
                 <td>{b.pdate}</td>
+                <td>{b.pages}</td>
                 <td className='bk-more'>{b.more}</td>
             </tr>
         )
@@ -99,8 +100,9 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
                             <th onClick={() => handleOrder("author")}>author</th>
                             <th onClick={() => handleOrder("color")}>color</th>
                             <th onClick={() => handleOrder("genre")}>genre</th>
-                            <th onClick={() => handleOrder("pages")}>pages</th>
+                            <th onClick={() => handleOrder("lang")}>language</th>
                             <th onClick={() => handleOrder("pdate")}>published</th>
+                            <th onClick={() => handleOrder("pages")}>pages</th>
                             <th onClick={() => handleOrder("more")}>more</th>
                         </tr>
                     </thead>

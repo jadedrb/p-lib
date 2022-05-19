@@ -181,12 +181,6 @@ const NewBook = ({ setCurrShelf }) => {
         valid = valid.filter(obj => obj.author === inputs.author)
       }   
       valid = valid[Math.floor(Math.random() * valid.length)]
-      
-      // if (valid?.extraData) 
-      //   setExtraData(valid.extraData)
-      
-      // if (valid)
-      //   delete valid.extraData
 
       setInputs({ ...inputs, ...valid });
   }
@@ -265,13 +259,6 @@ const NewBook = ({ setCurrShelf }) => {
             maxLength={255}
             style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
-          {/* {edit &&
-          <input 
-            type="button"
-            value=" "
-            name="skip"
-            onClick={() => setColorType(!colorType)}
-          />} */}
           <label htmlFor="genre">Genre</label>
           <input
             readOnly={edit ? false : true}
@@ -336,7 +323,7 @@ const NewBook = ({ setCurrShelf }) => {
             onKeyPress={handleEnter}
             onClick={handleClick}
             maxLength={255}
-            style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
+            style={{ backgroundColor: edit ? 'white' : '#ECECEC', minHeight: "100px" }}
           />
           {/* {extraData &&
             <textarea

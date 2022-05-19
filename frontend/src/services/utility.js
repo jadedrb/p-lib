@@ -183,7 +183,7 @@ export function utilOrder(results, order, toggle) {
             order = order.split(" ")[0]
         }
     }
-    if (order === "author" || order === "title" || order === "color" || order === "more" || order === "genre") {
+    if (order === "author" || order === "title" || order === "color" || order === "more" || order === "genre" || order === "lang") {
         return results.sort((a, b) => {
             let aa = { ...a }
             let bb = { ...b }

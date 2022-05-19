@@ -123,6 +123,8 @@ const Rooms = () => {
                     return Bookz.getPublishDateForUser(parsePagesAndDate(search), user)
                 if (searchType === "pages")
                     return Bookz.getPagesForUser(parsePagesAndDate(search), user)
+                if (searchType === "language")
+                    return Bookz.getLangForUser(search, user)
                 return []
             case "room":
                 if (searchType === "title") 
@@ -141,6 +143,8 @@ const Rooms = () => {
                     return Bookz.getPublishDateInRoom(parsePagesAndDate(search), rid)
                 if (searchType === "pages") 
                     return Bookz.getPagesInRoom(parsePagesAndDate(search), rid)
+                if (searchType === "language")
+                    return Bookz.getLangInRoom(search, user)
                 return []
             case "bookcase":
                 if (searchType === "title") 
@@ -159,6 +163,8 @@ const Rooms = () => {
                     return Bookz.getPublishDateInBookcase(parsePagesAndDate(search), rid)
                 if (searchType === "pages") 
                     return Bookz.getPagesInBookcase(parsePagesAndDate(search), rid)
+                if (searchType === "language")
+                    return Bookz.getLangInBookcase(search, user)
                 return []
             case "shelf":
                 if (searchType === "title") 
@@ -177,10 +183,14 @@ const Rooms = () => {
                     return Bookz.getPublishDateInShelf(parsePagesAndDate(search), rid)
                 if (searchType === "pages") 
                     return Bookz.getPagesInShelf(parsePagesAndDate(search), rid)
+                if (searchType === "language")
+                    return Bookz.getLangInShelf(search, user)
                 return []
             case "results":
                 if (searchType === "title" || searchType === "genre" || searchType === "color" || searchType === "author" || searchType === "more") 
                     return results.filter((b) => b[searchType].toLowerCase().includes(search.toLowerCase()))
+                if (searchType === "language")
+                    return results.filter((b) => b["lang"].toLowerCase().includes(search.toLowerCase()))
                 if (searchType === "all") 
                     return results.filter((b) => b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase()) || b.genre.toLowerCase().includes(search.toLowerCase()) || b.more.toLowerCase().includes(search.toLowerCase()) || b.color.toLowerCase().includes(search.toLowerCase()))
                 if (searchType === "published" || searchType === "pages") {
@@ -208,13 +218,19 @@ const Rooms = () => {
 
     const handleSearchChange = (e) => {
         let { value } = e.target
-        if (value === "#genre" || value === "#all" || value === "#title" || value === "#more" || value === "#color" || value === "#author" || value === "#published" || value === "#pages") {
+
+        if (value === "#pub")
+            value = "#published"
+        if (value === "#lang")
+            value = "#language"
+
+        if (value === "#genre" || value === "#all" || value === "#title" || value === "#more" || value === "#color" || value === "#author" || value === "#published" || value === "#pages" || value === "#language") {
             setSearchType(value.slice(1))
             setSearch("")
         } else if (value === "#roll") {
             setSearch("")
             rollRandomBook() 
-        } else if (value === "?genres" || value === "?authors" || value === "?colors") {
+        } else if (value === "?genres" || value === "?authors" || value === "?colors" || value === "?languages") {
             BookService.getUserCategoryCount(user, value.slice(1)).then(details => setCategoryDetails(details))
             setSearchType(value.slice(1, value.length - 1))
             setSearch("")

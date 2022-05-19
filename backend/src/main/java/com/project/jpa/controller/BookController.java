@@ -232,6 +232,15 @@ public class BookController {
 		return books;
 	}
 	
+	@GetMapping("/books/{username}/search/lang={lang}")
+	public List<Book> getByLang(@PathVariable String username, @PathVariable String lang) throws Exception {
+		System.out.println("search by lang");
+		List<Book> books = bookRepo.findLangForUser(lang, username);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
+	}
+	
 	@GetMapping("/books/{username}/search/published={low}&{high}")
 	public List<Book> getByPublishDate(@PathVariable String username, @PathVariable int low, @PathVariable int high) throws Exception {
 		System.out.println("search by publish date");
@@ -307,7 +316,10 @@ public class BookController {
 			
 			if (category.equals("genres"))
 				key = book.getGenre();
-			
+
+			if (category.equals("languages"))
+				key = book.getLang();
+			System.out.println(key);
 			if (key.contains("/")) {
 				for (String k : key.split("/")) {
 					k = k.trim();
@@ -406,6 +418,15 @@ public class BookController {
 		return books;
 	}
 	
+	@GetMapping("/books/search/in/room/{id}/lang={lang}")
+	public List<Book> getByLangInRoom(@PathVariable long id, @PathVariable String lang) throws Exception {
+		System.out.println("search by lang in room");
+		List<Book> books = bookRepo.findLangInRoom(lang, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
+	}
+	
 	@GetMapping("/books/search/in/room/{id}/published={low}&{high}")
 	public List<Book> getByPublishDateInRoom(@PathVariable long id, @PathVariable int low, @PathVariable int high) throws Exception {
 		System.out.println("search by publish date in room");
@@ -485,6 +506,15 @@ public class BookController {
 	public List<Book> getByMoreInBookcase(@PathVariable long id, @PathVariable String more) throws Exception {
 		System.out.println("search by more in bookcase");
 		List<Book> books = bookRepo.findMoreInBookcase(more, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
+	}
+	
+	@GetMapping("/books/search/in/bookcase/{id}/lang={lang}")
+	public List<Book> getByLangInBookcase(@PathVariable long id, @PathVariable String lang) throws Exception {
+		System.out.println("search by lang in bookcase");
+		List<Book> books = bookRepo.findLangInBookcase(lang, id);
 		if (!books.isEmpty())
 			validUserAccess(books.get(0));
 		return books;
@@ -573,6 +603,16 @@ public class BookController {
 	public List<Book> getByMoreInShelf(@PathVariable long id, @PathVariable String more) throws Exception {
 		System.out.println("search by more in shelf");
 		List<Book> books = bookRepo.findMoreInShelf(more, id);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
+	
+	}
+	
+	@GetMapping("/books/search/in/shelf/{id}/lang={lang}")
+	public List<Book> getByLangInShelf(@PathVariable long id, @PathVariable String lang) throws Exception {
+		System.out.println("search by lang in shelf");
+		List<Book> books = bookRepo.findLangInShelf(lang, id);
 		if (!books.isEmpty())
 			validUserAccess(books.get(0));
 		return books;

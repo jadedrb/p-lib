@@ -50,6 +50,11 @@ class BookService {
         return authAxios().get(`/books/${user}/search/more=${more}`).then(r => this.format(r))
     }
 
+    getLangForUser(lang, user) {
+        loading(".search-c")
+        return authAxios().get(`/books/${user}/search/lang=${lang}`).then(r => this.format(r))
+    }
+
     getAllForUser(all, user) {
         loading(".search-c")
         return authAxios().get(`/books/${user}/search/all=${all}`).then(r => this.format(r))
@@ -124,6 +129,11 @@ class BookService {
         return authAxios().get(`/books/search/in/room/${id}/more=${more}`).then(r => this.format(r))
     }
 
+    getLangInRoom(lang, id) {
+        loading(".search-c")
+        return authAxios().get(`/books/search/in/room/${id}/lang=${lang}`).then(r => this.format(r))
+    }
+
     getPublishDateInRoom(pdate, id) {
         loading(".search-c")
         return authAxios().get(`/books/search/in/room/${id}/published=${pdate.lesser}&${pdate.greater}`).then(r => this.format(r))
@@ -171,6 +181,11 @@ class BookService {
         return authAxios().get(`/books/search/in/bookcase/${id}/more=${more}`).then(r => this.format(r))
     }
 
+    getLangInBookcase(lang, id) {
+        loading(".search-c")
+        return authAxios().get(`/books/search/in/bookcase/${id}/lang=${lang}`).then(r => this.format(r))
+    }
+
     getPublishDateInBookcase(pdate, id) {
         loading(".search-c")
         return authAxios().get(`/books/search/in/bookcase/${id}/published=${pdate.lesser}&${pdate.greater}`).then(r => this.format(r))
@@ -216,6 +231,11 @@ class BookService {
     getMoreInShelf(more, id) {
         loading(".search-c")
         return authAxios().get(`/books/search/in/shelf/${id}/more=${more}`).then(r => this.format(r))
+    }
+
+    getLangInShelf(lang, id) {
+        loading(".search-c")
+        return authAxios().get(`/books/search/in/shelf/${id}/lang=${lang}`).then(r => this.format(r))
     }
 
     getPublishDateInShelf(pdate, id) {
