@@ -73,7 +73,18 @@ tr:hover {
     border: 3px solid black;
     min-height: 200px;
     overflow: auto;
+    /* border: 3px solid blue; */
 }
+
+/* .room-map-wrap {
+   display: flex;
+    justify-content: center;
+    align-content: flex-start;
+    border: 3px solid black;
+    min-height: 200px;
+    overflow: auto;
+    border: 3px solid orange;
+} */
 
 .box {
     border: 1px solid black;
@@ -970,23 +981,26 @@ tr td:nth-child(8) {
 
 .bk-more {
     max-width: 400px;
- overflow: hidden;
- text-overflow: ellipsis;
- white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .pages {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     font-size: 23px;
 }
 
 .pages span {
     cursor: pointer;
     user-select: none;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .pages span:nth-child(2) {
+    cursor: default;
     margin-top: 5px;
     font-size: 15px;
 }

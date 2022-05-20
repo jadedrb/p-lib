@@ -371,7 +371,9 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
         >
           <span>{"<"}</span>
         </div>
-        <div className="room-map" ref={mapRef} onClick={handleBoxClick}></div>
+        {/* <div className="room-map-wrap"> */}
+          <div className="room-map" ref={mapRef} onClick={handleBoxClick}></div>
+        {/* </div> */}
         <div
           className={`arrw ${
             !rooms.length || rIndex + 1 === rooms.length ? "hde" : ""

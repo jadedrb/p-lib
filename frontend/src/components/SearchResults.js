@@ -100,7 +100,7 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
         <>
         <div style={{ height }} className={`table-contain search-c ${!renderedBooks.length && 'table-cc'}`} onScroll={(e) => setRight(e.target.scrollLeft)}>
             <div className='x-results-wrapper' style={{ height: resultRef?.current?.offsetHeight ? `${resultRef.current.offsetHeight}px` : '100px', right: `-${Math.floor(right)}px` }}><div className="pm-r min-room x-results" onClick={closeSearchResults}>X</div></div>
-            {renderedBooks.length ? <h5>results: {books.length}</h5> : null}
+            {renderedBooks.length ? <h5 className='res-top'>results: {books.length}</h5> : null}
             <h6>{recordedSearch.map((rec, i, arr) => <span key={i}>{`"${rec}" in ${recordedSearchType[i]}`}{arr.length > 1 && i !== arr.length -1 ? ' & ' : ''}</span>)}{recordedSearchIn ? ` from ${recordedSearchIn}` : ''}</h6>
             {renderedBooks?.length ? 
                 <table className='booklist' ref={resultRef}>
@@ -128,12 +128,14 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
                 setPages(pages ? pages - 1 : pages)
                 setStartResult(startResult - limit)
                 setEndResult(endResult - limit)
+                document.querySelector('.res-top').scrollIntoView({ block: 'center' })
             }}>{'<'}</span> 
             <span>{pages} of {totalPages}</span> 
             <span style={{ opacity: pages < totalPages ? '1' : '.1', pointerEvents: pages < totalPages ? '' : 'none' }} onClick={() => {
                 setPages(pages < totalPages ? pages + 1 : pages)
                 setStartResult(startResult + limit)
                 setEndResult(endResult + limit)
+                document.querySelector('.res-top').scrollIntoView({ block: 'center' })
             }}>{'>'}</span>
         </div>
         : null
