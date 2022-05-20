@@ -13,6 +13,14 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
     let [height, setHeight] = useState(50)
     let [right, setRight] = useState(0)
 
+    let [pages, setPages] = useState(1)
+    let [startResult, setStartResult] = useState(0)
+
+    let limit = 150
+    let totalPages = Math.ceil(books.length / limit)
+
+    let [endResult, setEndResult] = useState(limit)
+
     let resultRef = useRef()
 
     const recordWrap = useRef()
@@ -36,10 +44,11 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
 
     useEffect(() => {
         recordWrap.current.recordSetup()
-        
+
         let height = resultRef?.current?.clientHeight
         height = !height ? height = 49 : height
         height = height < 50 ? 50 : height < 350 ? height : 350
+        
         setHeight(height)
     }, [books])
 
@@ -64,6 +73,8 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
 
     let renderedBooks = utilOrder(books, order, ascDesc)
 
+    renderedBooks = renderedBooks.slice(startResult, endResult)
+
     renderedBooks = renderedBooks.map((b,i) => {
         return (
             <tr 
@@ -85,12 +96,11 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
         )
     })
 
-    // const height =  !renderedBooks.length ? 50 : renderedBooks.length * 90 < 350 ? renderedBooks.length * 90 : 350 
-
     return (
+        <>
         <div style={{ height }} className={`table-contain search-c ${!renderedBooks.length && 'table-cc'}`} onScroll={(e) => setRight(e.target.scrollLeft)}>
             <div className='x-results-wrapper' style={{ height: resultRef?.current?.offsetHeight ? `${resultRef.current.offsetHeight}px` : '100px', right: `-${Math.floor(right)}px` }}><div className="pm-r min-room x-results" onClick={closeSearchResults}>X</div></div>
-            {renderedBooks.length ? <h5>results: {renderedBooks.length}</h5> : null}
+            {renderedBooks.length ? <h5>results: {books.length}</h5> : null}
             <h6>{recordedSearch.map((rec, i, arr) => <span key={i}>{`"${rec}" in ${recordedSearchType[i]}`}{arr.length > 1 && i !== arr.length -1 ? ' & ' : ''}</span>)}{recordedSearchIn ? ` from ${recordedSearchIn}` : ''}</h6>
             {renderedBooks?.length ? 
                 <table className='booklist' ref={resultRef}>
@@ -112,6 +122,23 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
                 </table>
             : <span>No results found</span>}
         </div>
+        {books.length > limit ?
+            <div className='pages'>
+            <span style={{ opacity: pages > 1 ? '1' : '.1', pointerEvents: pages > 1 ? '' : 'none' }} onClick={() => {
+                setPages(pages ? pages - 1 : pages)
+                setStartResult(startResult - limit)
+                setEndResult(endResult - limit)
+            }}>{'<'}</span> 
+            <span>{pages} of {totalPages}</span> 
+            <span style={{ opacity: pages < totalPages ? '1' : '.1', pointerEvents: pages < totalPages ? '' : 'none' }} onClick={() => {
+                setPages(pages < totalPages ? pages + 1 : pages)
+                setStartResult(startResult + limit)
+                setEndResult(endResult + limit)
+            }}>{'>'}</span>
+        </div>
+        : null
+        }
+        </>
     )
 }
 

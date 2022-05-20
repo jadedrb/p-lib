@@ -865,7 +865,7 @@ select {
     opacity: .3;
 }
 
-tr td:nth-child(7) {
+tr td:nth-child(8) {
     font-size: 9pt;
 }
 
@@ -973,6 +973,22 @@ tr td:nth-child(7) {
  overflow: hidden;
  text-overflow: ellipsis;
  white-space: nowrap;
+}
+
+.pages {
+    display: flex;
+    justify-content: space-around;
+    font-size: 23px;
+}
+
+.pages span {
+    cursor: pointer;
+    user-select: none;
+}
+
+.pages span:nth-child(2) {
+    margin-top: 5px;
+    font-size: 15px;
 }
 
 

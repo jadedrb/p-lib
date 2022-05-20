@@ -319,7 +319,7 @@ public class BookController {
 
 			if (category.equals("languages"))
 				key = book.getLang();
-			System.out.println(key);
+
 			if (key.contains("/")) {
 				for (String k : key.split("/")) {
 					k = k.trim();
