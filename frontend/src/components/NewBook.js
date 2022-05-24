@@ -16,6 +16,17 @@ const NewBook = ({ setCurrShelf }) => {
   let path = useLocation()
 
   let firstInput = useRef();
+  let inputRetrieval = useRef();
+  let inputMania = useRef();
+
+  /*
+    ORIGINAL PROBLEM: Pressing Enter in the "more" textfield counted also as
+    an onClick of the Reset button, even though it's two buttons down and the
+    Enter should only click the Save button. Some weird difference between 
+    onKeyPress (what it was originally) and onKeyDown (what it is now). The 
+    inputMania ref provides a 200ms delay to let all this settle before the 
+    next valid user keyPress.
+  */
 
   let initialInputs = useRef({
     title: "",
@@ -69,6 +80,7 @@ const NewBook = ({ setCurrShelf }) => {
   const handleInput = (e) => {
     let { name, value } = e.target;
     if ((name === 'pdate' || name === 'pages') && value.length > 9) return
+    if (value.includes('`')) return
     let newInputs = { ...inputs };
     newInputs[name] = value;
     setInputs(newInputs);
@@ -83,14 +95,14 @@ const NewBook = ({ setCurrShelf }) => {
 
     let nextInput;
 
-    if (e.key === "Enter" || e.key === "ArrowUp" || e.key === "ArrowDown") {
+    if (e.key === 'Enter' || e.key === "ArrowUp" || e.key === "ArrowDown") {
       let sibling = e.key === "Enter" || e.key === "ArrowDown" ? 'nextSibling' : 'previousSibling'
 
       if (e.key === "ArrowUp" || e.key === "ArrowDown") 
         e.preventDefault() // which would be the increment/decrement of numbers in a type=number input field
 
       if (currentFocus.id === 'more' && e.key === "ArrowDown")
-        sibling = ''
+        return
 
       nextInput = currentFocus[sibling] ? currentFocus[sibling] : currentFocus
 
@@ -106,7 +118,7 @@ const NewBook = ({ setCurrShelf }) => {
 
       if (nextInput) {
         nextInput.focus();
-        nextInput.select();
+        // nextInput.select();
         setCurrentFocus(nextInput);
       }
     }
@@ -114,17 +126,29 @@ const NewBook = ({ setCurrShelf }) => {
     // If enter press on the last input OR if they click the Save button
     if ((nextInput?.name === "reset" || e.target.name === "save") && (nextInput?.name !== e.target.name)) {
       handleSaveCreate()
+      console.log('here2')
+      inputMania.current = true
+      setTimeout(() => inputMania.current = false, 200)
     }
 
     // If enter press leads nowhere OR if Reset button is pressed
     if (nextInput === currentFocus || e.target.name === "reset") {
+      if (inputMania.current) return
       firstInput.current.focus();
       setCurrentFocus(firstInput.current);
       navigate(utilPath(path, 'book', ""))
     }
+
+    if (e.key === '`') {
+      if (inputRetrieval.current && e.target.id in inputRetrieval.current && !inputs[e.target.id])
+        handleInput({ target: { value: inputRetrieval.current[e.target.id], name: e.target.id } })
+      else 
+        inputRetrieval.current = { ...inputRetrieval.current, [e.target.id] : inputs[e.target.id] } 
+    }
   };
 
   const handleResetPress = () => {
+    if (inputMania.current) return
     firstInput.current.focus();
     setCurrentFocus(firstInput.current);
     navigate(utilPath(path, 'book', ""))
@@ -333,20 +357,13 @@ const NewBook = ({ setCurrShelf }) => {
             maxLength={255}
             style={{ backgroundColor: edit ? 'white' : '#ECECEC', minHeight: "100px" }}
           />
-          {/* {extraData &&
-            <textarea
-              readOnly={true}
-              value={extraData}
-              style={{ backgroundColor: '#ECECEC' }}
-          />
-          } */}
           {edit &&
           <input 
             type="button"
             value={bid ? "Save" : "Create"}
             name="save"
             onClick={handleSaveCreate}
-            onKeyDown={handleEnter}
+            onKeyPress={handleEnter}
           />}
           {edit &&
           <input 
@@ -354,7 +371,7 @@ const NewBook = ({ setCurrShelf }) => {
             value="Reset"
             name="reset"
             onClick={handleResetPress}
-            onKeyDown={handleEnter}
+            onKeyPress={handleEnter}
           />}
         </form>
       </div>

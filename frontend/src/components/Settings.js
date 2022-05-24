@@ -110,6 +110,8 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
                                         <li>For publish date and pages, you can add the letter <i>s</i> at the end to search a ten year period or a span of one hundred pages. (Example: <i>1980s</i> or <i>400s</i>) </li>
                                         <li>Type <i>?authors</i>, <i>?genres</i>, or <i>?colors</i> to see a list of potential search options for each category.</li>
                                         <li>Feel free to separate authors and genres with an ampersand ({'&'}) or a slash (/) when inputting data.</li>
+                                        <li>When entering new book information, you can use the <i>tilde</i> key ({'~'}) to copy the current text in the input field. Press it again on an empty version of the same input field of a future book entry to paste what you copied.</li>
+
                                     </ol>
                                 </details>
 
