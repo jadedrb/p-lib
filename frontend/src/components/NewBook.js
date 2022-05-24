@@ -83,24 +83,32 @@ const NewBook = ({ setCurrShelf }) => {
 
     let nextInput;
 
-    if (e.key === "Enter") {
-      nextInput = currentFocus?.nextSibling
-        ? currentFocus?.nextSibling
-        : currentFocus;
+    if (e.key === "Enter" || e.key === "ArrowUp" || e.key === "ArrowDown") {
+      let sibling = e.key === "Enter" || e.key === "ArrowDown" ? 'nextSibling' : 'previousSibling'
 
-    if (nextInput?.nodeName === "LABEL")
-      nextInput = nextInput.nextSibling
+      if (e.key === "ArrowUp" || e.key === "ArrowDown") 
+        e.preventDefault() // which would be the increment/decrement of numbers in a type=number input field
 
-      // When pressing enter, skip the color input type button and Save button
-      if (nextInput.name === 'skip' || nextInput.name === 'save') 
-        nextInput = nextInput.nextSibling
+      if (currentFocus.id === 'more' && e.key === "ArrowDown")
+        sibling = ''
 
-    if (nextInput.nodeName === "LABEL")
-      nextInput = nextInput.nextSibling
+      nextInput = currentFocus[sibling] ? currentFocus[sibling] : currentFocus
 
-      nextInput.focus();
-      nextInput.select();
-      setCurrentFocus(nextInput);
+      if (nextInput?.nodeName === "LABEL")
+        nextInput = nextInput[sibling]
+
+        // When pressing enter, skip the color input type button and Save button
+      if (nextInput?.name === 'skip' || nextInput?.name === 'save') 
+        nextInput = nextInput[sibling]
+
+      if (nextInput?.nodeName === "LABEL")
+        nextInput = nextInput[sibling]
+
+      if (nextInput) {
+        nextInput.focus();
+        nextInput.select();
+        setCurrentFocus(nextInput);
+      }
     }
 
     // If enter press on the last input OR if they click the Save button
@@ -224,7 +232,7 @@ const NewBook = ({ setCurrShelf }) => {
             ref={firstInput}
             value={inputs.title}
             onChange={handleInput}
-            onKeyPress={handleEnter}
+            onKeyDown={handleEnter}
             onClick={handleClick}
             maxLength={255}
             style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
@@ -237,7 +245,7 @@ const NewBook = ({ setCurrShelf }) => {
             name="author"
             value={inputs.author}
             onChange={handleInput}
-            onKeyPress={handleEnter}
+            onKeyDown={handleEnter}
             onClick={handleClick}
             maxLength={255}
             style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
@@ -254,7 +262,7 @@ const NewBook = ({ setCurrShelf }) => {
             type={colorType ? "text" : "color"}
             value={!colorType && inputs.color.slice(0,1) !== "#" ? "#ffffff" : inputs.color}
             onChange={handleInput}
-            onKeyPress={handleEnter}
+            onKeyDown={handleEnter}
             onClick={handleClick}
             maxLength={255}
             style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
@@ -267,7 +275,7 @@ const NewBook = ({ setCurrShelf }) => {
             name="genre"
             value={inputs.genre}
             onChange={handleInput}
-            onKeyPress={handleEnter}
+            onKeyDown={handleEnter}
             onClick={handleClick}
             maxLength={255}
             style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
@@ -281,7 +289,7 @@ const NewBook = ({ setCurrShelf }) => {
             maxLength={255}
             value={inputs.lang}
             onChange={handleInput}
-            onKeyPress={handleEnter}
+            onKeyDown={handleEnter}
             onClick={handleClick}
             style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
@@ -295,7 +303,7 @@ const NewBook = ({ setCurrShelf }) => {
             max="999"
             value={inputs.pdate}
             onChange={handleInput}
-            onKeyPress={handleEnter}
+            onKeyDown={handleEnter}
             onClick={handleClick}
             style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
@@ -308,7 +316,7 @@ const NewBook = ({ setCurrShelf }) => {
             type="number"
             value={inputs.pages}
             onChange={handleInput}
-            onKeyPress={handleEnter}
+            onKeyDown={handleEnter}
             onClick={handleClick}
             style={{ backgroundColor: edit ? 'white' : '#ECECEC' }}
           />
@@ -320,7 +328,7 @@ const NewBook = ({ setCurrShelf }) => {
             name="more"
             value={inputs.more}
             onChange={handleInput}
-            onKeyPress={handleEnter}
+            onKeyDown={handleEnter}
             onClick={handleClick}
             maxLength={255}
             style={{ backgroundColor: edit ? 'white' : '#ECECEC', minHeight: "100px" }}
@@ -338,7 +346,7 @@ const NewBook = ({ setCurrShelf }) => {
             value={bid ? "Save" : "Create"}
             name="save"
             onClick={handleSaveCreate}
-            onKeyPress={handleEnter}
+            onKeyDown={handleEnter}
           />}
           {edit &&
           <input 
@@ -346,7 +354,7 @@ const NewBook = ({ setCurrShelf }) => {
             value="Reset"
             name="reset"
             onClick={handleResetPress}
-            onKeyPress={handleEnter}
+            onKeyDown={handleEnter}
           />}
         </form>
       </div>

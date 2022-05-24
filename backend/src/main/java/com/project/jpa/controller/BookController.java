@@ -339,6 +339,7 @@ public class BookController {
 				}
 			}
 			else {
+				key = key.trim();
 				catInfoDraft.put(key, catInfoDraft.getOrDefault(key, 0) + 1);
 				
 				if (catInfoDraft.get(key) >= 3 || !category.equals("authors")) 

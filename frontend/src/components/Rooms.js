@@ -339,14 +339,14 @@ const Rooms = () => {
                     {results.length && <option value="results">Search Results:</option>}
                 </select>
                 <input 
-                    onBlur={() => setTimeout(() => setCategoryDetails(null), 100)}
+                    onBlur={() => setTimeout(() => setCategoryDetails(null), 300)}
                     value={search} 
                     placeholder={searchType}
                     onChange={handleSearchChange}
                 />
                 {categoryDetails &&
                 <div className="cat-deet">
-                    {Object.keys(categoryDetails).map((details, i) =>
+                    {Object.keys(categoryDetails).sort((c,d) => categoryDetails[d] - categoryDetails[c]).map((details, i) =>
                         <div style={{ color: searchType === 'color' ? details : null }} key={i} onClick={() => {
                             setSearch(details)
                             setCategoryDetails(null)
