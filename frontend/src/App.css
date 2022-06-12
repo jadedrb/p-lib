@@ -1061,6 +1061,116 @@ tr td:nth-child(8) {
     color: gold;
 }
 
+.markers-icon {
+    height: 20px;
+    opacity: .2;
+    position: absolute;
+    top: 18px;
+    right: 300px;
+}
+
+.markers-icon:hover {
+    fill: rgb(74, 74, 255);
+    color: rgb(74, 74, 255);
+    cursor: pointer;
+    opacity: .8;
+}
+
+.m-hub-head {
+    display: flex;
+    outline: 1px solid black;
+    height: 30px;
+    position: relative;
+}
+
+.m-hub-head div {
+    position: relative;
+    padding-top: 5px;
+}
+
+.m-hub-head div:hover {
+    cursor: pointer;
+}
+
+.markers-hub {
+    padding: 0;
+    flex-direction: column;
+    align-items: inherit;
+    justify-content: inherit;
+    background-color: white;
+    min-height: 200px;
+    max-height: 400px;
+}
+
+.markers-hub div {
+    position: relative;
+}
+
+.m-hub-body {
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: inherit !important;
+    justify-content: inherit !important;
+}
+
+.m-hub-body div {
+    outline: 1px solid black;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    width: calc(100% - 10px);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+	overflow: hidden;
+    font-size: 10px;
+    justify-content: flex-start;
+}
+
+.m-hub-body div span {
+    cursor: pointer;
+}
+
+.m-hub-body div span:hover {
+    color: black;
+}
+
+.m-hub-body .markers {
+    transform: inherit;
+    align-items: inherit;
+    position: absolute;
+    right: 25px;
+    left: auto;
+    height: 33px;
+    width: 70px;
+    padding: 0;
+    outline: none;
+}
+
+.m-hub-body .markers svg {
+    margin: 0;
+    height: 35px;
+}
+
+.m-hub-opt {
+    background-color: deepskyblue;
+    opacity: .2;
+    color: white;
+    justify-content: space-around !important;
+}
+
+.m-hub-opt span {
+    font-size: 30px;
+    height: 100%;
+    padding: 0;
+}
+
+.m-hub-opt span:hover {
+    cursor: pointer;
+    color: blue;
+}
+
 
 @media screen and (max-width: 600px) {
     .welcome {
@@ -1071,6 +1181,9 @@ tr td:nth-child(8) {
     }
     .extra-stuff {
         display: flex;
+    }
+    .markers-icon {
+        display: none;
     }
     .search-lib {
         width: 100%;

@@ -354,6 +354,16 @@ public class BookController {
 		return catInfoFinal;
 	}
 	
+	// Search for markers
+	
+	@GetMapping("/books/{username}/search/marker={marker}")
+	public List<Book> getByMarkerForUser(@PathVariable String username, @PathVariable String marker) throws Exception {
+		System.out.println("search for markers of user");
+		List<Book> books = bookRepo.findMarkersForUser(marker, username);
+		if (!books.isEmpty())
+			validUserAccess(books.get(0));
+		return books;
+	}	
 	
 	// Search for books in room
 	

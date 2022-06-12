@@ -10,6 +10,8 @@ import SearchResults from "./SearchResults"
 import { utilPath } from "../services/utility";
 import Settings from "./Settings"
 import BookService from "../services/BookService"
+import MarkersHub from "./MarkersHub"
+import GeneralModal from "./GeneralModal"
 
 const Rooms = () => {
 
@@ -31,6 +33,7 @@ const Rooms = () => {
     let [searchIn, setSearchIn] = useState("library")
     let [searchType, setSearchType] = useState("title")
     let [showUserDet, setShowUserDet] = useState(false)
+    let [showMarkers, setShowMarkers] = useState(false)
     let [userDetails, setUserDetails] = useState({})
     let [categoryDetails, setCategoryDetails] = useState(null)
 
@@ -317,6 +320,10 @@ const Rooms = () => {
                 <div className="dropdown-extra">
                     <div className="drop" onClick={() => {
                         setExtraStuff(!extraStuff)
+                        setShowMarkers(!showMarkers)
+                    }}>Markers</div>
+                    <div className="drop" onClick={() => {
+                        setExtraStuff(!extraStuff)
                         handleShowDetails()
                     }}>Settings</div>
                     <div className="drop" onClick={handleLogout}>Logout</div>
@@ -325,11 +332,20 @@ const Rooms = () => {
             }
 
             <button className="logout" onClick={handleLogout}>Logout</button>
+
             <h4 className="welcome"><span>{user && `welcome`}</span> <span onClick={handleShowDetails}>{user}</span></h4>
+            
+            <svg onClick={() => {
+                setShowMarkers(!showMarkers)
+            }} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 markers-icon" fill='black' viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+            </svg>
+
             <div className={user ? "b-sec-center" : "b-sec-center b-sec-fade"}>
                 <button className="b-section" onClick={toggleRoomsView}>Room</button>
                 <div className="b-sec-line" style={{ display: showRooms ? "block" : "none" }}/>
             </div>
+
             <label className="search-lib">
                 <select value={searchIn} onChange={(e) => setSearchIn(e.target.value)}>
                     <option value="library">Search Library:</option>
@@ -389,6 +405,12 @@ const Rooms = () => {
                     handleLogout={handleLogout}
                     handleShowDetails={handleShowDetails}
                 />
+            }
+
+            {showMarkers && 
+            <GeneralModal toggle={() => setShowMarkers(false)}>
+               <MarkersHub navigate={navigate} user={user} setShowMarkers={setShowMarkers} />
+            </GeneralModal>
             }
             <Outlet />
         </div>

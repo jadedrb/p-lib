@@ -35,6 +35,11 @@ class BookService {
 
     // SEARCH Endpoints
 
+    getMarkerForUser(marker, user) {
+        loading(".search-c")
+        return authAxios().get(`/books/${user}/search/marker=${marker}`).then(r => this.format(r))
+    }
+
     getTitleForUser(title, user) {
         loading(".search-c")
         return authAxios().get(`/books/${user}/search/title=${title}`).then(r => this.format(r))
