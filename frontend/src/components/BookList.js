@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState, useEffect, useRef } from 'react';
 import { utilPath, utilOrder, loading, clearLoading } from '../services/utility';
 import GeneralModal from './GeneralModal'
+import Markers from './Markers';
 
 const BookList = ({ books, bid, path, navigate, selected }) => {
 
@@ -15,6 +16,7 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
     let intoViewRef = useRef(true)
 
     let [modalPic, setModalPic] = useState(false)
+    let [selectedBook, setSelectedBook] = useState(false)
 
     useEffect(() => {
    
@@ -60,7 +62,9 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
                 return acc
         }, [])
 
-        setModalPic(pics[Math.floor(Math.random() * pics.length)])
+        let pic = pics[Math.floor(Math.random() * pics.length)]
+        setModalPic(pic ? pic : b.title)
+        setSelectedBook(b)
         clearLoading()
     }
 
@@ -133,9 +137,13 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
 
             {modalPic && 
             <GeneralModal toggle={() => setModalPic(false)}>
-             <div className="u-modal" style={{ backgroundColor: 'black', width: 'fit-content'}}>
+                <>
+                {modalPic.includes("http") ? 
+                <div className="u-modal" style={{ backgroundColor: 'black', width: 'fit-content'}}>
                         <img src={modalPic} alt={"cover"} />
-                    </div>
+                </div> : <h4 className='title-modal'>{modalPic}</h4>}
+                <Markers modalPic={modalPic} selectedBook={selectedBook} />
+                </>
             </GeneralModal>}
         </div>
     )

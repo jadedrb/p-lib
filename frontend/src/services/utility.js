@@ -188,8 +188,8 @@ export function utilOrder(results, order, toggle) {
             let aa = { ...a }
             let bb = { ...b }
             if (originalOrder.includes("last")) {
-                aa.author = aa.author.split(" ").reverse().join(" ")
-                bb.author = bb.author.split(" ").reverse().join(" ")
+                aa.author = aa.author?.split(" ").reverse().join(" ")
+                bb.author = bb.author?.split(" ").reverse().join(" ")
             }
             if (toggle) {
                 if (aa[order] < bb[order])

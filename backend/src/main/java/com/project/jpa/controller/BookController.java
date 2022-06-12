@@ -163,6 +163,7 @@ public class BookController {
 		oldBook.setColor(newBook.getColor());
 		oldBook.setMore(newBook.getMore());
 		oldBook.setLang(newBook.getLang());
+		oldBook.setMarkers(newBook.getMarkers());
 		
 		return bookRepo.save(oldBook);
 	}

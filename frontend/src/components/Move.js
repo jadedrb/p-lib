@@ -172,8 +172,8 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
  
         if (from === 'shelf') 
             bks = bks.map(bk => {
-                let { title, author, genre, pdate, pages, color, more } = bk
-                return { title, author, genre, pdate, pages, color, more }
+                let { title, author, genre, pdate, pages, color, more, lang } = bk
+                return { title, author, genre, pdate, pages, color, more, lang }
             })
    
         let books = await BookService.addBooksForShelfAndUser(bks, selShelf, user)

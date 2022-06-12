@@ -33,6 +33,7 @@ public class Book {
 	private String color;
 	private String more;
 	private String lang;
+	private String markers;
 	
 	@UpdateTimestamp
 	private Date recorded_on;
@@ -55,7 +56,7 @@ public class Book {
 	
 	public Book() {}
 
-	public Book(String lang, String title, String author, String genre, int pages, int pdate, String color, String more) {
+	public Book(String markers, String lang, String title, String author, String genre, int pages, int pdate, String color, String more) {
 		super();
 		this.title = title;
 		this.author = author;
@@ -65,6 +66,7 @@ public class Book {
 		this.color = color;
 		this.more = more;
 		this.lang = lang;
+		this.markers = markers;
 	}
 	
 	
@@ -181,6 +183,13 @@ public class Book {
 		this.lang = lang;
 	}
 
+	public String getMarkers() {
+		return markers;
+	}
+
+	public void setMarkers(String markers) {
+		this.markers = markers;
+	}
 	
 	
 }
