@@ -56,7 +56,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
                     payload: bid
                 })
             }
-        } else if (selected?.highlight.length) {
+        } else if (selected?.highlight?.length) {
             dispatch({
                 type: TOGGLE_SELECT,
                 payload: []
@@ -172,8 +172,8 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
  
         if (from === 'shelf') 
             bks = bks.map(bk => {
-                let { title, author, genre, pdate, pages, color, more, lang } = bk
-                return { title, author, genre, pdate, pages, color, more, lang }
+                let { title, author, genre, pdate, pages, color, more, lang, markers } = bk
+                return { title, author, genre, pdate, pages, color, more, lang, markers }
             })
    
         let books = await BookService.addBooksForShelfAndUser(bks, selShelf, user)
@@ -218,6 +218,8 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
                 <option value="contents">Every book on this shelf</option>
                 <option value="selected">Selected books from this shelf</option>
             </select> :
+            from === "hub" ?
+            <p style={{ fontWeight: "bold" }}>All selected books</p> :
             <p style={{ fontWeight: "bold" }}>{bkcase.location ? bkcase.location : "Untitled Bookcase"} (id: {bkcase.id})</p>
             }
             <p style={{ opacity: ".4" }}>{from !== "bkcase" ? "To..." : "In..."}</p>

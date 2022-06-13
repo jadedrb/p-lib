@@ -17,7 +17,8 @@ const Rooms = () => {
 
     const { rooms, dispatch, user, reposition, setup, settings } = useContext(Context)
 
-    let { bcid, rid, bid, shid } = useParams()
+    let params = useParams()
+    let { bcid, rid, bid, shid } = params
     let wrapperRef = useRef()
 
     let navigate = useNavigate();
@@ -409,7 +410,15 @@ const Rooms = () => {
 
             {showMarkers && 
             <GeneralModal toggle={() => setShowMarkers(false)}>
-               <MarkersHub navigate={navigate} user={user} setShowMarkers={setShowMarkers} />
+               <MarkersHub 
+                    rooms={rooms}
+                    navigate={navigate} 
+                    user={user} 
+                    setShowMarkers={setShowMarkers} 
+                    dispatch={dispatch}
+                    path={path}
+                    params={params}
+                />
             </GeneralModal>
             }
             <Outlet />
