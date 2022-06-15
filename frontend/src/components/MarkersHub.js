@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { REMOVE_BOOK } from '../context';
 import BookService from '../services/BookService';
-import { utilPath, loading, clearLoading } from "../services/utility";
+import { utilPath, loading } from "../services/utility";
 import Markers from './Markers'
 import MoveFromHub from './MoveFromHub';
 
@@ -13,8 +13,7 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
     const [showMoveStuff, setShowMoveStuff] = useState(false)
 
     useEffect(() => {
-        loading('.m-hub-body')
-
+        loading('.markers-hub')
         BookService
             .getMarkerForUser(selectedMarker, user)
             .then(mb => setMarkedBooks(mb))
@@ -51,7 +50,6 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
     const handleDelete = async () => {
         let confirm = window.confirm(`Are you sure you want to delete all ${markedBooks.length} selected books?`)
         if (!confirm) return
-        loading('.m-hub-body')
         setShowMarkers(false)
         for (let i = 0; i < markedBooks.length; i++) {
             try {
@@ -64,7 +62,6 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
             }
         }
         alert(`All ${markedBooks.length} selected books have been deleted.`)
-        clearLoading()
     }
 
     const renderMarkerSpace = () => {
