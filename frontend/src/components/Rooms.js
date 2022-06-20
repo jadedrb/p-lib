@@ -293,7 +293,7 @@ const Rooms = () => {
             : null}
 
             {!extraStuff &&
-            <svg style={{ zIndex: '1' }} onClick={() => {
+            <svg style={{ zIndex: user ? '1' : '0' }} onClick={() => {
                 setExtraStuff(!extraStuff)
                 let body = document.querySelector('body')
                 setExtraStuffHeight(body.clientHeight > window.innerHeight ? body.clientHeight + 100 : window.innerHeight)
