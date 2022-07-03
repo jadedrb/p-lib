@@ -37,7 +37,14 @@ export function utilPath(path, type, id) {
             break;
         case 'coord':
             let { book, shelf, bookcase, room } = path 
-            return `/room/${room}/bookcase/${bookcase}/shelf/${shelf}/book/${book}`
+            let result = ''
+
+            if (room) result += '/room/' + room
+            if (bookcase) result += '/bookcase/' + bookcase
+            if (shelf) result += '/shelf/' + shelf
+            if (book) result += '/book/' + book
+            
+            return result
         default:
             break;
     }

@@ -147,7 +147,8 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
                 dispatch({ type: UPDATE_ROOM, payload });
             }
         }
-        navigate(utilPath(path, 'shelf', selShelf))
+        navigate(utilPath({ room: selRoom, bookcase: selBkcase, shelf: selShelf }, "coord"))
+        setTimeout(() => alert(`${action === 'Copy' ? 'Copied' : 'Moved'} all book(s)`), 100)
     }
 
     const handleBookcaseAdjust = async (e) => {

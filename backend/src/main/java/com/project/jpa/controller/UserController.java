@@ -121,10 +121,10 @@ public class UserController {
 	
 	@GetMapping("/api/overview/{name}") 
 	public List<Map<String, Integer>> findUserInformation(@PathVariable String name) throws Exception {
-		
+		System.out.println('1');
 		User user = userRepo.findByUsername(name).get(0);
 		validUserAccess(user);
-		
+		System.out.println('2');
 		boolean admin = false;
 		
 		if (name.equals(System.getenv("PLIB_ADMIN"))) 
