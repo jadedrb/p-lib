@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useContext } from 'react';
 import { utilitySelector } from './services/utility';
 
 export const Context = React.createContext()
@@ -198,3 +198,5 @@ export function Provider(props) {
         </Context.Provider>
     )
 }
+
+export const useLibContext = () => useContext(Context)

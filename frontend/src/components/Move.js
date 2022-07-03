@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { utilitySelector, utilPath } from "../services/utility";
 
 import BookService from "../services/BookService"
@@ -6,11 +6,11 @@ import RoomService from "../services/RoomService"
 import BookcaseService from "../services/BookcaseService"
 
 import { ADD_BULK, REMOVE_BOOK, TOGGLE_BKCASE_SELECT, TOGGLE_SELECT, UPDATE_BOOKCASE, UPDATE_ROOM } from '../context';
-import { Context } from "../context"
+import { useLibContext } from "../context"
 
 function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
 
-    let { rooms, dispatch, user, reposition } = useContext(Context);
+    let { rooms, dispatch, user, reposition } = useLibContext()
 
     let { bid, shid, bcid, rid } = params
 

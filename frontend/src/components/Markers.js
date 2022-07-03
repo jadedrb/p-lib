@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState, useRef } from "react";
-import { Context, UPDATE_BOOK } from "../context";
+import { useEffect, useState, useRef } from "react";
+import { useLibContext, UPDATE_BOOK } from "../context";
 import BookService from "../services/BookService";
 
 function Markers({ modalPic, selectedBook, setEnableMarkers }) {
 
-    const { dispatch } = useContext(Context);
+    const { dispatch } = useLibContext()
 
     let [markers, setMarkers] = useState([])
 

@@ -1,5 +1,5 @@
-import { useContext, useEffect } from "react"
-import { Context, SET_INITIAL_STATE, SET_ROOMS, SET_USER, UPDATE_SETTINGS } from '../context'
+import { useEffect } from "react"
+import { useLibContext, SET_INITIAL_STATE, SET_ROOMS, SET_USER, UPDATE_SETTINGS } from '../context'
 import { useNavigate } from "react-router-dom"
 
 import UserService from '../services/UserService'
@@ -10,7 +10,7 @@ import { loading, clearLoading } from "../services/utility"
 
 function LoginAndRegister(props) {
 
-    const { dispatch } = useContext(Context)
+    const { dispatch } = useLibContext()
 
     let navigate = useNavigate()
 

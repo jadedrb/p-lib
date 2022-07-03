@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useRef } from 'react'
-import { Context, SETUP_COMPLETE, SET_ROOMS, SET_USER, UPDATE_SETTINGS } from './context'
+import React, { useEffect, useRef } from 'react'
+import { useLibContext, SETUP_COMPLETE, SET_ROOMS, SET_USER, UPDATE_SETTINGS } from './context'
 import './App.css';
 
 import Rooms from './components/Rooms';
@@ -14,11 +14,11 @@ import Home from './components/Home';
 import UserService from './services/UserService';
 import RoomService from './services/RoomService';
 
-import { loading, clearLoading } from './services/utility'
+import { loading, clearLoading, A_WEEKS_TIME } from './services/utility'
 
 function App() {
 
-  let { selected, user, dispatch, setup, settings } = useContext(Context)
+  let { selected, user, dispatch, setup, settings } = useLibContext()
 
   let navigate = useNavigate()
   let navigateRef = useRef()
@@ -31,7 +31,7 @@ function App() {
       let token = localStorage.getItem("token")
       let time = localStorage.getItem("time")
 
-      if ((new Date() - new Date(time)) > (1000 * 60 * 60 * 72)) {
+      if ((new Date() - new Date(time)) > A_WEEKS_TIME) {
         token = false
         localStorage.removeItem("token")
         localStorage.removeItem("time")
@@ -80,7 +80,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.50')
+      console.log('v1.51')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))

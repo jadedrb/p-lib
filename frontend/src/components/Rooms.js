@@ -1,6 +1,6 @@
-import { useState, useContext, useEffect, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import NewRoom from "./NewRoom"
-import { Context, SET_USER } from '../context'
+import { useLibContext, SET_USER } from '../context'
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
 
 import Bookz from '../services/BookService'
@@ -15,7 +15,7 @@ import GeneralModal from "./GeneralModal"
 
 const Rooms = () => {
 
-    const { rooms, dispatch, user, reposition, setup, settings } = useContext(Context)
+    const { rooms, dispatch, user, reposition, setup, settings } = useLibContext()
 
     let params = useParams()
     let { bcid, rid, bid, shid } = params

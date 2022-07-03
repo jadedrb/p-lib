@@ -1,11 +1,11 @@
-import { useState, useContext, useEffect } from "react"
+import { useState, useEffect } from "react"
 import NewBookcase from "./NewBookcase"
 import { useParams, useNavigate, useLocation, Outlet } from 'react-router-dom'
-import { Context, CURRENT_BOOK } from "../context"
+import { useLibContext, CURRENT_BOOK } from "../context"
 import { utilitySelector, utilPath } from "../services/utility";
 
 const Bookcases = () => {
-    let { rooms, current, dispatch, settings, currentBook, user } = useContext(Context);
+    let { rooms, current, dispatch, settings, currentBook, user } = useLibContext()
     
     let params = useParams()
     let { rid, bcid, shid, bid } = params

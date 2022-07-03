@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
-import { ADD_BOOK, Context, CURRENT_BOOK, REMOVE_BOOK, UPDATE_BOOK } from "../context";
+import React, { useState, useEffect, useRef } from "react";
+import { useLibContext, ADD_BOOK, CURRENT_BOOK, REMOVE_BOOK, UPDATE_BOOK } from "../context";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { utilPath, utilitySelector, utilMsg, utilTime, loading, clearLoading } from "../services/utility";
 
@@ -8,7 +8,7 @@ import Move from "./Move";
 import axios from "axios";
 
 const NewBook = ({ setCurrShelf }) => {
-  const { rooms, dispatch, user, settings } = useContext(Context);
+  const { rooms, dispatch, user, settings } = useLibContext()
 
   let params = useParams();
   let { shid, rid, bcid, bid } = params

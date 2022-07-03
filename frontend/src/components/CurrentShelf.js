@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { Context, REMOVE_SHELF, UPDATE_SHELF } from "../context"
+import { useLibContext, REMOVE_SHELF, UPDATE_SHELF } from "../context"
 import { utilitySelector, utilMsg } from '../services/utility';
 import BookList from './BookList';
 
@@ -10,7 +10,7 @@ import Move from './Move';
 
 function CurrentShelf() {
 
-    let { rooms, dispatch, selected, settings, user } = useContext(Context)
+    let { rooms, dispatch, selected, settings, user } = useLibContext()
 
     let [showShelf, setShowShelf] = useState(true)
     let [showBook, setShowBook] = useState(true)
