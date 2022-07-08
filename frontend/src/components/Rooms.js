@@ -37,6 +37,7 @@ const Rooms = () => {
     let [showMarkers, setShowMarkers] = useState(false)
     let [userDetails, setUserDetails] = useState({})
     let [categoryDetails, setCategoryDetails] = useState(null)
+    let [searchGroup, setSearchGroup] = useState("space")
 
     useEffect(() => {
         let delay;
@@ -70,14 +71,16 @@ const Rooms = () => {
     const parsePagesAndDate = (search) => {
         let greater, lesser;
         // All this is to handle better searches for publish date and pages
-        if (/s/.test(search) && searchType === "published") {
-            let tenYearStart = Number(search.split("s")[0])
-            greater = tenYearStart - 1
-            lesser = tenYearStart + 11
-        } else {
-            let hundredYearStart = Number(search.split("s")[0])
-            greater = hundredYearStart - 1
-            lesser = hundredYearStart + 101
+        if (/s/.test(search)) {
+            if (searchType === "published") {
+                let tenYearStart = Number(search.split("s")[0])
+                greater = tenYearStart - 1
+                lesser = tenYearStart + 11
+            } else {
+                let hundredYearStart = Number(search.split("s")[0])
+                greater = hundredYearStart - 1
+                lesser = hundredYearStart + 101
+            }
         }
         if (/>/.test(search)) {
             let rinse = search.split(">")
@@ -148,7 +151,7 @@ const Rooms = () => {
                 if (searchType === "pages") 
                     return Bookz.getPagesInRoom(parsePagesAndDate(search), rid)
                 if (searchType === "language")
-                    return Bookz.getLangInRoom(search, user)
+                    return Bookz.getLangInRoom(search, rid)
                 return []
             case "bookcase":
                 if (searchType === "title") 
@@ -168,7 +171,7 @@ const Rooms = () => {
                 if (searchType === "pages") 
                     return Bookz.getPagesInBookcase(parsePagesAndDate(search), rid)
                 if (searchType === "language")
-                    return Bookz.getLangInBookcase(search, user)
+                    return Bookz.getLangInBookcase(search, bcid)
                 return []
             case "shelf":
                 if (searchType === "title") 
@@ -188,7 +191,7 @@ const Rooms = () => {
                 if (searchType === "pages") 
                     return Bookz.getPagesInShelf(parsePagesAndDate(search), rid)
                 if (searchType === "language")
-                    return Bookz.getLangInShelf(search, user)
+                    return Bookz.getLangInShelf(search, shid)
                 return []
             case "results":
                 if (searchType === "title" || searchType === "genre" || searchType === "color" || searchType === "author" || searchType === "more") 
@@ -230,6 +233,10 @@ const Rooms = () => {
 
         if (value === "#genre" || value === "#all" || value === "#title" || value === "#more" || value === "#color" || value === "#author" || value === "#published" || value === "#pages" || value === "#language") {
             setSearchType(value.slice(1))
+            setSearch("")
+        } else if (value === "#library" || value === "#room" || value === "#bookcase" || value === "#shelf" || value === "#results") {
+            if ((value === "#room" && rid) || (value === "#bookcase" && bcid) || (value === "#shelf" && shid) || (value === "#results" && results.length))
+                setSearchIn(value.slice(1))
             setSearch("")
         } else if (value === "#roll") {
             setSearch("")
@@ -348,17 +355,48 @@ const Rooms = () => {
             </div>
 
             <label className="search-lib">
-                <select value={searchIn} onChange={(e) => setSearchIn(e.target.value)}>
+                <select value={searchGroup === "space" ? searchIn : searchType} onChange={(e) => {
+                    if (searchGroup === "space") {
+                        if (e.target.value === 'category') {
+                            setSearchGroup(e.target.value)
+                            setSearchType("title")
+                        } else {
+                            setSearchIn(e.target.value)
+                        }
+                    } else {
+                        if (e.target.value === 'library') {
+                            setSearchGroup("space")
+                            setSearchIn(e.target.value)
+                        } else {
+                            setSearchType(e.target.value)
+                        }
+                    }
+                }}>
+                    {searchGroup === "space" && <option value="category">Search by Category:</option>}
+                    {searchGroup === "space" && <option disabled>---</option>}
                     <option value="library">Search Library:</option>
-                    {rid && <option value="room">Search Room:</option>}
-                    {bcid && <option value="bookcase">Search Bookcase:</option>}
-                    {shid && <option value="shelf">Search Shelf:</option>}
-                    {results.length && <option value="results">Search Results:</option>}
+                    {searchGroup === "category" && <option disabled>---</option>}
+
+                    {searchGroup === "category" && <option value="title">Search by Title:</option>}
+                    {searchGroup === "category" && <option value="author">Search by Author:</option>}
+                    {searchGroup === "category" && <option value="color">Search by Color:</option>}
+                    {searchGroup === "category" && <option value="genre">Search by Genre:</option>}
+                    {searchGroup === "category" && <option value="language">Search by Language:</option>}
+                    {searchGroup === "category" && <option value="published">Search by Publish Date:</option>}
+                    {searchGroup === "category" && <option value="pages">Search by Pages:</option>}
+                    {searchGroup === "category" && <option value="more">Search by More:</option>}
+                    {searchGroup === "category" && <option value="all">Search all Categories:</option>}
+
+                    {rid && searchGroup === "space" && <option value="room">Search Room:</option>}
+                    {bcid && searchGroup === "space" && <option value="bookcase">Search Bookcase:</option>}
+                    {shid && searchGroup === "space" && <option value="shelf">Search Shelf:</option>}
+                    {results.length && searchGroup === "space" && <option value="results">Search Results:</option>}
+
                 </select>
                 <input 
                     onBlur={() => setTimeout(() => setCategoryDetails(null), 300)}
                     value={search} 
-                    placeholder={searchType}
+                    placeholder={searchGroup === "space" ? searchType : searchIn}
                     onChange={handleSearchChange}
                 />
                 {categoryDetails &&
