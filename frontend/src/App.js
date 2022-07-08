@@ -14,7 +14,7 @@ import Home from './components/Home';
 import UserService from './services/UserService';
 import RoomService from './services/RoomService';
 
-import { loading, clearLoading, A_WEEKS_TIME } from './services/utility'
+import { loading, clearLoading, A_MONTHS_TIME } from './services/utility'
 
 function App() {
 
