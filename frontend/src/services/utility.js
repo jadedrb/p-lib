@@ -249,4 +249,4 @@ export const utilTime = (date) => {
     return `${month}/${day}/${year}`
 }
 
-export const A_MONTHS_TIME = 1000 * 60 * 60 * 24 * 7 * 4
+export const A_WEEKS_TIME = 1000 * 60 * 60 * 24 * 7
