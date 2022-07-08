@@ -80,7 +80,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.56')
+      console.log('v1.57')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))
