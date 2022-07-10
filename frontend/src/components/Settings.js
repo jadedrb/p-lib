@@ -3,7 +3,19 @@ import GeneralModal from './GeneralModal'
 import UserService from '../services/UserService'
 import { UPDATE_SETTINGS } from '../context'
 
+import { useRef, useEffect, useState } from 'react'
+
 function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUserDet, handleLogout, handleShowDetails, settings }) {
+
+    const [responsiveHeight, setResponsiveHeight] = useState(window.innerHeight)
+
+    const hubRef = useRef()
+
+    useEffect(() => {
+        const resize = (e) => setResponsiveHeight(e.target.innerHeight)
+        window.addEventListener('resize', resize);
+        return () => window.removeEventListener('resize', resize)
+    }, [])
 
     const handleAccountDeletion = async (id) => {
         const confirm = window.confirm("Are you sure you want to delete your account?")
@@ -59,9 +71,15 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
      // const lastFirst = settings.names === 'last, first'
      const readWrite = settings.default === 'Read Only'
 
+    let responsiveHeightObj = (hubRef.current?.offsetHeight + 100) > responsiveHeight ? {
+        height: `${responsiveHeight - 100}px` 
+    } : {
+        height: '50vh'
+    }
+
     return ( 
         <GeneralModal toggle={handleShowDetails}>
-                    <div className="u-modal" style={{ height: `${window.innerHeight - 400}px` }}>
+                    <div className="u-modal" style={responsiveHeightObj} ref={hubRef}>
                         <div>
                             <h3><span>{user}</span> <span>library</span> <span>settings</span></h3>
                             <h6>Account created on: {handleCreationTime(userDetails)}</h6>

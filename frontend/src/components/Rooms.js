@@ -332,6 +332,10 @@ const Rooms = () => {
                     }}>Markers</div>
                     <div className="drop" onClick={() => {
                         setExtraStuff(!extraStuff)
+                        rollRandomBook()
+                    }}>Roll</div>
+                    <div className="drop" onClick={() => {
+                        setExtraStuff(!extraStuff)
                         handleShowDetails()
                     }}>Settings</div>
                     <div className="drop" onClick={handleLogout}>Logout</div>
