@@ -343,62 +343,69 @@ const Rooms = () => {
 
             <h4 className="welcome"><span>{user && `welcome`}</span> <span onClick={handleShowDetails}>{user}</span></h4>
             
-            <svg onClick={() => {
-                setShowMarkers(!showMarkers)
-            }} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 markers-icon" fill='black' viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-            </svg>
 
             <div className={user ? "b-sec-center" : "b-sec-center b-sec-fade"}>
                 <button className="b-section" onClick={toggleRoomsView}>Room</button>
                 <div className="b-sec-line" style={{ display: showRooms ? "block" : "none" }}/>
             </div>
 
-            <label className="search-lib">
-                <select value={searchGroup === "space" ? searchIn : searchType} onChange={(e) => {
-                    if (searchGroup === "space") {
-                        if (e.target.value === 'category') {
-                            setSearchGroup(e.target.value)
-                            setSearchType("title")
+            <div className="top-right-contain">
+
+                <svg onClick={() => {
+                    setShowMarkers(!showMarkers)
+                }} xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 markers-icon" fill='black' viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                </svg>
+
+            
+
+                <label className="search-lib">
+                    <select value={searchGroup === "space" ? searchIn : searchType} onChange={(e) => {
+                        if (searchGroup === "space") {
+                            if (e.target.value === 'category') {
+                                setSearchGroup(e.target.value)
+                                setSearchType("title")
+                            } else {
+                                setSearchIn(e.target.value)
+                            }
                         } else {
-                            setSearchIn(e.target.value)
+                            if (e.target.value === 'library') {
+                                setSearchGroup("space")
+                                setSearchIn(e.target.value)
+                            } else {
+                                setSearchType(e.target.value)
+                            }
                         }
-                    } else {
-                        if (e.target.value === 'library') {
-                            setSearchGroup("space")
-                            setSearchIn(e.target.value)
-                        } else {
-                            setSearchType(e.target.value)
-                        }
-                    }
-                }}>
-                    {searchGroup === "space" && <option value="category">Search by Category:</option>}
-                    {searchGroup === "space" && <option disabled>---</option>}
-                    <option value="library">Search Library:</option>
-                    {searchGroup === "category" && <option disabled>---</option>}
+                    }}>
+                        {searchGroup === "space" && <option value="category">Search by Category:</option>}
+                        {searchGroup === "space" && <option disabled>---</option>}
+                        <option value="library">Search Library:</option>
+                        {searchGroup === "category" && <option disabled>---</option>}
 
-                    {searchGroup === "category" && <option value="title">Search by Title:</option>}
-                    {searchGroup === "category" && <option value="author">Search by Author:</option>}
-                    {searchGroup === "category" && <option value="color">Search by Color:</option>}
-                    {searchGroup === "category" && <option value="genre">Search by Genre:</option>}
-                    {searchGroup === "category" && <option value="language">Search by Language:</option>}
-                    {searchGroup === "category" && <option value="published">Search by Publish Date:</option>}
-                    {searchGroup === "category" && <option value="pages">Search by Pages:</option>}
-                    {searchGroup === "category" && <option value="more">Search by More:</option>}
-                    {searchGroup === "category" && <option value="all">Search all Categories:</option>}
+                        {searchGroup === "category" && <option value="title">Search by Title:</option>}
+                        {searchGroup === "category" && <option value="author">Search by Author:</option>}
+                        {searchGroup === "category" && <option value="color">Search by Color:</option>}
+                        {searchGroup === "category" && <option value="genre">Search by Genre:</option>}
+                        {searchGroup === "category" && <option value="language">Search by Language:</option>}
+                        {searchGroup === "category" && <option value="published">Search by Publish Date:</option>}
+                        {searchGroup === "category" && <option value="pages">Search by Pages:</option>}
+                        {searchGroup === "category" && <option value="more">Search by More:</option>}
+                        {searchGroup === "category" && <option value="all">Search all Categories:</option>}
 
-                    {rid && searchGroup === "space" && <option value="room">Search Room:</option>}
-                    {bcid && searchGroup === "space" && <option value="bookcase">Search Bookcase:</option>}
-                    {shid && searchGroup === "space" && <option value="shelf">Search Shelf:</option>}
-                    {results.length && searchGroup === "space" && <option value="results">Search Results:</option>}
+                        {rid && searchGroup === "space" && <option value="room">Search Room:</option>}
+                        {bcid && searchGroup === "space" && <option value="bookcase">Search Bookcase:</option>}
+                        {shid && searchGroup === "space" && <option value="shelf">Search Shelf:</option>}
+                        {results.length && searchGroup === "space" && <option value="results">Search Results:</option>}
 
-                </select>
-                <input 
-                    onBlur={() => setTimeout(() => setCategoryDetails(null), 300)}
-                    value={search} 
-                    placeholder={searchGroup === "space" ? searchType : searchIn}
-                    onChange={handleSearchChange}
-                />
+                    </select>
+                    <input 
+                        onBlur={() => setTimeout(() => setCategoryDetails(null), 300)}
+                        value={search} 
+                        placeholder={searchGroup === "space" ? searchType : searchIn}
+                        onChange={handleSearchChange}
+                    />
+
+            
                 {categoryDetails &&
                 <div className="cat-deet">
                     {Object.keys(categoryDetails).sort((c,d) => categoryDetails[d] - categoryDetails[c]).map((details, i) =>
@@ -413,7 +420,9 @@ const Rooms = () => {
                 </div>
                 }
             </label>
-           
+
+
+            </div>
 
             {showRooms &&
                 <div className="n-room">

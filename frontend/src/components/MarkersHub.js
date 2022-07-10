@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { REMOVE_BOOK } from '../context';
 import BookService from '../services/BookService';
 import { utilPath, loading } from "../services/utility";
@@ -12,13 +12,33 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
     const [enableMarkers, setEnableMarkers] = useState(true)
     const [showMoveStuff, setShowMoveStuff] = useState(false)
 
+    const [responsiveHeight, setResponsiveHeight] = useState(window.innerHeight)
+
+    const hubRef = useRef()
+
+    useEffect(() => {
+        const resize = (e) => setResponsiveHeight(e.target.innerHeight)
+        window.addEventListener('resize', resize);
+        return () => window.removeEventListener('resize', resize)
+    }, [])
+
     useEffect(() => {
         loading('.markers-hub')
         BookService
             .getMarkerForUser(selectedMarker, user)
-            .then(mb => setMarkedBooks(mb))
+            .then(mb => {
+                setMarkedBooks(mb)
+            })
 
     }, [user, selectedMarker])
+
+    useEffect(() => {
+        // The height of the hub changes when it's populated with data
+        // So this auto-adjusts it by calculating the styles again on a new render
+        if (markedBooks.length) {
+            setResponsiveHeight(window.innerHeight - 1)
+        }
+    }, [markedBooks])
 
     let selectedStyleFav = {
         color: selectedMarker === 'favorited' ? 'blue' : 'black',
@@ -87,13 +107,17 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
         if (markedBooks.length) {
             return markerSpace
         }
-        return <p>No books {selectedMarker}</p>
+        return <p style={{ marginBottom: '100px' }}><span>No books {selectedMarker}</span></p>
     }
 
     let markedBookStyle = selectedMarker === 'favorited' ? selectedStyleFav : selectedMarker === 'selected' ? selectedStyleSel : selectedStyleMis 
 
+    let responsiveHeightObj = (hubRef.current?.offsetHeight + 100) > responsiveHeight ? {
+        height: `${responsiveHeight - 100}px` 
+    } : null
+
     return ( 
-            <div className="u-modal markers-hub" style={{ height: `${window.innerHeight - 400}px` }}>
+            <div className="u-modal markers-hub" style={responsiveHeightObj} ref={hubRef}>
                 <div className='m-hub-head'>
                     <div onClick={() => enableMarkers && setSelectedMarker('favorited')} style={selectedStyleFav}>Favorited</div>
                     <div onClick={() => enableMarkers && setSelectedMarker('selected')} style={selectedStyleSel}>Selected</div>

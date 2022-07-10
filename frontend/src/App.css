@@ -342,12 +342,21 @@ tr:hover {
 Search
 */
 
-.search-lib {
+.top-right-contain {
+    /* border: 1px solid orange; */
     display: flex;
     justify-content: space-around;
     position: absolute;
+    top: 18px;
     right: 0;
-    top: 15px;
+}
+
+.search-lib {
+    display: flex;
+    justify-content: space-around;
+    /* position: absolute;
+    right: 0;
+    top: 15px; */
     width: 300px;
 
 }
@@ -357,6 +366,7 @@ Search
     border-radius: 5px;
     height: 18px;
     padding: 3px;
+    margin-left: 10px;
 }
 .search-lib input:focus {
     outline: 3px solid rgb(224, 223, 223);
@@ -1064,9 +1074,9 @@ tr td:nth-child(8) {
 .markers-icon {
     height: 20px;
     opacity: .2;
-    position: absolute;
+    /* position: absolute;
     top: 18px;
-    right: 320px;
+    right: 320px; */
 }
 
 .markers-icon:hover {
@@ -1098,8 +1108,8 @@ tr td:nth-child(8) {
     align-items: inherit;
     justify-content: inherit;
     background-color: white;
-    min-height: 200px;
-    max-height: 400px;
+    /* min-height: 200px;
+    max-height: 400px; */
 }
 
 .markers-hub div {
@@ -1220,3 +1230,20 @@ tr td:nth-child(8) {
         right: 20%;
     }
 }
+
+
+@media screen and (max-width: 900px) {
+    .markers-icon {
+        position: absolute;
+        right: 40vw;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .markers-icon {
+        position: absolute;
+        right: 48vw;
+    }
+}
+
+
