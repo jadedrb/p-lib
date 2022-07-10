@@ -343,7 +343,7 @@ Search
 */
 
 .top-right-contain {
-    /* border: 1px solid orange; */
+    width: 400px;
     display: flex;
     justify-content: space-around;
     position: absolute;
@@ -1139,6 +1139,8 @@ tr td:nth-child(8) {
 
 .m-hub-body div span {
     cursor: pointer;
+    /* text-overflow: ellipsis;
+    white-space: nowrap; */
 }
 
 .m-hub-body div span:hover {
@@ -1194,7 +1196,7 @@ tr td:nth-child(8) {
     margin: 0 !important;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 650px) {
     .welcome {
         display: none;
     }
@@ -1229,10 +1231,11 @@ tr td:nth-child(8) {
         width: 100px;
         right: 20%;
     }
+   
 }
 
 
-@media screen and (max-width: 900px) {
+/* @media screen and (max-width: 900px) {
     .markers-icon {
         position: absolute;
         right: 40vw;
@@ -1244,11 +1247,14 @@ tr td:nth-child(8) {
         position: absolute;
         right: 48vw;
     }
-}
+} */
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 500px) {
     .bookcase {
         width: 80% !important;
+    }
+    .top-right-contain {
+        width: inherit;
     }
 }
 
