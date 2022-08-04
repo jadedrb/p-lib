@@ -179,10 +179,15 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
           div.style.backgroundColor = currentBookcase.color;
           if (currentBookcase.id === bcid) {
             if (reposition.toggle) {
-              div.style.opacity = ".5"
+              div.style.opacity = ".3"
               div.style.outline = "3px solid white"
             } else {
               div.style.outline = "3px solid black";
+            }
+          } else {
+            if (bcid && !reposition.toggle) {
+              div.style.opacity = ".3"
+              //div.style.backgroundColor = 'grey'
             }
           }
         }

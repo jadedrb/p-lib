@@ -7,7 +7,7 @@ import Bookz from '../services/BookService'
 import UserService from '../services/UserService'
 import SearchResults from "./SearchResults"
 
-import { utilPath } from "../services/utility";
+import { utilPath, parsePagesAndDate } from "../services/utility";
 import Settings from "./Settings"
 import BookService from "../services/BookService"
 import MarkersHub from "./MarkersHub"
@@ -68,49 +68,6 @@ const Rooms = () => {
             wrapperRef.current.finish = false
     }, [showRooms])
 
-    const parsePagesAndDate = (search) => {
-        let greater, lesser;
-        // All this is to handle better searches for publish date and pages
-        if (/s/.test(search)) {
-            if (searchType === "published") {
-                let tenYearStart = Number(search.split("s")[0])
-                greater = tenYearStart - 1
-                lesser = tenYearStart + 11
-            } else {
-                let hundredYearStart = Number(search.split("s")[0])
-                greater = hundredYearStart - 1
-                lesser = hundredYearStart + 101
-            }
-        }
-        if (/>/.test(search)) {
-            let rinse = search.split(">")
-            greater = rinse.filter(p => !/>/.test(p) && p !== "")
-            if (greater.length > 1) 
-                greater = rinse.filter(p => !/</.test(p)).join().trim()
-            else 
-                greater = greater.join().split("<")[0].trim()
-        }
-        if (/</.test(search)) {
-            let rinse = search.split("<")
-            lesser = rinse.filter(p => !/</.test(p) && p !== "")
-            if (lesser.length > 1) 
-                lesser = rinse.filter(p => !/>/.test(p)).join().trim()
-            else 
-                lesser = lesser.join().split(">")[0].trim()
-        }
-  
-        if (!greater && !lesser && search.length > 0) {
-            greater = Number(search.trim()) - 1
-            lesser = Number(search.trim()) + 1
-        } else if (greater && !lesser) {
-            lesser = "9999"
-        } else if (!greater && lesser) {
-            greater = "0"
-        }
-
-        return { greater: Number(greater), lesser: Number(lesser) }
-    }
-
     const determineSearchArea = (search, user) => {
         switch(searchIn) {
             case "library":
@@ -127,9 +84,9 @@ const Rooms = () => {
                 if (searchType === "author")
                     return Bookz.getAuthorForUser(search, user)
                 if (searchType === "published")
-                    return Bookz.getPublishDateForUser(parsePagesAndDate(search), user)
+                    return Bookz.getPublishDateForUser(parsePagesAndDate(search, searchType), user)
                 if (searchType === "pages")
-                    return Bookz.getPagesForUser(parsePagesAndDate(search), user)
+                    return Bookz.getPagesForUser(parsePagesAndDate(search, searchType), user)
                 if (searchType === "language")
                     return Bookz.getLangForUser(search, user)
                 return []
@@ -147,9 +104,9 @@ const Rooms = () => {
                 if (searchType === "more") 
                     return Bookz.getMoreInRoom(search, rid)
                 if (searchType === "published") 
-                    return Bookz.getPublishDateInRoom(parsePagesAndDate(search), rid)
+                    return Bookz.getPublishDateInRoom(parsePagesAndDate(search, searchType), rid)
                 if (searchType === "pages") 
-                    return Bookz.getPagesInRoom(parsePagesAndDate(search), rid)
+                    return Bookz.getPagesInRoom(parsePagesAndDate(search, searchType), rid)
                 if (searchType === "language")
                     return Bookz.getLangInRoom(search, rid)
                 return []
@@ -167,9 +124,9 @@ const Rooms = () => {
                 if (searchType === "more") 
                     return Bookz.getMoreInBookcase(search, bcid)
                 if (searchType === "published") 
-                    return Bookz.getPublishDateInBookcase(parsePagesAndDate(search), rid)
+                    return Bookz.getPublishDateInBookcase(parsePagesAndDate(search, searchType), rid)
                 if (searchType === "pages") 
-                    return Bookz.getPagesInBookcase(parsePagesAndDate(search), rid)
+                    return Bookz.getPagesInBookcase(parsePagesAndDate(search, searchType), rid)
                 if (searchType === "language")
                     return Bookz.getLangInBookcase(search, bcid)
                 return []
@@ -187,9 +144,9 @@ const Rooms = () => {
                 if (searchType === "more") 
                     return Bookz.getMoreInShelf(search, shid)
                 if (searchType === "published") 
-                    return Bookz.getPublishDateInShelf(parsePagesAndDate(search), rid)
+                    return Bookz.getPublishDateInShelf(parsePagesAndDate(search, searchType), rid)
                 if (searchType === "pages") 
-                    return Bookz.getPagesInShelf(parsePagesAndDate(search), rid)
+                    return Bookz.getPagesInShelf(parsePagesAndDate(search, searchType), rid)
                 if (searchType === "language")
                     return Bookz.getLangInShelf(search, shid)
                 return []
@@ -201,7 +158,7 @@ const Rooms = () => {
                 if (searchType === "all") 
                     return results.filter((b) => b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase()) || b.genre.toLowerCase().includes(search.toLowerCase()) || b.more.toLowerCase().includes(search.toLowerCase()) || b.color.toLowerCase().includes(search.toLowerCase()))
                 if (searchType === "published" || searchType === "pages") {
-                    let { greater, lesser } = parsePagesAndDate(search)
+                    let { greater, lesser } = parsePagesAndDate(search, searchType)
                     if (searchType === "published")
                         return results.filter((b) => b.pdate > greater && b.pdate < lesser)
                     else

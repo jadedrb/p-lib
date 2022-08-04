@@ -250,3 +250,48 @@ export const utilTime = (date) => {
 }
 
 export const A_WEEKS_TIME = 1000 * 60 * 60 * 24 * 7
+
+
+
+export const parsePagesAndDate = (search, searchType) => {
+    let greater, lesser;
+    // All this is to handle better searches for publish date and pages
+    if (/s/.test(search)) {
+        if (searchType === "published") {
+            let tenYearStart = Number(search.split("s")[0])
+            greater = tenYearStart - 1
+            lesser = tenYearStart + 11
+        } else {
+            let hundredYearStart = Number(search.split("s")[0])
+            greater = hundredYearStart - 1
+            lesser = hundredYearStart + 101
+        }
+    }
+    if (/>/.test(search)) {
+        let rinse = search.split(">")
+        greater = rinse.filter(p => !/>/.test(p) && p !== "")
+        if (greater.length > 1) 
+            greater = rinse.filter(p => !/</.test(p)).join().trim()
+        else 
+            greater = greater.join().split("<")[0].trim()
+    }
+    if (/</.test(search)) {
+        let rinse = search.split("<")
+        lesser = rinse.filter(p => !/</.test(p) && p !== "")
+        if (lesser.length > 1) 
+            lesser = rinse.filter(p => !/>/.test(p)).join().trim()
+        else 
+            lesser = lesser.join().split(">")[0].trim()
+    }
+
+    if (!greater && !lesser && search.length > 0) {
+        greater = Number(search.trim()) - 1
+        lesser = Number(search.trim()) + 1
+    } else if (greater && !lesser) {
+        lesser = "9999"
+    } else if (!greater && lesser) {
+        greater = "0"
+    }
+
+    return { greater: Number(greater), lesser: Number(lesser) }
+}

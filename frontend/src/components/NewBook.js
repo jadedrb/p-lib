@@ -126,7 +126,6 @@ const NewBook = ({ setCurrShelf }) => {
     // If enter press on the last input OR if they click the Save button
     if ((nextInput?.name === "reset" || e.target.name === "save") && (nextInput?.name !== e.target.name)) {
       handleSaveCreate()
-      console.log('here2')
       inputMania.current = true
       setTimeout(() => inputMania.current = false, 200)
     }
