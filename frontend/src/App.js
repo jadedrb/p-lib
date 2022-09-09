@@ -16,6 +16,7 @@ import RoomService from './services/RoomService';
 
 import { loading, clearLoading, A_WEEKS_TIME } from './services/utility'
 
+
 function App() {
 
   let { selected, user, dispatch, setup, settings } = useLibContext()
@@ -80,7 +81,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.64')
+      console.log('v1.65')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))

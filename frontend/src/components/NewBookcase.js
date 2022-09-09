@@ -78,7 +78,6 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
                 onClick={() => navigate(utilPath(path, 'book', b.id)) }
                 style={{ backgroundColor: bid === b?.id && b.color ? b.color : bid === b?.id && !b.color ? 'lightgrey' : bid !== b.id && currentBook?.color === "white" && bid ? 'lightgrey' : "white" }}
               >
-                
               </span>
             ) : 
             null}

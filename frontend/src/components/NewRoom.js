@@ -152,7 +152,8 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
     for (let r = 1; r <= height; r++) {
       for (let c = 1; c <= width; c++) {
         let div = document.createElement("div");
-        div.setAttribute("class", `box r-${r}-c-${c}`);
+        div.classList.add('box')
+        div.classList.add(`r-${r}-c-${c}`)
 
         if (
           (bcStart[0] === r && bcStart[1] === c) ||
@@ -177,6 +178,9 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
 
         if (tiles) {
           div.style.backgroundColor = currentBookcase.color;
+          console.log(currentBookcase)
+          div.classList.add('bookcase-tag')
+          div.setAttribute('data-bk-tag', currentBookcase.location)
           if (currentBookcase.id === bcid) {
             if (reposition.toggle) {
               div.style.opacity = ".3"

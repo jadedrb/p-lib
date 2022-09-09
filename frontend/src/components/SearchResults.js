@@ -17,7 +17,7 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
     let [startResult, setStartResult] = useState(0)
 
     let limit = 150
-    let totalPages = Math.ceil(books.length / limit)
+    let totalPages = Math.ceil(books?.length / limit)
 
     let [endResult, setEndResult] = useState(limit)
 
@@ -28,7 +28,7 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
     let navigate = useNavigate()
 
     const recordSetup = () => {
-        if (searchIn !== 'results' && books.length) {
+        if (searchIn !== 'results' && books?.length) {
             setRecordedSearch([search])
             setRecordedSearchType([searchType])
         } else {
@@ -73,9 +73,9 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
 
     let renderedBooks = utilOrder(books, order, ascDesc)
 
-    renderedBooks = renderedBooks.slice(startResult, endResult)
+    renderedBooks = renderedBooks?.slice(startResult, endResult)
 
-    renderedBooks = renderedBooks.map((b,i) => {
+    renderedBooks = renderedBooks?.map((b,i) => {
         return (
             <tr 
                 className='table-head'
@@ -98,10 +98,10 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
 
     return (
         <>
-        <div style={{ height }} className={`table-contain search-c ${!renderedBooks.length && 'table-cc'}`} onScroll={(e) => setRight(e.target.scrollLeft)}>
+        <div style={{ height }} className={`table-contain search-c ${!renderedBooks?.length && 'table-cc'}`} onScroll={(e) => setRight(e.target.scrollLeft)}>
             <div className='x-results-wrapper' style={{ height: resultRef?.current?.offsetHeight ? `${resultRef.current.offsetHeight}px` : '100px', right: `-${Math.floor(right)}px` }}><div className="pm-r min-room x-results" onClick={closeSearchResults}>X</div></div>
-            {renderedBooks.length ? <h5 className='res-top'>results: {books.length}</h5> : null}
-            <h6>{recordedSearch.map((rec, i, arr) => <span key={i}>{`"${rec}" in ${recordedSearchType[i]}`}{arr.length > 1 && i !== arr.length -1 ? ' & ' : ''}</span>)}{recordedSearchIn ? ` from ${recordedSearchIn}` : ''}</h6>
+            {renderedBooks?.length ? <h5 className='res-top'>results: {books?.length}</h5> : null}
+            <h6>{recordedSearch.map((rec, i, arr) => <span key={i}>{`"${rec}" in ${recordedSearchType[i]}`}{arr?.length > 1 && i !== arr?.length -1 ? ' & ' : ''}</span>)}{recordedSearchIn ? ` from ${recordedSearchIn}` : ''}</h6>
             {renderedBooks?.length ? 
                 <table className='booklist' ref={resultRef}>
                     <thead>
@@ -122,7 +122,7 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
                 </table>
             : <span>No results found</span>}
         </div>
-        {books.length > limit ?
+        {books?.length > limit ?
             <div className='pages'>
             <span style={{ opacity: pages > 1 ? '1' : '.1', pointerEvents: pages > 1 ? '' : 'none' }} onClick={() => {
                 setPages(pages ? pages - 1 : pages)

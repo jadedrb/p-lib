@@ -59,9 +59,9 @@ const Rooms = () => {
     }, [rid, shid, bcid])
 
     useEffect(() => {
-        if (!results.length && searchIn === "results")
+        if (!results?.length && searchIn === "results")
             setSearchIn("library")
-    }, [results.length, searchIn])
+    }, [results?.length, searchIn])
 
     useEffect(() => {
         if (wrapperRef.current.finish)
@@ -69,105 +69,105 @@ const Rooms = () => {
     }, [showRooms])
 
     const determineSearchArea = (search, user) => {
-        switch(searchIn) {
-            case "library":
-                if (searchType === "title") 
-                    return Bookz.getTitleForUser(search, user)
-                if (searchType === "genre")
-                    return Bookz.getGenreForUser(search, user)
-                if (searchType === "more")
-                    return Bookz.getMoreForUser(search, user)
-                if (searchType === "all") 
-                    return Bookz.getAllForUser(search, user)
-                if (searchType === "color")
-                    return Bookz.getColorForUser(search, user)
-                if (searchType === "author")
-                    return Bookz.getAuthorForUser(search, user)
-                if (searchType === "published")
-                    return Bookz.getPublishDateForUser(parsePagesAndDate(search, searchType), user)
-                if (searchType === "pages")
-                    return Bookz.getPagesForUser(parsePagesAndDate(search, searchType), user)
-                if (searchType === "language")
-                    return Bookz.getLangForUser(search, user)
-                return []
-            case "room":
-                if (searchType === "title") 
-                    return Bookz.getTitleInRoom(search, rid)
-                if (searchType === "genre") 
-                    return Bookz.getGenreInRoom(search, rid)
-                if (searchType === "color") 
-                    return Bookz.getColorInRoom(search, rid)
-                if (searchType === "author")
-                    return Bookz.getAuthorInRoom(search, rid)
-                if (searchType === "all") 
-                    return Bookz.getAllInRoom(search, rid)
-                if (searchType === "more") 
-                    return Bookz.getMoreInRoom(search, rid)
-                if (searchType === "published") 
-                    return Bookz.getPublishDateInRoom(parsePagesAndDate(search, searchType), rid)
-                if (searchType === "pages") 
-                    return Bookz.getPagesInRoom(parsePagesAndDate(search, searchType), rid)
-                if (searchType === "language")
-                    return Bookz.getLangInRoom(search, rid)
-                return []
-            case "bookcase":
-                if (searchType === "title") 
-                    return Bookz.getTitleInBookcase(search, bcid)
-                if (searchType === "genre") 
-                    return Bookz.getGenreInBookcase(search, bcid)
-                if (searchType === "color") 
-                    return Bookz.getColorInBookcase(search, bcid)
-                if (searchType === "author")
-                    return Bookz.getAuthorInBookcase(search, bcid)
-                if (searchType === "all") 
-                    return Bookz.getAllInBookcase(search, bcid)
-                if (searchType === "more") 
-                    return Bookz.getMoreInBookcase(search, bcid)
-                if (searchType === "published") 
-                    return Bookz.getPublishDateInBookcase(parsePagesAndDate(search, searchType), rid)
-                if (searchType === "pages") 
-                    return Bookz.getPagesInBookcase(parsePagesAndDate(search, searchType), rid)
-                if (searchType === "language")
-                    return Bookz.getLangInBookcase(search, bcid)
-                return []
-            case "shelf":
-                if (searchType === "title") 
-                    return Bookz.getTitleInShelf(search, shid)
-                if (searchType === "genre") 
-                    return Bookz.getGenreInShelf(search, shid)
-                if (searchType === "color") 
-                    return Bookz.getColorInShelf(search, shid)
-                if (searchType === "author")
-                    return Bookz.getAuthorInShelf(search, shid)
-                if (searchType === "all") 
-                    return Bookz.getAllInShelf(search, shid)
-                if (searchType === "more") 
-                    return Bookz.getMoreInShelf(search, shid)
-                if (searchType === "published") 
-                    return Bookz.getPublishDateInShelf(parsePagesAndDate(search, searchType), rid)
-                if (searchType === "pages") 
-                    return Bookz.getPagesInShelf(parsePagesAndDate(search, searchType), rid)
-                if (searchType === "language")
-                    return Bookz.getLangInShelf(search, shid)
-                return []
-            case "results":
-                if (searchType === "title" || searchType === "genre" || searchType === "color" || searchType === "author" || searchType === "more") 
-                    return results.filter((b) => b[searchType].toLowerCase().includes(search.toLowerCase()))
-                if (searchType === "language")
-                    return results.filter((b) => b["lang"].toLowerCase().includes(search.toLowerCase()))
-                if (searchType === "all") 
-                    return results.filter((b) => b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase()) || b.genre.toLowerCase().includes(search.toLowerCase()) || b.more.toLowerCase().includes(search.toLowerCase()) || b.color.toLowerCase().includes(search.toLowerCase()))
-                if (searchType === "published" || searchType === "pages") {
-                    let { greater, lesser } = parsePagesAndDate(search, searchType)
+            switch(searchIn) {
+                case "library":
+                    if (searchType === "title") 
+                        return Bookz.getTitleForUser(search, user)
+                    if (searchType === "genre")
+                        return Bookz.getGenreForUser(search, user)
+                    if (searchType === "more")
+                        return Bookz.getMoreForUser(search, user)
+                    if (searchType === "all") 
+                        return Bookz.getAllForUser(search, user)
+                    if (searchType === "color")
+                        return Bookz.getColorForUser(search, user)
+                    if (searchType === "author")
+                        return Bookz.getAuthorForUser(search, user)
                     if (searchType === "published")
-                        return results.filter((b) => b.pdate > greater && b.pdate < lesser)
-                    else
-                        return results.filter((b) => b.pages > greater && b.pages < lesser)
-                }
-                return []
-            default:
-                return []
-        }
+                        return Bookz.getPublishDateForUser(parsePagesAndDate(search, searchType), user)
+                    if (searchType === "pages")
+                        return Bookz.getPagesForUser(parsePagesAndDate(search, searchType), user)
+                    if (searchType === "language")
+                        return Bookz.getLangForUser(search, user)
+                    return []
+                case "room":
+                    if (searchType === "title") 
+                        return Bookz.getTitleInRoom(search, rid)
+                    if (searchType === "genre") 
+                        return Bookz.getGenreInRoom(search, rid)
+                    if (searchType === "color") 
+                        return Bookz.getColorInRoom(search, rid)
+                    if (searchType === "author")
+                        return Bookz.getAuthorInRoom(search, rid)
+                    if (searchType === "all") 
+                        return Bookz.getAllInRoom(search, rid)
+                    if (searchType === "more") 
+                        return Bookz.getMoreInRoom(search, rid)
+                    if (searchType === "published") 
+                        return Bookz.getPublishDateInRoom(parsePagesAndDate(search, searchType), rid)
+                    if (searchType === "pages") 
+                        return Bookz.getPagesInRoom(parsePagesAndDate(search, searchType), rid)
+                    if (searchType === "language")
+                        return Bookz.getLangInRoom(search, rid)
+                    return []
+                case "bookcase":
+                    if (searchType === "title") 
+                        return Bookz.getTitleInBookcase(search, bcid)
+                    if (searchType === "genre") 
+                        return Bookz.getGenreInBookcase(search, bcid)
+                    if (searchType === "color") 
+                        return Bookz.getColorInBookcase(search, bcid)
+                    if (searchType === "author")
+                        return Bookz.getAuthorInBookcase(search, bcid)
+                    if (searchType === "all") 
+                        return Bookz.getAllInBookcase(search, bcid)
+                    if (searchType === "more") 
+                        return Bookz.getMoreInBookcase(search, bcid)
+                    if (searchType === "published") 
+                        return Bookz.getPublishDateInBookcase(parsePagesAndDate(search, searchType), rid)
+                    if (searchType === "pages") 
+                        return Bookz.getPagesInBookcase(parsePagesAndDate(search, searchType), rid)
+                    if (searchType === "language")
+                        return Bookz.getLangInBookcase(search, bcid)
+                    return []
+                case "shelf":
+                    if (searchType === "title") 
+                        return Bookz.getTitleInShelf(search, shid)
+                    if (searchType === "genre") 
+                        return Bookz.getGenreInShelf(search, shid)
+                    if (searchType === "color") 
+                        return Bookz.getColorInShelf(search, shid)
+                    if (searchType === "author")
+                        return Bookz.getAuthorInShelf(search, shid)
+                    if (searchType === "all") 
+                        return Bookz.getAllInShelf(search, shid)
+                    if (searchType === "more") 
+                        return Bookz.getMoreInShelf(search, shid)
+                    if (searchType === "published") 
+                        return Bookz.getPublishDateInShelf(parsePagesAndDate(search, searchType), rid)
+                    if (searchType === "pages") 
+                        return Bookz.getPagesInShelf(parsePagesAndDate(search, searchType), rid)
+                    if (searchType === "language")
+                        return Bookz.getLangInShelf(search, shid)
+                    return []
+                case "results":
+                    if (searchType === "title" || searchType === "genre" || searchType === "color" || searchType === "author" || searchType === "more") 
+                        return results.filter((b) => b[searchType].toLowerCase().includes(search.toLowerCase()))
+                    if (searchType === "language")
+                        return results.filter((b) => b["lang"].toLowerCase().includes(search.toLowerCase()))
+                    if (searchType === "all") 
+                        return results.filter((b) => b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase()) || b.genre.toLowerCase().includes(search.toLowerCase()) || b.more.toLowerCase().includes(search.toLowerCase()) || b.color.toLowerCase().includes(search.toLowerCase()))
+                    if (searchType === "published" || searchType === "pages") {
+                        let { greater, lesser } = parsePagesAndDate(search, searchType)
+                        if (searchType === "published")
+                            return results.filter((b) => b.pdate > greater && b.pdate < lesser)
+                        else
+                            return results.filter((b) => b.pages > greater && b.pages < lesser)
+                    }
+                    return []
+                default:
+                    return []
+            }
     }
     const toggleRoomsView = () => {
         if (wrapperRef.current.finish) return
@@ -192,7 +192,7 @@ const Rooms = () => {
             setSearchType(value.slice(1))
             setSearch("")
         } else if (value === "#library" || value === "#room" || value === "#bookcase" || value === "#shelf" || value === "#results") {
-            if ((value === "#room" && rid) || (value === "#bookcase" && bcid) || (value === "#shelf" && shid) || (value === "#results" && results.length))
+            if ((value === "#room" && rid) || (value === "#bookcase" && bcid) || (value === "#shelf" && shid) || (value === "#results" && results?.length))
                 setSearchIn(value.slice(1))
             setSearch("")
         } else if (value === "#roll") {
@@ -246,7 +246,7 @@ const Rooms = () => {
 
     return (
         <div className="rooms">
-            {(search && !typing && showResults) || results.length || (!results.length && searchIn === 'results') ? 
+            {(search && !typing && showResults) || results?.length || (!results?.length && searchIn === 'results') ? 
                 <SearchResults 
                     search={search} 
                     searchType={searchType} 
@@ -356,7 +356,7 @@ const Rooms = () => {
                         {rid && searchGroup === "space" && <option value="room">Search Room:</option>}
                         {bcid && searchGroup === "space" && <option value="bookcase">Search Bookcase:</option>}
                         {shid && searchGroup === "space" && <option value="shelf">Search Shelf:</option>}
-                        {results.length && searchGroup === "space" && <option value="results">Search Results:</option>}
+                        {results?.length && searchGroup === "space" && <option value="results">Search Results:</option>}
 
                     </select>
                     <input 
