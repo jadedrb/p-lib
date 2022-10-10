@@ -24,6 +24,7 @@ public class Room {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	private String name;
+	private String perspective;
 	private int height;
 	private int width;
 	private int tile;
@@ -40,12 +41,13 @@ public class Room {
 	
 	public Room() {}
 
-	public Room(String name, int height, int width, int tile) {
+	public Room(String name, int height, int width, int tile, String perspective) {
 		super();
 		this.name = name;
 		this.height = height;
 		this.width = width;
 		this.tile = tile;
+		this.perspective = perspective;
 	}
 	
 	public void addBook(Book book) {
@@ -127,5 +129,14 @@ public class Room {
 	public void setWidth(int width) {
 		this.width = width;
 	}
+
+	public String getPerspective() {
+		return perspective;
+	}
+
+	public void setPerspective(String perspective) {
+		this.perspective = perspective;
+	}
+
 	
 }

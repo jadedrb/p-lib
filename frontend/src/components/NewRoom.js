@@ -16,6 +16,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
     tile: 25,
     name: "New Room",
     bookcases: [],
+    perspective: null,
     id: 0,
   };
 
@@ -27,6 +28,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
   let [width, setWidth] = useState(currentRoom.width);
   let [tile, setTile] = useState(currentRoom.tile);
   let [name, setName] = useState(currentRoom.name);
+  let [perspective, setPerspective] = useState(currentRoom.perspective ?? "")
 
   let [bcStart, setBcStart] = useState("");
   let [bcEnd, setBcEnd] = useState("");
@@ -123,6 +125,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
     setTile(rooms[idx].tile)
     setName(rooms[idx].name)
     setBookcases(rooms[idx].bookcases)
+    setPerspective(rooms[idx].perspective ?? "")
     setBcStart('')
     setBcEnd('')
   }
@@ -135,6 +138,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
     setTile(defaultRoom.tile)
     setName(defaultRoom.name)
     setBookcases(defaultRoom.bookcases)
+    setPerspective(defaultRoom.perspective)
     setBcStart('')
     setBcEnd('')
   }
@@ -178,9 +182,10 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
 
         if (tiles) {
           div.style.backgroundColor = currentBookcase.color;
-          console.log(currentBookcase)
+
           div.classList.add('bookcase-tag')
           div.setAttribute('data-bk-tag', currentBookcase.location)
+
           if (currentBookcase.id === bcid) {
             if (reposition.toggle) {
               div.style.opacity = ".3"
@@ -285,13 +290,14 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
     }
   }, [reposition, edit])
 
-  const roomConstruct = (h, w, rn, ti, bc) => {
+  const roomConstruct = (h, w, rn, ti, bc, per) => {
     return {
       height: h ? h : height,
       width: w ? w : width,
       name: rn ? rn : name,
       tile: ti ? ti : tile,
       bookcases: bc ? bc : bookcases,
+      perspective: per === 'null' ? null : perspective
     };
   };
 
@@ -319,7 +325,8 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
   };
 
   const newBlankRoom = async () => {
-    let rm = roomConstruct(10, 10, "New Room", 25, []);
+    let rm = roomConstruct(10, 10, "New Room", 25, [], 'null');
+   
     let payload = await Rooms.addRoomForUser(rm, user);
     navigate(utilPath(path, "room", payload.id));
     dispatch({ type: ADD_ROOM, payload })
@@ -345,9 +352,12 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
 
   return (
     <div className="newroom">
-      <h3>
-        <span>{name}</span> ({rIndex + 1})
-      </h3>
+     
+        <figure>
+          <span>{name}</span> ({rIndex + 1})
+          {perspective && <figcaption>({perspective})</figcaption>}
+        </figure> 
+ 
       <div className="pm">
         <div className="pm-r ed" onClick={() => { 
           if (bcStart) setBcStart("");
@@ -427,6 +437,13 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
             onChange={(e) => setName(e.target.value)}
             placeholder="room name"
             value={name}
+          />
+          <label htmlFor="per">Perspective</label>
+          <input
+            id="per"
+            onChange={(e) => setPerspective(e.target.value)}
+            placeholder="ex: facing the window"
+            value={perspective}
           />
           <button>Save</button>
         </form>

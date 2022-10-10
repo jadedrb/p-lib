@@ -37,7 +37,7 @@ const Rooms = () => {
     let [showMarkers, setShowMarkers] = useState(false)
     let [userDetails, setUserDetails] = useState({})
     let [categoryDetails, setCategoryDetails] = useState(null)
-    let [searchGroup, setSearchGroup] = useState("space")
+    let [searchGroup, setSearchGroup] = useState("category")
 
     useEffect(() => {
         let delay;

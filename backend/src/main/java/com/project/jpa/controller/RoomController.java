@@ -105,6 +105,7 @@ public class RoomController {
 		oldRoom.setName(newRoom.getName());
 		oldRoom.setWidth(newRoom.getWidth());
 		oldRoom.setTile(newRoom.getTile());
+		oldRoom.setPerspective(newRoom.getPerspective());
 		
 		return roomRepo.save(oldRoom);
 	}

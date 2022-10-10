@@ -117,13 +117,19 @@ tr:hover {
     position: relative;
 }
 
-.newroom h3 {
+.newroom figure {
     text-align: center;
     padding: 10px;
+    font-size: 16px;
 }
 
-.newroom h3 span {
+.newroom figure span {
     color: rgb(74, 74, 255);
+}
+
+.newroom figure figcaption {
+    font-size: 12px;
+    opacity: .3;
 }
 
 .newroom form {
@@ -426,7 +432,7 @@ Search
     position: sticky;
     top: -10px;
     height: 20px;
-    font-size: 1rem;
+    font-size: 1.5rem;
   
     padding: 1px;
 }
