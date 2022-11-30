@@ -69,6 +69,17 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
     }
 
     renderedBooks = renderedBooks?.map((b,i) => {
+        
+        const styleMarkedBooks = { 
+            backgroundColor: b.markers?.includes('missing') ? 'gold'
+            :
+            b.markers?.includes('favorite') ? '#6363FF'
+            :
+            b.markers?.includes('select') ? 'lightskyblue'
+            :
+            'inherit'
+        }
+
         return (
             <tr 
                 className={`bk-${b.id}`}
@@ -82,6 +93,7 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
                 style={{ outline: selected.highlight.includes(b?.id + "") ? '3px solid rgb(74, 74, 255)' : bid === b?.id ? '3px solid black' : 'none', opacity: (bid === b?.id || selected.highlight.includes(b?.id + "")) && focusOn ? '1' : !focusOn ? '1' : '.3' }}
             >
                 <td 
+                    style={styleMarkedBooks}
                     onMouseOver={(e) => {
                         if (b.id === bid) {
                             if (b.color === "white" || b.color === "black") 
@@ -89,16 +101,16 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
                             e.target.style.color = b.color
                         }
                     }}
-                    onMouseLeave={(e) => { e.target.style.color = 'black'; e.target.style.backgroundColor = 'inherit'}}
+                    onMouseLeave={(e) => { e.target.style.color = 'black'; e.target.style.backgroundColor = styleMarkedBooks.backgroundColor }}
                     onClick={(e) => { if (b.id === bid && e.target.style.color === b.color) thumbnailPreview(b); }}
                 >{b.title}</td>
-                <td>{b.author}</td>
-                <td style={{ color: bid === b?.id && focusOn ? b.color : 'black', backgroundColor: bid === b?.id && focusOn && b.color === "white" ? "lightgrey" : 'inherit' }}>{b.color}</td>
-                <td>{b.genre}</td>
-                <td>{b.lang}</td>
-                <td>{b.pdate}</td>
-                <td>{b.pages}</td>
-                <td className={`${b.id !== bid ? 'bk-more' : ''}`}>{b.more}</td>
+                <td style={styleMarkedBooks}>{b.author}</td>
+                <td style={{ color: bid === b?.id && focusOn ? b.color : 'black', backgroundColor: bid === b?.id && focusOn && b.color === "white" ? "lightgrey" : styleMarkedBooks.backgroundColor }}>{b.color}</td>
+                <td style={styleMarkedBooks}>{b.genre}</td>
+                <td style={styleMarkedBooks}>{b.lang}</td>
+                <td style={styleMarkedBooks}>{b.pdate}</td>
+                <td style={styleMarkedBooks}>{b.pages}</td>
+                <td style={styleMarkedBooks} className={`${b.id !== bid ? 'bk-more' : ''}`}>{b.more}</td>
             </tr>
         )
     })

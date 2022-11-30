@@ -216,8 +216,29 @@ const NewBook = ({ setCurrShelf }) => {
       setInputs({ ...inputs, ...valid });
   }
 
+  const marked = currentBook?.markers?.includes('missing') ? 'Missing' 
+  : currentBook?.markers?.includes('favorite') ? 'Favorited' 
+  : currentBook?.markers?.includes('select') ? 'Selected'
+  : null
+
+  const styleMarkedBooks = { 
+    border: marked === 'Missing' ? '3px solid gold'
+    :
+    marked === 'Favorited' ? '3px solid #6363FF'
+    :
+    marked === 'Selected' ? '3px solid lightskyblue'
+    :
+    'inherit'
+  }
+  
+  let markedWordStyle = {
+    color: marked === 'Missing' ? 'gold'
+    : marked === 'Favorited' ? 'blue'
+    : 'lightskyblue'
+  }
+
   return (
-    <div className="nb-contain">
+    <div className="nb-contain" style={styleMarkedBooks}>
       {shelfPres ?
           <>
           <div className="pm">
@@ -382,6 +403,8 @@ const NewBook = ({ setCurrShelf }) => {
         path={path}
         navigate={navigate}
       /> : "No book selected"}
+
+{bid && marked && <div className="mrk-dwn">marked as <span style={markedWordStyle}>{marked}</span></div>}
     </div>
   );
 };
