@@ -1,5 +1,4 @@
 import { utilTime, loading, clearLoading } from "../services/utility"
-import GeneralModal from './GeneralModal'
 import UserService from '../services/UserService'
 import { UPDATE_SETTINGS } from '../context'
 
@@ -78,7 +77,7 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
     }
 
     return ( 
-        <GeneralModal toggle={handleShowDetails}>
+        
                     <div className="u-modal" style={responsiveHeightObj} ref={hubRef}>
                         <div>
                             <h3><span>{user}</span> <span>library</span> <span>settings</span></h3>
@@ -137,7 +136,7 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
                             </div>
                         </div>
                     </div>
-                </GeneralModal>
+               
      );
 }
 

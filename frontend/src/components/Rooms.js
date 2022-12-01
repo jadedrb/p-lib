@@ -235,8 +235,8 @@ const Rooms = () => {
     const handleShowDetails = async () => {
         if (!showUserDet) {
             // setTimeout(() => loading(".u-modal"), 1)
-            setShowUserDet(!showUserDet)
             let usr = await UserService.getUserDetails(user)
+            setShowUserDet(!showUserDet)
             setUserDetails(usr.filter(ud => ud.hasOwnProperty(user))[0])
             // clearLoading()
         } else {
@@ -403,6 +403,7 @@ const Rooms = () => {
             }
 
             {showUserDet && 
+            <GeneralModal toggle={handleShowDetails}>
                 <Settings
                     rooms={rooms} 
                     settings={settings} 
@@ -414,6 +415,7 @@ const Rooms = () => {
                     handleLogout={handleLogout}
                     handleShowDetails={handleShowDetails}
                 />
+            </GeneralModal>
             }
 
             {showMarkers && 
