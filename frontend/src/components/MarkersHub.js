@@ -112,9 +112,9 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
 
     let markedBookStyle = selectedMarker === 'favorited' ? selectedStyleFav : selectedMarker === 'selected' ? selectedStyleSel : selectedStyleMis 
 
-    let responsiveHeightObj = (hubRef.current?.offsetHeight + 100) > responsiveHeight ? {
-        height: `${responsiveHeight - 100}px` 
-    } : null
+    let responsiveHeightObj = {
+        maxHeight: `${responsiveHeight - 100}px` 
+    }
 
     return ( 
             <div className="u-modal markers-hub" style={responsiveHeightObj} ref={hubRef}>
