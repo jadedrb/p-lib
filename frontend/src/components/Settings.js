@@ -1,4 +1,4 @@
-import { utilTime, loading, clearLoading } from "../services/utility"
+import { utilTime } from "../services/utility"
 import UserService from '../services/UserService'
 import { UPDATE_SETTINGS } from '../context'
 
@@ -7,14 +7,50 @@ import { useRef, useEffect, useState } from 'react'
 function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUserDet, handleLogout, handleShowDetails, settings }) {
 
     const [responsiveHeight, setResponsiveHeight] = useState(window.innerHeight)
+    const [tempSettings, setTempSettings] = useState({ ...settings })
 
     const hubRef = useRef()
+    let wrapperRef = useRef()
+
+    const updateOnExit = async () => {
+        const changesWereMade = Object.keys(tempSettings).some((prop) => tempSettings[prop] !== settings[prop])
+        if (changesWereMade) {
+            await UserService.updateUserOfId({ other: JSON.stringify(tempSettings)}, userDetails[user]) 
+            dispatch({
+                type: UPDATE_SETTINGS,
+                payload: tempSettings
+            })
+        }
+    }
+
+    wrapperRef.current = { mount: false, updateOnExit }
 
     useEffect(() => {
         const resize = (e) => setResponsiveHeight(e.target.innerHeight)
         window.addEventListener('resize', resize);
-        return () => window.removeEventListener('resize', resize)
+
+        let { mount } = wrapperRef.current
+        let timeout = setTimeout(() => {
+            mount = true
+        }, 100)
+
+        return () => {
+            window.removeEventListener('resize', resize)
+            clearTimeout(timeout)
+            if (mount){
+                wrapperRef.current.mount = 'exit'
+            }
+        }
     }, [])
+
+    useEffect(() => {
+        return () => {
+            let { mount, updateOnExit } = wrapperRef.current
+            if (mount === 'exit') {
+                updateOnExit()
+            }
+        }
+    }, [tempSettings])
 
     const handleAccountDeletion = async (id) => {
         const confirm = window.confirm("Are you sure you want to delete your account?")
@@ -34,41 +70,14 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
         }
     }
 
-    const handleOtherSettings = async (id, setting) => {
-
-        loading(".u-modal")
-        let currentSettings = await UserService.getUserByName(user)
-        let other = {}
-
-        if (currentSettings.other)
-            other = JSON.parse(currentSettings.other)
-   
-        other = { ...other, [Object.keys(setting)[0]]: Object.values(setting)[0] }
-        await UserService.updateUserOfId({ other: JSON.stringify(other)}, id) 
-        
-        dispatch({
-            type: UPDATE_SETTINGS,
-            payload: other
-        })
-
-        clearLoading()
-    }
-
-    const handleTempReadWrite = () => {
-        dispatch({ 
-            type: UPDATE_SETTINGS, 
-            payload: { temp: settings.temp === "Read/Write" ? "Read Only" : "Read/Write" }
-        })
-    }
-
-    const handleJumpChange = (e) => {
-        handleOtherSettings(userDetails[user], { jump: e.target.value })
+    const handleUpdateSettings = (__, setting) => {
+        const alteredSettings = { ...tempSettings, [Object.keys(setting)[0]]: Object.values(setting)[0] }
+        setTempSettings(alteredSettings)
     }
 
     const handleCreationTime = (ud) => utilTime(Object.keys(ud).filter(udp => /[0-9]/.test(udp))[0])
 
-     // const lastFirst = settings.names === 'last, first'
-     const readWrite = settings.default === 'Read Only'
+     const readWrite = tempSettings.default === 'Read Only'
 
     let responsiveHeightObj = (hubRef.current?.offsetHeight + 100) > responsiveHeight ? {
         height: `${responsiveHeight - 100}px` 
@@ -93,15 +102,19 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
                             <div className="u-modal-set">
                                 {/* <p>Make {lastFirst ? "first" : "last"} names appear before {lastFirst ? "last" : "first"} names (Example: {lastFirst ? "George Washington" : "Washington, George"})</p>
                                 <button onClick={() => handleOtherSettings(userDetails[user], { names: lastFirst ? "first, last" : "last, first" })}>Switch</button> */}
-                                <p>Currently set to {settings.default ? settings.default : "Read/Write"} by default. Change default to {!readWrite ? "Read Only" : "Read/Write"}</p>
-                                <button onClick={() => handleOtherSettings(userDetails[user], { default: !readWrite ? "Read Only" : "Read/Write" })}>{!readWrite ? "Read Only" : "Read/Write"}</button>
-                                <p>Your account is {settings.temp ? settings.temp : "Read/Write"}. Temporarily switch to {settings.temp === "Read/Write" ? "Read Only" : "Read/Write"}</p>
-                                <button onClick={handleTempReadWrite}>{settings.temp === "Read/Write"  ? "Read Only" : "Read/Write"}</button>
+                                <p>Currently set to {tempSettings.default ? tempSettings.default : "Read/Write"} by default. Change default to {!readWrite ? "Read Only" : "Read/Write"}</p>
+                                <button onClick={() => handleUpdateSettings(userDetails[user], { default: !readWrite ? "Read Only" : "Read/Write" })}>
+                                    {!readWrite ? "Read Only" : "Read/Write"}
+                                </button>
+                                <p>Your account is {tempSettings.temp ? tempSettings.temp : "Read/Write"}. Temporarily switch to {tempSettings.temp === "Read/Write" ? "Read Only" : "Read/Write"}</p>
+                                <button onClick={() => handleUpdateSettings(userDetails[user], { temp: tempSettings.temp === "Read/Write" ? "Read Only" : "Read/Write" })}>
+                                    {tempSettings.temp === "Read/Write"  ? "Read Only" : "Read/Write"}
+                                </button>
                                 {rooms.length ?
                                 <>
-                                    <p>Jump to {rooms[settings.jump] ? rooms[settings.jump].name : rooms[0]?.name} on login</p>
+                                    <p>Jump to {rooms[tempSettings.jump] ? rooms[tempSettings.jump].name : rooms[0]?.name} on login</p>
                                 
-                                    <select value={settings.jump} onChange={handleJumpChange} style={{ backgroundColor: 'lightgrey'}}>
+                                    <select value={tempSettings.jump} onChange={(e) => handleUpdateSettings(userDetails[user], { jump: e.target.value })} style={{ backgroundColor: 'lightgrey'}}>
                                         {rooms.map((room, i) => 
                                             <option key={room.id} value={i}>
                                                 {`${room.name} (${i + 1})`}
@@ -110,8 +123,8 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
                                     </select>
                                 </> : ''}
 
-                                <p>{!settings.roll || settings.roll === "Don't Roll" ? "Don't roll" : "Roll"} to a random book by default</p>
-                                <button onClick={() => handleOtherSettings(userDetails[user], { roll: !settings.roll || settings.roll === "Don't Roll" ? "Roll" : "Don't Roll" })}>{!settings.roll || settings.roll === "Don't Roll" ? "Roll" : "Don't Roll"}</button>
+                                <p>{!tempSettings.roll || tempSettings.roll === "Don't Roll" ? "Don't roll" : "Roll"} to a random book by default</p>
+                                <button onClick={() => handleUpdateSettings(userDetails[user], { roll: !tempSettings.roll || tempSettings.roll === "Don't Roll" ? "Roll" : "Don't Roll" })}>{!tempSettings.roll || tempSettings.roll === "Don't Roll" ? "Roll" : "Don't Roll"}</button>
 
                                 <p>Delete my personal library and account information</p>
                                 <button onClick={() => handleAccountDeletion(userDetails[user])}>Delete</button>
