@@ -776,10 +776,27 @@ select {
 
 .mrk-dwn {
     position: absolute;
-    right: 0;
-    bottom: 0;
+    right: 10px;
+    bottom: 5px;
     font-size: 10pt;
     opacity: .5;
+}
+
+.mrk-dwn:hover {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.mrk-dwn .markers {
+    /* border: 3px solid black; */
+    width: 100%;
+    display: flex;
+    justify-content: right;
+}
+
+.mrk-dwn .markers svg {
+    height: 25px;
+    margin-bottom: 35px;
 }
 
 .modal {

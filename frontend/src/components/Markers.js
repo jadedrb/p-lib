@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { useLibContext, UPDATE_BOOK } from "../context";
 import BookService from "../services/BookService";
 
-function Markers({ modalPic, selectedBook, setEnableMarkers }) {
+function Markers({ modalPic, selectedBook, setEnableMarkers, closeOption }) {
 
     const { dispatch } = useLibContext()
 
@@ -71,6 +71,13 @@ function Markers({ modalPic, selectedBook, setEnableMarkers }) {
         } else {
             setMarkers([...markers, name])
         }
+
+        if (closeOption) {
+            setTimeout(() => { 
+                closeOption(false)
+            }, 500)
+        }
+
     }
 
     return (  

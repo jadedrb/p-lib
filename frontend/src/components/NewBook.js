@@ -6,6 +6,7 @@ import { utilPath, utilitySelector, utilMsg, utilTime, loading, clearLoading } f
 import BookService from "../services/BookService"
 import Move from "./Move";
 import axios from "axios";
+import Markers from "./Markers";
 
 const NewBook = ({ setCurrShelf }) => {
   const { rooms, dispatch, user, settings } = useLibContext()
@@ -49,6 +50,9 @@ const NewBook = ({ setCurrShelf }) => {
   let [shelfPres, setShelfPres] = useState(null);
   let [currentBook, setCurrentBook] = useState(null);
 
+  let [showMarkers, setShowMarkers] = useState(null);
+  const [, setEnableMarkers] = useState(true)
+
   // let [extraData, setExtraData] = useState('');
 
   useEffect(() => {
@@ -67,6 +71,7 @@ const NewBook = ({ setCurrShelf }) => {
     }
     setShelfPres(shelf)
     setCurrentBook(book)
+    setShowMarkers(false)
 
   }, [rid, bcid, shid, rooms, bid])
 
@@ -219,7 +224,7 @@ const NewBook = ({ setCurrShelf }) => {
   const marked = currentBook?.markers?.includes('missing') ? 'Missing' 
   : currentBook?.markers?.includes('favorite') ? 'Favorited' 
   : currentBook?.markers?.includes('select') ? 'Selected'
-  : null
+  : "mark this book"
 
   const styleMarkedBooks = { 
     border: marked === 'Missing' ? '3px solid gold'
@@ -234,7 +239,8 @@ const NewBook = ({ setCurrShelf }) => {
   let markedWordStyle = {
     color: marked === 'Missing' ? 'gold'
     : marked === 'Favorited' ? 'blue'
-    : 'lightskyblue'
+    : marked === 'Selected' ? 'lightskyblue'
+    : 'inherit'
   }
 
   return (
@@ -404,7 +410,16 @@ const NewBook = ({ setCurrShelf }) => {
         navigate={navigate}
       /> : "No book selected"}
 
-{bid && marked && <div className="mrk-dwn">marked as <span style={markedWordStyle}>{marked}</span></div>}
+    {bid && 
+      <div className="mrk-dwn">
+        {marked !== "mark this book" && !showMarkers &&  "marked as "}
+        <span style={markedWordStyle} onClick={() => !showMarkers ? setShowMarkers(!showMarkers) : null}>
+          {currentBook && !showMarkers ? marked
+            : showMarkers ? <Markers modalPic='' selectedBook={currentBook} setEnableMarkers={setEnableMarkers} closeOption={setShowMarkers} />  
+            : ''
+          }
+        </span>
+      </div>}
     </div>
   );
 };
