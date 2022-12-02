@@ -11,6 +11,7 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
     const [markedBooks, setMarkedBooks] = useState([])
     const [enableMarkers, setEnableMarkers] = useState(true)
     const [showMoveStuff, setShowMoveStuff] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const [responsiveHeight, setResponsiveHeight] = useState(window.innerHeight)
 
@@ -23,11 +24,13 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
     }, [])
 
     useEffect(() => {
-        loading('.markers-hub')
+        // loading('.m-hub-body')
+        setIsLoading(true)
         BookService
             .getMarkerForUser(selectedMarker, user)
             .then(mb => {
                 setMarkedBooks(mb)
+                setIsLoading(false)
             })
 
     }, [user, selectedMarker])
@@ -106,6 +109,9 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
         }
         if (markedBooks.length) {
             return markerSpace
+        }
+        if (isLoading) {
+            return null
         }
         return <p style={{ marginBottom: '100px' }}><span>No books {selectedMarker}</span></p>
     }
