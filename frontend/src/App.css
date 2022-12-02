@@ -789,6 +789,7 @@ select {
 
 .mrk-dwn .markers {
     /* border: 3px solid black; */
+    position: fixed;
     width: 100%;
     display: flex;
     justify-content: right;
