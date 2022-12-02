@@ -383,16 +383,19 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
         </>}
       </div>
       <div className="room-sec">
-        <div
+        {/* <div className="room-map-wrap"> */}
+          <div className="room-map" ref={mapRef} onClick={handleBoxClick}></div>
+        {/* </div> */}
+      </div>
+
+      <div className="arrows">
+      <div
           className={`arrw ${rIndex <= 0 ? "hde" : ""}`}
           id="lft"
           onClick={() => switchRoom(-1)}
         >
           <span>{"<"}</span>
         </div>
-        {/* <div className="room-map-wrap"> */}
-          <div className="room-map" ref={mapRef} onClick={handleBoxClick}></div>
-        {/* </div> */}
         <div
           className={`arrw ${
             !rooms.length || rIndex + 1 === rooms.length ? "hde" : ""

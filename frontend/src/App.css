@@ -93,20 +93,42 @@ tr:hover {
 .room-sec {
     display: flex;
     justify-content: center;
-    /* border: 3px solid orange; */
 }
+
+.arrows {
+    display: flex;
+    justify-content: center;
+}
+
+/* .room-sec .arrw {
+    position: absolute;
+    bottom: -45px;
+    right: 30%;
+}
+
+.room-sec .arrw:nth-child(1) {
+    position: absolute;
+    bottom: -45px;
+    right: 60%;
+    border: 1px solid orange;
+} */
 
 .arrw {
     display: flex;
     font-size: 2rem;
     align-items: center;
     justify-content: center;
-    border: 1px solid blue;
+    border: 1px solid black;
+    border-radius: 10px;
     width: 50px;
+    margin: 10px;
 }
+
 
 .arrw:hover {
     cursor: pointer;
+    color: #4A4AFF;
+    border: 1px solid #4A4AFF;
 }
 
 .hde {
