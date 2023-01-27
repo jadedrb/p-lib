@@ -44,7 +44,7 @@ const BookList = ({ books, bid, path, navigate, selected }) => {
         let result;
 
         try {
-            result = await axios.get(`${process.env.REACT_APP_GOOGLE_API}${b.title}`)
+            result = await axios.get(`${import.meta.env.VITE_GOOGLE_API}${b.title}`)
         } catch (e) {
             console.log(e)
         }

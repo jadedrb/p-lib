@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const API = process.env.NODE_ENV === "production" ? process.env.REACT_APP_API : process.env.REACT_APP_API_DEV
+export const API = import.meta.env.PROD ? import.meta.env.VITE_API : import.meta.env.VITE_API_DEV
 export const APILite = API.slice(0,-4)
 
 export const authAxios = () => axios.create({

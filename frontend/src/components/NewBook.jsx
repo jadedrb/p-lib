@@ -192,7 +192,7 @@ const NewBook = ({ setCurrShelf }) => {
     let result, valid;
     loading('.ff-contain')
     try {
-      result = await axios.get(`${process.env.REACT_APP_GOOGLE_API}${inputs.title}`)
+      result = await axios.get(`${import.meta.env.VITE_GOOGLE_API}${inputs.title}`)
     } catch (e) {
       console.log(e)
     }
