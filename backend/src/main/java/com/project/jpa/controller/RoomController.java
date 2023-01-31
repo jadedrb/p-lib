@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.jpa.model.Bookcase;
 import com.project.jpa.model.Room;
 import com.project.jpa.model.User;
 import com.project.jpa.repository.RoomRepository;
@@ -56,6 +57,17 @@ public class RoomController {
 			
 			if (!rooms.isEmpty())
 				validUserAccess(rooms.get(0));
+			
+			
+			for (Room room : rooms) {
+				room.setBooks(null);
+				
+				for (Bookcase bkcase : room.getBookcases()) {
+					bkcase.setBooks(null);
+				}
+				
+			}
+			
 				
 			return rooms;
 	}
@@ -115,6 +127,13 @@ public class RoomController {
 		public Room roomOfUser(@PathVariable long id) throws Exception {
 			Room room = roomRepo.findById(id).orElseThrow();
 			validUserAccess(room);
+			System.out.println("here...");
+			room.setBooks(null);
+			
+			for (Bookcase bkcase : room.getBookcases()) {
+				bkcase.setBooks(null);
+			}
+			
 			return room;
 		}
 }

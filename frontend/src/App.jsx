@@ -50,8 +50,10 @@ function App() {
           })
 
           let payload = await RoomService.getRoomsForUser(user)
+          // let test = await RoomService.getRoomOfId(1)
+          // console.log(test)
           let currentSettings = await UserService.getUserByName(user)
-
+// console.log(payload)
           if (currentSettings.other) {
             let other = JSON.parse(currentSettings.other)
             dispatch({
@@ -59,8 +61,8 @@ function App() {
               payload: { ...other, temp: other.default === "Read Only" ? "Read Only" : "Read/Write" }
             })
           }
-            
-
+        
+          clearLoading()
           if (payload.length) {
             dispatch({ type: SET_ROOMS, payload })
             dispatch({ type: SETUP_COMPLETE })
@@ -81,7 +83,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.72')
+      console.log('v1.73')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))
