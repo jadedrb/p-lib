@@ -107,8 +107,7 @@ const Rooms = () => {
     }
 
     const rollRandomBook = async () => {
-        let book = await BookService.getRandomBookForUser(user)
-        let coord = await BookService.getBookCoordinates(book.id)
+        let coord = await BookService.getBookCoordinates('random')
         navigate(utilPath(coord, "coord"))
     }
 

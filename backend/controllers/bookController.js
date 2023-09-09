@@ -49,10 +49,16 @@ module.exports.show = async (req, res) => {
 module.exports.coord = async (req, res) => {
     try {
         let { id } = req.params
-    
-        const bookResult = await pool.query('SELECT room_id, shelf_id, id, bookcase_id FROM books WHERE id = $1', [id])
-        const book = bookResult.rows[0]
 
+        if (id === 'random') {
+            const { rows } = await pool.query('SELECT id FROM books WHERE user_id = $1', [req.id])
+            let random = Math.floor(Math.random() * rows.length)
+            id = rows[random].id
+        } 
+
+        const { rows } = await pool.query('SELECT room_id, shelf_id, id, bookcase_id FROM books WHERE id = $1', [id])
+        book = rows[0]
+        
         const coordinates = {
             book: book.id,
             shelf: book.shelf_id,
