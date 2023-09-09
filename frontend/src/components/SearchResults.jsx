@@ -53,8 +53,11 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
     }, [books])
 
     const whereIsThisBook = async (id) => {
+        console.log('er')
         if (bid === id) return
+        console.log('he')
         let coord = await Books.getBookCoordinates(id)
+        console.log(coord)
         navigate(utilPath(coord, "coord"))
         // prevCoord.current = id
     }

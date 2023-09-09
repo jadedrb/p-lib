@@ -35,7 +35,7 @@ function CurrentShelf() {
         let { shelf, bkcase } = utilitySelector(rid, bcid, shid, rooms)
         
         let top, bot, swap;
-        let pos = bkcase?.shelves?.findIndex(sh => sh.id === Number(shid))
+        let pos = bkcase?.shelves?.findIndex(sh => sh.id === shid)
      
         if (typeof pos === "number") {
             bot = bkcase.shelves.length - pos
@@ -102,7 +102,7 @@ function CurrentShelf() {
                         selected={selected}
                         books={currShelf.books} 
                         path={path}
-                        bid={Number(bid)}
+                        bid={bid}
                         navigate={navigate}
                     />
                     {/* {edit && <NewBook book={'test'} setCurrShelf={setCurrShelf} />} */}

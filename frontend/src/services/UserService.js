@@ -12,7 +12,7 @@ class UserService {
     }
 
     validateUserToken() {
-        return authAxiosLite().get('/auth/test').then(r => this.format(r)).catch(() => console.log('oops'))
+        return authAxiosLite().get('/api/users/test').then(r => this.format(r)).catch(() => console.log('oops'))
     }
 
     registerUser(user) {

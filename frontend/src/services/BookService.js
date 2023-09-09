@@ -253,6 +253,19 @@ class BookService {
         return authAxios().get(`/books/search/in/shelf/${id}/pages=${pages.lesser}&${pages.greater}`).then(r => this.format(r))
     }
 
+    getThisInThat(query) {
+        loading(".search-c")
+
+        let search = typeof query.search === 'string' ? `search=${query.search}&` : ''
+        let greater = typeof query.search === 'object' && query.search.greater ? `greater=${query.search.greater}&` : ''
+        let lesser = typeof query.search === 'object' && query.search.lesser ? `lesser=${query.search.lesser}&` : ''
+        let searchIn = query.searchIn ? `searchIn=${query.searchIn}&` : ''
+        let searchType = query.searchType ? `searchType=${query.searchType}&` : ''
+        let searchId = query.searchId ? `searchType=${query.searchId}&` : ''
+
+        return authAxios().get(`/books/search?${search}${searchIn}${searchType}${searchId}${greater}${lesser}`.slice(0, -1)).then(r => this.format(r))
+    }
+
     // /books/{username}/search/more={more}
 }
 

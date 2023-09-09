@@ -50,10 +50,9 @@ function App() {
           })
 
           let payload = await RoomService.getRoomsForUser(user)
-          // let test = await RoomService.getRoomOfId(1)
-          // console.log(test)
+
           let currentSettings = await UserService.getUserByName(user)
-// console.log(payload)
+
           if (currentSettings.other) {
             let other = JSON.parse(currentSettings.other)
             dispatch({

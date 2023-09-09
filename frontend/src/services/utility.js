@@ -2,17 +2,19 @@ export function utilitySelector(rid, bcid, shid, rms, bid) {
     let rooms = [ ...rms ]
     let roomIndex, room, bkcase, bkcaseIndex, shelfIndex, shelf, bookIndex, book;
     if (rid) {
-        roomIndex = rooms.findIndex((r) => r.id === Number(rid))
+        roomIndex = rooms.findIndex((r) => r.id == rid)
         room = rooms[roomIndex]
         if (bcid && room) {
-            bkcaseIndex = room.bookcases.findIndex((b) => b.id === Number(bcid))
+            bkcaseIndex = room.bookcases.findIndex((b) => {
+                return b.id === bcid
+            })
             bkcase = room.bookcases[bkcaseIndex]
             if (shid && bkcase) {
-                shelfIndex = bkcase.shelves.findIndex((sh) => sh.id === Number(shid))
+                shelfIndex = bkcase.shelves.findIndex((sh) => sh.id === shid)
                 shelf = bkcase.shelves[shelfIndex]
             }
             if (bid && shelf) {
-                bookIndex = shelf.books.findIndex((b) => b.id === Number(bid))
+                bookIndex = shelf.books.findIndex((b) => b.id === bid)
                 book = shelf.books[bookIndex]
             }
         }

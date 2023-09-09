@@ -50,10 +50,10 @@ const Bookcases = () => {
                         path={path}
                         rooms={rooms}
                         params={params}
-                        shid={Number(shid)}
-                        bid={Number(bid)}
-                        bcid={Number(bcid)}
-                        rid={Number(rid)}
+                        shid={shid}
+                        bid={bid}
+                        bcid={bcid}
+                        rid={rid}
                         settings={settings}
                     />
                 </div> 

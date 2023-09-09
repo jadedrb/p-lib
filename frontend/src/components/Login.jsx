@@ -61,7 +61,7 @@ function LoginAndRegister(props) {
             console.log('logging in...')
             
             token = await UserService.loginUser({ username, password })
-            
+           console.log('token:', token) 
             if (!validate(token)) {
                 clearLoading()
                 return

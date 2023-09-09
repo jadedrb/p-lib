@@ -52,7 +52,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
     if (rooms.length) {
       let initialJumpIndex = settings.jump ? settings.jump : 0
       if (rid) {
-        let idx = rooms.findIndex(r => r.id === Number(rid))
+        let idx = rooms.findIndex(r => r.id == rid)
         if (idx >= 0) {
           roomSetup(idx)
         } else if (!afterDeletionRef.current) {
@@ -93,7 +93,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
 
   const respondToRidChange = () => {
     if (rooms.length) {
-      let idx = rooms.findIndex(r => r.id === Number(rid))
+      let idx = rooms.findIndex(r => r.id == rid)
       if (idx >= 0) {
         roomSetup(idx)
       }
@@ -153,7 +153,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
     map.innerHTML = "";
     map.style.gridTemplateColumns = `repeat(${width}, ${tile}px)`;
     map.style.gridTemplateRows = `repeat(${height}, ${tile}px)`;
-
+    
     for (let r = 1; r <= height; r++) {
       for (let c = 1; c <= width; c++) {
         let div = document.createElement("div");
@@ -166,16 +166,16 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
         ) {
           div.style.backgroundColor = "blue";
         }
-
+        
         let currentBookcase;
 
         let tiles = bookcases.length
           ? bookcases.some((b) => {
               let result =
-                r >= b.rowLow &&
-                r <= b.rowHigh &&
-                c >= b.colLow &&
-                c <= b.colHigh;
+                r >= b.row_low &&
+                r <= b.row_high &&
+                c >= b.col_low &&
+                c <= b.col_high;
               if (result) currentBookcase = b;
               return result;
             })
@@ -193,11 +193,12 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
               div.style.outline = "3px solid white"
             } else {
               div.style.outline = "3px solid black";
+              console.log('here')
             }
           } else {
             if (bcid && !reposition.toggle) {
               div.style.opacity = ".3"
-              //div.style.backgroundColor = 'grey'
+              // div.style.backgroundColor = 'grey'
             }
           }
         }
@@ -222,10 +223,10 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
 
     let overlap = bookcases.some((b) => {
       let result =
-        row >= b.rowLow &&
-        row <= b.rowHigh &&
-        column >= b.colLow &&
-        column <= b.colHigh;
+        row >= b.row_low &&
+        row <= b.row_high &&
+        column >= b.col_low &&
+        column <= b.col_high;
       if (result) currentBookcase = b;
       return result;
     });
