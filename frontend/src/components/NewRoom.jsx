@@ -64,7 +64,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
           roomSetup(0)
 
           // Depends on the "roll" and "jump" settings
-          if (!settings.roll || settings.roll === "Don't Roll") {
+          if (!settings.roll || settings.roll === "Dont Roll") {
             navigate(utilPath(path, "room", rooms[initialJumpIndex].id))
           } else {
             rollRandomBook()
@@ -74,7 +74,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
         roomSetup(0)
         // The timeout is to trick React and prevent the warning about using useNavigate on first render
         // Depends on the "roll" and "jump" settings
-        if (!settings.roll || settings.roll === "Don't Roll") {
+        if (!settings.roll || settings.roll === "Dont Roll") {
           setTimeout(() => navigate(utilPath(path, "room", rooms[initialJumpIndex].id)), 1)
         } else {
           setTimeout(() => rollRandomBook(), 1)     

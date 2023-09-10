@@ -7,4 +7,6 @@ router.get('/test', userCtrl.test)
 router.get('/overview', userCtrl.overview)
 router.get('/:username', userCtrl.show)
 
+router.put('/', userCtrl.update)
+
 module.exports = router

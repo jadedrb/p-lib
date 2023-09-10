@@ -55,6 +55,7 @@ function App() {
 
           if (currentSettings.other) {
             let other = JSON.parse(currentSettings.other)
+            
             dispatch({
               type: UPDATE_SETTINGS,
               payload: { ...other, temp: other.default === "Read Only" ? "Read Only" : "Read/Write" }

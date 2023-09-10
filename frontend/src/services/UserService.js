@@ -38,8 +38,8 @@ class UserService {
     getUserDetails() {
         return authAxios().get(`/users/overview`).then(r => this.format(r))
     }
-    updateUserOfId(user, id) {
-        return authAxios().put(`/users/${id}`, user).then(r => this.format(r))
+    updateUser(user, id) {
+        return authAxios().put(`/users`, user).then(r => this.format(r))
     }
 }
 

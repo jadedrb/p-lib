@@ -15,7 +15,7 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
     const updateOnExit = async () => {
         const changesWereMade = Object.keys(tempSettings).some((prop) => tempSettings[prop] !== settings[prop])
         if (changesWereMade) {
-            await UserService.updateUserOfId({ other: JSON.stringify(tempSettings)}, userDetails[user]) 
+            await UserService.updateUser({ other: JSON.stringify(tempSettings) }, userDetails[user]) 
             dispatch({
                 type: UPDATE_SETTINGS,
                 payload: tempSettings
@@ -72,6 +72,7 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
 
     const handleUpdateSettings = (__, setting) => {
         const alteredSettings = { ...tempSettings, [Object.keys(setting)[0]]: Object.values(setting)[0] }
+        console.log(alteredSettings)
         setTempSettings(alteredSettings)
     }
 
@@ -123,8 +124,8 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
                                     </select>
                                 </> : ''}
 
-                                <p>{!tempSettings.roll || tempSettings.roll === "Don't Roll" ? "Don't roll" : "Roll"} to a random book by default</p>
-                                <button onClick={() => handleUpdateSettings(userDetails[user], { roll: !tempSettings.roll || tempSettings.roll === "Don't Roll" ? "Roll" : "Don't Roll" })}>{!tempSettings.roll || tempSettings.roll === "Don't Roll" ? "Roll" : "Don't Roll"}</button>
+                                <p>{!tempSettings.roll || tempSettings.roll === "Dont Roll" ? "Don't roll" : "Roll"} to a random book by default</p>
+                                <button onClick={() => handleUpdateSettings(userDetails[user], { roll: !tempSettings.roll || tempSettings.roll === "Dont Roll" ? "Roll" : "Dont Roll" })}>{!tempSettings.roll || tempSettings.roll === "Dont Roll" ? "Roll" : "Don't Roll"}</button>
 
                                 <p>Delete my personal library and account information</p>
                                 <button onClick={() => handleAccountDeletion(userDetails[user])}>Delete</button>
