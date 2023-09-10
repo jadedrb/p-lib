@@ -26,12 +26,18 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
     useEffect(() => {
         // loading('.m-hub-body')
         setIsLoading(true)
-        BookService
-            .getMarkerForUser(selectedMarker, user)
-            .then(mb => {
-                setMarkedBooks(mb)
+
+        async function getMakers() {
+            try {
+                const markers = await BookService.getThisInThat({ search: selectedMarker, searchType: 'markers' })
+                setMarkedBooks(markers)
                 setIsLoading(false)
-            })
+            } catch(err) {
+                console.log(err)
+            }
+        }
+        
+        getMakers()
 
     }, [user, selectedMarker])
 
