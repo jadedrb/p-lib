@@ -17,9 +17,9 @@ class RoomService {
         return authAxios().get(`/room/${id}`).then(r => this.format(r)).catch(() => { console.log('uhoh'); clearLoading(); return []; })
     }
 
-    getRoomsForUser(user) {
+    getRoomsForUser() {
         loading(".newroom")
-        return authAxios().get(`/rooms/${user}`).then(r => this.format(r)).catch(() => { console.log('uhoh'); clearLoading(); return []; })
+        return authAxios().get(`/rooms`).then(r => this.format(r)).catch(() => { console.log('uhoh'); clearLoading(); return []; })
     }
     
     addRoomForUser(room, user) {

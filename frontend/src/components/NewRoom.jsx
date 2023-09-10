@@ -5,7 +5,6 @@ import { randomNum, utilMsg, utilPath, rgbToHex } from "../services/utility";
 import Rooms from "../services/RoomService";
 import Bookcases from "../services/BookcaseService";
 import BookService from "../services/BookService";
-import RoomService from "../services/RoomService";
 
 const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path, settings, setup }) => {
 

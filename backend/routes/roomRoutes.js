@@ -3,6 +3,6 @@ const router = express.Router()
 
 const roomCtrl = require('../controllers/roomController')
 
-router.get('/:username', roomCtrl.index)
+router.get('/', roomCtrl.index)
 
 module.exports = router

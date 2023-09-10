@@ -16,7 +16,6 @@ import RoomService from './services/RoomService';
 
 import { loading, clearLoading, A_WEEKS_TIME } from './services/utility'
 
-
 function App() {
 
   let { selected, user, dispatch, setup, settings } = useLibContext()
@@ -49,7 +48,7 @@ function App() {
               payload: user
           })
 
-          let payload = await RoomService.getRoomsForUser(user)
+          let payload = await RoomService.getRoomsForUser()
 
           let currentSettings = await UserService.getUserByName(user)
 
