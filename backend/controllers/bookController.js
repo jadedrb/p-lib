@@ -71,3 +71,50 @@ module.exports.coord = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+
+module.exports.count = async (req, res) => {
+    try {
+        
+        let { category } = req.params
+        category = category === 'languages' ? category.slice(0, 4) : category.slice(0, -1)
+
+        const catInfoDraft = {}
+        const catInfoFinal = {}
+
+        const { rows } = await pool.query(`SELECT ${category} FROM books WHERE user_id = $1`, [req.id])
+
+        // { genre: 'Novel' }  -> row
+        for (let row of rows) {
+
+            let categoryValue = row[category]
+
+            const separator = categoryValue.includes('/') ? '/' : categoryValue.includes('&') ? '&' : null
+
+            // { genre: 'Novel / Mystery' }  -> sometimes a row is like this
+            if (separator) {
+
+                // ['Novel', 'Mystery'] -> after split
+                for(let key of categoryValue.split(separator)) {
+                    categoryCounter(key)
+                }
+            } else {
+                categoryCounter(categoryValue)
+            }
+
+            function categoryCounter(key) {
+                key = key.trim()
+                catInfoDraft[key] ? catInfoDraft[key]++ : catInfoDraft[key] = 1
+    
+                // { genre: 1, mystery: 1 } -> catInfoFinal after inner loop
+                if (catInfoDraft[key] > 2 || categoryValue !== 'author')
+                    catInfoFinal[key] = catInfoDraft[key] 
+            } 
+
+        }
+        
+        res.status(200).json(catInfoFinal)
+    } catch(err) {
+        console.log({ error: err.message })
+        res.status(400).json({ error: err.message })
+    }
+}

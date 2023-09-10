@@ -5,5 +5,6 @@ const bookCtrl = require('../controllers/bookController')
 
 router.get('/search', bookCtrl.show)
 router.get('/:id/coord', bookCtrl.coord)
+router.get('/:category/count', bookCtrl.count)
 
 module.exports = router

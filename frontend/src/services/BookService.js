@@ -34,7 +34,7 @@ class BookService {
     }
 
     getUserCategoryCount(user, category) {
-        return authAxios().get(`/books/${user}/${category}`).then(r => this.format(r)) 
+        return authAxios().get(`/books/${category}/count`).then(r => this.format(r)) 
     }
 
     getThisInThat(query) {

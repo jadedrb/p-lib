@@ -55,9 +55,7 @@ module.exports.overview = async (req, res) => {
 
 module.exports.update = async (req, res) => {
     try {
-        console.log(typeof req.body.other, req.body.other)
-        const results = await pool.query(`UPDATE users SET other = '${req.body.other}' WHERE id = $1`, [req.id])
-        console.log(results)
+        await pool.query(`UPDATE users SET other = '${req.body.other}' WHERE id = $1`, [req.id])
         res.send({ message: 'user settings updated successfully' })
     } catch(err) {
         console.log({ error: err.message })
