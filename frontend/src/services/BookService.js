@@ -29,11 +29,6 @@ class BookService {
 
     // SEARCH Endpoints
 
-    getMarkerForUser(marker, user) {
-        loading(".search-c")
-        return authAxios().get(`/books/${user}/search/marker=${marker}`).then(r => this.format(r))
-    }
-
     getBookCoordinates(id) {
         return authAxios().get(`/books/${id}/coord`).then(r => this.format(r))
     }

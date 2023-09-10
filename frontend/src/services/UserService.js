@@ -35,8 +35,8 @@ class UserService {
     removeUser(id) {
         return authAxios().delete(`/users/${id}`).then(r => this.format(r))
     }
-    getUserDetails(name) {
-        return authAxios().get(`/overview/${name}`).then(r => this.format(r))
+    getUserDetails() {
+        return authAxios().get(`/users/overview`).then(r => this.format(r))
     }
     updateUserOfId(user, id) {
         return authAxios().put(`/users/${id}`, user).then(r => this.format(r))
@@ -44,18 +44,3 @@ class UserService {
 }
 
 export default new UserService()
-
-
-/*
-
-    getUser(user) {
-        return axios.get(API + `/users/${user}/rooms`).then(r => this.format(r))
-    }
-    getUserByName(user) {
-        return axios.get(API + `/users/${user}`).then(r => this.format(r))
-    }
-    removeUser(id) {
-        return axios.delete(API + `/users/${id}`).then(r => this.format(r))
-    }
-
-*/

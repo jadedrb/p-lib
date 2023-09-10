@@ -3,7 +3,6 @@ import NewRoom from "./NewRoom"
 import { useLibContext, SET_USER } from '../context'
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
 
-import Bookz from '../services/BookService'
 import UserService from '../services/UserService'
 import SearchResults from "./SearchResults"
 
@@ -97,7 +96,7 @@ const Rooms = () => {
             searchType = searchType === 'language' ? searchType = 'lang' : searchType === 'published' ? 'pdate' : searchType
             search = searchType === 'pdate' || searchType === 'pages' ? parsePagesAndDate(search, searchType) : search
 
-            return Bookz.getThisInThat({ searchIn, search, searchType, searchId })
+            return BookService.getThisInThat({ searchIn, search, searchType, searchId })
         }
     }
 
@@ -166,7 +165,8 @@ const Rooms = () => {
     const handleShowDetails = async () => {
         if (!showUserDet) {
             // setTimeout(() => loading(".u-modal"), 1)
-            let usr = await UserService.getUserDetails(user)
+            let usr = await UserService.getUserDetails()
+            console.log(usr)
             setShowUserDet(!showUserDet)
             setUserDetails(usr.filter(ud => ud.hasOwnProperty(user))[0])
             // clearLoading()
