@@ -122,15 +122,17 @@ module.exports.count = async (req, res) => {
 module.exports.update = async (req, res) => {
     try {
  
-        const bookResult = await pool.query('SELECT author, color, genre, more, pages, pdate, title, lang, markers FROM books WHERE id = $1', [req.params.id])
+        const bookResult = await pool.query('SELECT author, color, genre, more, pages, pdate, title, lang, markers FROM books WHERE id = $1 AND user_id = $2', [req.params.id, req.id])
         const oldBook = bookResult.rows[0]
+
+        if (!oldBook) throw new Error('Access denied')
 
         // Compare old books columns with new book columns
         // and reduce it to an array -> [ ['author','new-name'], ['genre', 'new-genre'] ]
         const updatedColumns = Object.keys(oldBook).reduce((acc, curr) => typeof req.body[curr] !== 'undefined' && oldBook[curr] !== req.body[curr] ? [...acc, [curr, req.body[curr]]] : acc, [])
 
         // Construct a SET clause with only the updated fields and the id at the end -> 'author = $1, genre = $2 WHERE id = $3'
-        const AFTERSET = updatedColumns.reduce((acc, c, i, arr) => arr.length > (i + 1) ? acc + `${c[0]} = $${i + 1}, ` : acc + `${c[0]} = $${i + 1} WHERE id = $${i + 2}`, '')
+        const AFTERSET = updatedColumns.reduce((acc, c, i, arr) => arr.length > (i + 1) ? acc + `${c[0]} = $${i + 1}, ` : acc + `${c[0]} = $${i + 1}, recorded_on = NOW() WHERE id = $${i + 2}`, '')
     
         // Construct an ARGS array with the updates and the id at the end -> ['Charles Dickens', 'Novel', '3810']
         const ARGS = updatedColumns.reduce((acc, c, i, arr) => arr.length > i + 1 ? [...acc, c[1]] : [...acc, c[1], req.params.id], [])
@@ -141,7 +143,6 @@ module.exports.update = async (req, res) => {
         const updatedBookResults = await pool.query('SELECT * FROM books WHERE id = $1', [req.params.id])
         const newBook = updatedBookResults.rows[0]
 
-        console.log(newBook)
         res.json(newBook)
     } catch(err) {
         console.log({ error: err.message })
