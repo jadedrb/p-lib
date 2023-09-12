@@ -7,4 +7,6 @@ router.get('/search', bookCtrl.show)
 router.get('/:id/coord', bookCtrl.coord)
 router.get('/:category/count', bookCtrl.count)
 
+router.put('/:id', bookCtrl.update)
+
 module.exports = router

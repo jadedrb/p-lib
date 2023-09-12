@@ -163,6 +163,7 @@ const NewBook = ({ setCurrShelf }) => {
     // loading(`.sh-b`, false, 'thumb')
     if (bid) {
       let book = await BookService.updateBookForShelf(inputs, bid)
+      console.log(book)
       dispatch({
         type: UPDATE_BOOK,
         payload: { shid, rid, bcid, bid, book },

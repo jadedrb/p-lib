@@ -84,7 +84,7 @@ function reducer(state, action) {
         case REMOVE_SHELF: {
             let { bcid, rid, shid } = action.payload
             let { roomIndex, rooms, bkcaseIndex } = utilitySelector(rid, bcid, shid, state.rooms)
-            let newShelves = rooms[roomIndex].bookcases[bkcaseIndex].shelves.filter(sh => sh.id !== Number(shid))
+            let newShelves = rooms[roomIndex].bookcases[bkcaseIndex].shelves.filter(sh => sh.id !== shid)
             rooms[roomIndex].bookcases[bkcaseIndex].shelves = newShelves
             return { ...state, rooms }
         }
@@ -110,22 +110,18 @@ function reducer(state, action) {
             let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
             shelf.books = [ ...shelf.books, ...books]
             return { ...state, rooms }
-            // return { ...state, rooms: state.rooms
-            //     .map(r => r.id === Number(roomIndex) ? {...r, bookcases: r.bookcases.
-            //         map(bk => bk.id === Number(bkcaseIndex) ? {...bk, shelves: bk.shelves.
-            //             map(sh => sh.id === Number(shelfIndex) ? {...sh, books: sh.books.concat(books)} : sh)} : bk)} : r )}
         }
         case UPDATE_BOOK: {
             let { bcid, rid, shid, book, bid } = action.payload
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms, bid)
             let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
-            shelf.books = shelf.books.map(b => b.id === Number(bid) ? book : b)
+            shelf.books = shelf.books.map(b => b.id === bid ? book : b)
             return { ...state, rooms }
         }
         case REMOVE_BOOK: {
             let { bcid, rid, shid, bid } = action.payload
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms, bid)
-            let newBooks = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books.filter(b => b.id !== Number(bid))
+            let newBooks = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books.filter(b => b.id !== bid)
             rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books = newBooks
             return { ...state, rooms }
         }
