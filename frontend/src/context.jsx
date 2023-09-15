@@ -101,6 +101,8 @@ function reducer(state, action) {
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms)
             let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
             shelf.books = [ ...shelf.books, book]
+            // let test = shelf.books.filter(b => b.id === book.id)
+            // console.log(test, test.length)
             // setCurrShelf({ ...shelf })
             return { ...state, rooms }
         }

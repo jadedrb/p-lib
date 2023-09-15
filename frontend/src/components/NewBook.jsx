@@ -169,8 +169,9 @@ const NewBook = ({ setCurrShelf }) => {
         payload: { shid, rid, bcid, bid, book },
       });
     } else {
-      let [ book ] = await BookService.addBooksForShelfAndUser([inputs], shid, user)
+      let book = await BookService.addBooksToShelf([{...inputs, shid, rid, bcid}], shid)
       navigate(utilPath(path, 'book', book.id))
+      console.log('one')
       dispatch({
         type: ADD_BOOK,
         payload: { shid, rid, bcid, setCurrShelf, book },

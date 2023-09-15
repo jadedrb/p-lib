@@ -12,9 +12,9 @@ class BookService {
         return authAxios().get(`/books/${shelf}`).then(r => this.format(r))
     }
 
-    addBooksForShelfAndUser(book, shelf, user) {
+    addBooksToShelf(book, shelf) {
         loading(".booklist-r")
-        return authAxios().post(`/books/${shelf}/users/${user}`, book).then(r => this.format(r))
+        return authAxios().post(`/books/${shelf}`, book).then(r => this.format(r))
     }
     
     removeBookFromShelfAndUser(id, shelf, user) {

@@ -191,7 +191,6 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
               div.style.outline = "3px solid white"
             } else {
               div.style.outline = "3px solid black";
-              console.log('here')
             }
           } else {
             if (bcid && !reposition.toggle) {

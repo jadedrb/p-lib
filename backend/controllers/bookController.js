@@ -148,3 +148,48 @@ module.exports.update = async (req, res) => {
         console.log({ error: err.message })
     }
 }
+
+module.exports.create = async (req, res) => {
+    try {
+        const { title, author, genre, 
+            pages, pdate, color, 
+            more, lang, rid, shid, bcid } = req.body[0]
+
+        const INSERT = 'INSERT INTO books'
+        const COLUMNS = '(title, author, genre, pages, pdate, color, more, lang, room_id, shelf_id, bookcase_id, user_id, recorded_on)'
+        const VALUES = 'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)'
+        const RETURNING = 'RETURNING *'
+        const ARGS = [title, author, genre, Number(pages), Number(pdate), color, more, lang, rid, shid, bcid, req.id, new Date()]
+
+        const result = await pool.query(
+            INSERT + ' ' + COLUMNS + ' ' +
+            VALUES + ' ' + RETURNING, ARGS
+        )
+
+        console.log(result)
+        console.log('got here to create')
+        console.log(req.body)
+        console.log(result)
+        res.json(result.rows[0])
+        /*
+        ; 
+    [
+    {
+        title: 'test',
+        author: 'wowooo',
+        genre: '',
+        pages: '',
+        pdate: '',
+        color: '',
+        more: '',
+        lang: ''
+    }
+    ]
+    
+        */
+    } catch(err) {
+        console.log(err.message)
+        console.log(err)
+        
+    }
+}

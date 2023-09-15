@@ -9,4 +9,6 @@ router.get('/:category/count', bookCtrl.count)
 
 router.put('/:id', bookCtrl.update)
 
+router.post('/:id', bookCtrl.create)
+
 module.exports = router
