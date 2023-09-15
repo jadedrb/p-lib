@@ -12,9 +12,9 @@ class BookService {
         return authAxios().get(`/books/${shelf}`).then(r => this.format(r))
     }
 
-    addBooksToShelf(book, shelf) {
+    addBooksToShelf(book) {
         loading(".booklist-r")
-        return authAxios().post(`/books/${shelf}`, book).then(r => this.format(r))
+        return authAxios().post(`/books`, book).then(r => this.format(r))
     }
     
     removeBookFromShelfAndUser(id, shelf, user) {
@@ -45,7 +45,7 @@ class BookService {
         let lesser = typeof query.search === 'object' && query.search.lesser ? `lesser=${query.search.lesser}&` : ''
         let searchIn = query.searchIn ? `searchIn=${query.searchIn}&` : ''
         let searchType = query.searchType ? `searchType=${query.searchType}&` : ''
-        let searchId = query.searchId ? `searchType=${query.searchId}&` : ''
+        let searchId = query.searchId ? `searchId=${query.searchId}&` : ''
 
         return authAxios().get(`/books/search?${search}${searchIn}${searchType}${searchId}${greater}${lesser}`.slice(0, -1)).then(r => this.format(r))
     }

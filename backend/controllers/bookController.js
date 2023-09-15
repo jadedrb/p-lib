@@ -4,7 +4,7 @@ module.exports.show = async (req, res) => {
     try {
 
         let { search, searchIn, searchType, searchId, greater, lesser } = req.query
-
+console.log(req.query)
         let NUM = 1
         let SELECT = 'SELECT * FROM books'
         let WHERE = searchType ? `WHERE ${searchType} ILIKE $${NUM++}` : ''
@@ -36,7 +36,7 @@ module.exports.show = async (req, res) => {
         }
 
         ARGS.push(req.id)
-
+console.log(SELECT + ' ' + WHERE + ' ' + AND + ' ' + USER, ARGS)
         const searchResults = await pool.query(SELECT + ' ' + WHERE + ' ' + AND + ' ' + USER, ARGS)
         const books = searchResults.rows
 
