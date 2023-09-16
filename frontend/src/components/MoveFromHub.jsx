@@ -79,7 +79,7 @@ const handleMove = async (bks) => {
     setShowMarkers(false)
     for (let i = 0; i < bks.length; i++) {
         try {
-            await BookService.removeBookFromShelfAndUser(bks[i].id, selShelf, user)
+            await BookService.removeBookFrom(bks[i].id)
             dispatch({
                 type: REMOVE_BOOK,
                 payload: { bcid: selBkcase, rid: selRoom, shid: selShelf, bid: bks[i].id }

@@ -17,9 +17,9 @@ class BookService {
         return authAxios().post(`/books`, book).then(r => this.format(r))
     }
     
-    removeBookFromShelfAndUser(id, shelf, user) {
+    removeBookFromShelf(id) {
         loading(".booklist-r")
-        return authAxios().delete(`/books/${id}/shelves/${shelf}/users/${user}`).then(r => this.format(r))
+        return authAxios().delete(`/books/${id}`).then(r => this.format(r))
     }
     
     updateBookForShelf(book, id) {

@@ -4,7 +4,7 @@ module.exports.show = async (req, res) => {
     try {
 
         let { search, searchIn, searchType, searchId, greater, lesser } = req.query
-console.log(req.query)
+
         let NUM = 1
         let SELECT = 'SELECT * FROM books'
         let WHERE = searchType ? `WHERE ${searchType} ILIKE $${NUM++}` : ''
@@ -36,7 +36,7 @@ console.log(req.query)
         }
 
         ARGS.push(req.id)
-console.log(SELECT + ' ' + WHERE + ' ' + AND + ' ' + USER, ARGS)
+
         const searchResults = await pool.query(SELECT + ' ' + WHERE + ' ' + AND + ' ' + USER, ARGS)
         const books = searchResults.rows
 
@@ -191,5 +191,20 @@ module.exports.create = async (req, res) => {
         console.log(err.message)
         console.log(err)
         
+    }
+}
+
+module.exports.destroy = async (req, res) => {
+    try {
+        let { id } = req.params
+
+        const result = await pool.query('DELETE FROM books WHERE id = $1 AND user_id = $2', [id, req.id])
+        
+        // Unable to find and delete a book that has both the book id (from the parameter) and the user id (from the token) and the  
+        if (!result.rowCount) throw new Error('Access denied') 
+       
+        res.status(200).json({ message: 'book deleted successfully' })
+    } catch(err) {
+        res.status(400).json({ error: err.message })
     }
 }

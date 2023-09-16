@@ -83,7 +83,7 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
         for (let i = 0; i < markedBooks.length; i++) {
             try {
                 let coord = await BookService.getBookCoordinates(markedBooks[i].id)
-                await BookService.removeBookFromShelfAndUser(coord.book, coord.shelf, user)
+                await BookService.removeBookFrom(coord.book)
                 dispatch({ type: REMOVE_BOOK, payload: { bcid: coord.bookcase, rid: coord.room, shid: coord.shelf, bid: coord.book }})
             } catch (e) {
                 alert('Something went wrong. Try again later.')

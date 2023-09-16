@@ -11,4 +11,6 @@ router.put('/:id', bookCtrl.update)
 
 router.post('/', bookCtrl.create)
 
+router.delete('/:id', bookCtrl.destroy)
+
 module.exports = router

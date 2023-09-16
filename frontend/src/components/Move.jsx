@@ -187,7 +187,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
     const handleMove = async (bks) => {
         for (let i = 0; i < bks.length; i++) {
             try {
-                await BookService.removeBookFromShelfAndUser(from === "book" ? bid : bks[i].id, shid, user)
+                await BookService.removeBookFrom(from === "book" ? bid : bks[i].id)
                 dispatch({
                     type: REMOVE_BOOK,
                     payload: { bcid, rid, shid, bid: from === "book" ? bid : bks[i].id }

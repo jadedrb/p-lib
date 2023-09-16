@@ -185,7 +185,7 @@ const NewBook = ({ setCurrShelf }) => {
   const removeBook = async () => {
     let confirm = window.confirm(utilMsg({ type: 'book', details: { bid, title: inputs.title } }))
     if (!confirm) return
-    await BookService.removeBookFromShelfAndUser(bid, shid, user)
+    await BookService.removeBookFromShelf(bid)
     dispatch({ type: REMOVE_BOOK, payload: { bcid, rid, shid, bid }})
     navigate(utilPath(path, 'shelf', shid))
   }
