@@ -99,7 +99,7 @@ const Rooms = () => {
             return BookService.getThisInThat({ searchIn, search, searchType, searchId })
         }
     }
-console.log(searchType)
+
     const toggleRoomsView = () => {
         if (wrapperRef.current.finish) return
         setShowRooms(!showRooms)

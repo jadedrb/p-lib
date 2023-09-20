@@ -169,7 +169,7 @@ const NewBook = ({ setCurrShelf }) => {
         payload: { shid, rid, bcid, bid, book },
       });
     } else {
-      let book = await BookService.addBooksToShelf([{...inputs, shid, rid, bcid}])
+      let [ book ] = await BookService.addBooksToShelf([{...inputs, shid, rid, bcid}])
       navigate(utilPath(path, 'book', book.id))
       console.log('one')
       dispatch({
