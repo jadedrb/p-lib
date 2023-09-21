@@ -4,8 +4,9 @@ import BookService from '../services/BookService';
 import { utilPath, loading } from "../services/utility";
 import Markers from './Markers'
 import MoveFromHub from './MoveFromHub';
+import Move from './Move'
 
-function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
+function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms, params }) {
 
     const [selectedMarker, setSelectedMarker] = useState('favorited')
     const [markedBooks, setMarkedBooks] = useState([])
@@ -36,7 +37,7 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
                 console.log(err)
             }
         }
-        
+        console.log(selectedMarker)
         getMakers()
 
     }, [user, selectedMarker])
@@ -102,15 +103,26 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms }) {
         )
         if (selectedMarker === 'selected') {
             if (showMoveStuff) {
-                return <MoveFromHub 
-                            rooms={rooms} 
-                            selected={markedBooks} 
+                return <Move
+                            from={"hub"}
+                            rooms={rooms}
+                            selected={markedBooks}
+                            params={params} 
+                            dispatch={dispatch}
+                            user={user}
+                            path={path}
                             navigate={navigate} 
-                            path={path} 
-                            dispatch={dispatch} 
-                            user={user} 
                             setShowMarkers={setShowMarkers}
-                        />
+                        /> 
+                // return <MoveFromHub 
+                //             rooms={rooms} 
+                //             selected={markedBooks} 
+                //             navigate={navigate} 
+                //             path={path} 
+                //             dispatch={dispatch} 
+                //             user={user} 
+                //             setShowMarkers={setShowMarkers}
+                //         />
             }
         }
         if (markedBooks.length) {

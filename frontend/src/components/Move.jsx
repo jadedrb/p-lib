@@ -8,7 +8,7 @@ import BookcaseService from "../services/BookcaseService"
 import { ADD_BULK, REMOVE_BOOK, TOGGLE_BKCASE_SELECT, TOGGLE_SELECT, UPDATE_BOOKCASE, ADD_BOOK } from '../context';
 import { useLibContext } from "../context"
 
-function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
+function Move({ book, params, navigate, path, from, selected, bkcase, room, setShowMarkers }) {
 
     let { rooms, dispatch, user, reposition } = useLibContext()
 
@@ -70,7 +70,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
                 type: TOGGLE_BKCASE_SELECT,
                 payload: true
             })
-        } else {
+        } else if (from !== 'hub') {
             dispatch({
                 type: TOGGLE_SELECT,
                 payload: []
@@ -114,37 +114,49 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
 
     const confirmBut = () => selRoom === "select" || selBkcase === "select" || selShelf === "select" ? true : false
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log('handleSubmit')
+        
+        try {
+            let result;
 
-        if (action === 'Copy') {
-            if (from === 'book') {
-                handleCopy([book])
-            } else {
-                if (selBulk === "selected") {
-                    console.log('selected')
-                    handleCopy(currShelf.filter(b => selected.highlight.includes(b.id + "")))
+            if (action === 'Copy') {
+                if (from === 'book') {
+                    result = await handleCopy([book])
+                } else if (from !== 'hub') {
+                    if (selBulk === "selected") {
+                        result = await handleCopy(currShelf.filter(b => selected.highlight.includes(b.id + "")))
+                    } else {
+                        result = await handleCopy(currShelf)
+                    }
                 } else {
-                    handleCopy(currShelf)
+                    setShowMarkers(false)
+                    result = await handleMove(selected)
+                }
+            } else {
+                if (from === "book") {
+                    result = await handleMove([{ ...book, id: bid }])
+                } else if (from !== 'hub') {
+                    if (selBulk === "selected") {
+                        let filter = currShelf.filter(b => selected.highlight.includes(b.id + ""))
+                        result = await handleMove(filter)
+                    } else {
+                        result = await handleMove(currShelf)
+                    }
+                } else {
+                    setShowMarkers(false)
+                    result = await handleMove(selected)
                 }
             }
-        } else {
-            if (from === "book") {
-                    handleMove([{ ...book, id: bid }])
-            } else {
-                if (selBulk === "selected") {
-                    let filter = currShelf.filter(b => selected.highlight.includes(b.id + ""))
-                    handleMove(filter)
-                } else {
-                    handleMove(currShelf)
-                }
-                // let payload = await RoomService.getRoomOfId(selRoom)
-                // dispatch({ type: UPDATE_ROOM, payload });
-            }
+
+            console.log(result)
+            navigate(utilPath({ room: selRoom, bookcase: selBkcase, shelf: selShelf }, "coord"))
+            setTimeout(() => alert(`${action === 'Copy' ? 'Copied' : 'Moved'} all ${result.amount} book(s)`), 1000)
+
+        } catch(err) {
+            console.log(err)
+            alert(err)
         }
-        navigate(utilPath({ room: selRoom, bookcase: selBkcase, shelf: selShelf }, "coord"))
-        setTimeout(() => alert(`${action === 'Copy' ? 'Copied' : 'Moved'} all book(s)`), 100)
     }
 
     const handleBookcaseAdjust = async (e) => {
@@ -166,58 +178,56 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
     }
 
     const handleCopy = async (bks) => {
-        console.log('handleCopy')
-        const copiedBooksWithUpdatedLocation = await BookService.addBooksToShelf(bks.map(bk => ({ ...bk, rid: selRoom, bcid: selBkcase, shid: selShelf })))
-        console.log(copiedBooksWithUpdatedLocation)
+        try {
+            
+            const copiedBooksWithUpdatedLocation = await BookService.addBooksToShelf(bks.map(bk => ({ ...bk, rid: selRoom, bcid: selBkcase, shid: selShelf })))
 
-        dispatch({
-            type: ADD_BULK,
-            payload: { shid: selShelf, rid: selRoom, bcid: selBkcase, books: copiedBooksWithUpdatedLocation },
-        });
+            dispatch({
+                type: ADD_BULK,
+                payload: { shid: selShelf, rid: selRoom, bcid: selBkcase, books: copiedBooksWithUpdatedLocation },
+            });
 
-//  if (from === 'shelf') 
-//             bks = bks.map(bk => {
-//                 console.log(bk)
-//                 let { title, author, genre, pdate, pages, color, more, lang, markers } = bk
-//                 return { title, author, genre, pdate, pages, color, more, lang, markers }
-//             })
-   
-//         let books = await BookService.addBooksToShelf(bks, selShelf, user)
-//         dispatch({
-//             type: ADD_BULK,
-//             payload: { shid: selShelf, rid: selRoom, bcid: selBkcase, books },
-//         });
+        } catch(e) {
+            throw new Error(e.response?.data?.error)
+        }
+
+        return { success: true, amount: bks.length }
     }
 
     const handleMove = async (bks) => {
+ 
         for (let bk of bks) {
             try {
+     
                 bk = {
                     ...bk,
                     room_id: selRoom, 
                     bookcase_id: selBkcase, 
                     shelf_id: selShelf 
                 }
+
                 const updatedBook = await BookService.updateBookForShelf(bk, bk.id)
-                console.log('after: ', updatedBook)
-                // await BookService.removeBookFrom(from === "book" ? bid : bks[i].id)
+
                 dispatch({
                     type: REMOVE_BOOK,
                     payload: { bcid, rid, shid, bid: bk.id }
                 })
+
                 dispatch({
                     type: ADD_BOOK,
                     payload: { shid: selShelf, rid: selRoom, bcid: selBkcase, setCurrShelf, book: updatedBook },
                 });
+
             } catch(e) {
-                console.log(e)
-                alert(e.response?.data?.error)
+                throw new Error(e.response?.data?.error)
             }
         }
+
+        return { success: true, amount: bks.length }
     }
 
     return ( 
-        <div>
+        <div className='move-area'>
             <p style={{ opacity: ".4" }}>I want to...</p>
 
             {from !== "bkcase" ? 
@@ -260,7 +270,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
                 <p>Shelf:</p>
                 <select name="shelf" value={selShelf} onChange={handleChange}>
                 <option value="select" disabled>Select</option>
-                    {bkcaseInfo?.shelves?.map((sh,i) => <option value={sh.id} key={sh.id} disabled={sh.id === Number(shid) ? true : false}>{i + 1 === 1 ? "1st" : i + 1 === 2 ? "2nd" : i + 1 === 3 ? "3rd" : i + 1 + "th"} from the top (id: {sh.id})</option>)}
+                    {bkcaseInfo?.shelves?.map((sh,i) => <option value={sh.id} key={sh.id} disabled={sh.id === shid && from !== 'hub' ? true : false}>{i + 1 === 1 ? "1st" : i + 1 === 2 ? "2nd" : i + 1 === 3 ? "3rd" : i + 1 + "th"} from the top (id: {sh.id})</option>)}
                 </select>
                 <br /><br /><br />
                 <input disabled={confirmBut()} type="button" onClick={handleSubmit} value={action.toUpperCase()}/>  

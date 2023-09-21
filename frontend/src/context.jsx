@@ -99,12 +99,15 @@ function reducer(state, action) {
         case ADD_BOOK: {
             let { bcid, rid, shid, book } = action.payload
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms)
-            console.log(roomIndex, rooms, bkcaseIndex, shelfIndex)
             let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
+            
+            // for those strange edge cases where state somehow ends up with duplicate book objects
+            let checkDuplicate = shelf.books.some(b => b.id === book.id)
+
+            if (checkDuplicate)
+                return state
+
             shelf.books = [ ...shelf.books, book]
-            console.log(action.payload, shelf.books, book)
-            // let test = shelf.books.filter(b => b.id === book.id)
-            // console.log(test, test.length)
             // setCurrShelf({ ...shelf })
             return { ...state, rooms }
         }

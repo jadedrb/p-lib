@@ -141,15 +141,18 @@ module.exports.update = async (req, res) => {
         // Construct an ARGS array with the updates and the id at the end -> ['Charles Dickens', 'Novel', '3810']
         const ARGS = updatedColumns.reduce((acc, c, i, arr) => arr.length > i + 1 ? [...acc, c[1]] : [...acc, c[1], req.params.id], [])
 
-        // Check for cases where nothing was updated
-        if (AFTERSET && ARGS.length)
-            await pool.query(`UPDATE books SET ${AFTERSET}`, ARGS)
-        else
-            throw new Error('Nothing to update')
+        let newBook;
 
-        // Get the updates to return to the frontend
-        const updatedBookResults = await pool.query('SELECT * FROM books WHERE id = $1', [req.params.id])
-        const newBook = updatedBookResults.rows[0]
+        // Check for cases where nothing was updated
+        if (AFTERSET && ARGS.length) {
+            await pool.query(`UPDATE books SET ${AFTERSET}`, ARGS)
+            // Get the updates to return to the frontend
+            newBook = await pool.query('SELECT * FROM books WHERE id = $1', [req.params.id])
+            newBook = newBook.rows[0]
+        } else {
+            console.log('Nothing to update')
+            newBook = oldBook
+        }
 
         res.status(200).json(newBook)
     } catch(err) {
