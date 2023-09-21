@@ -160,26 +160,31 @@ const NewBook = ({ setCurrShelf }) => {
   }
 
   const handleSaveCreate = async (e) => {
-    // loading(`.sh-b`, false, 'thumb')
-    if (bid) {
-      let book = await BookService.updateBookForShelf(inputs, bid)
-      console.log(book)
-      dispatch({
-        type: UPDATE_BOOK,
-        payload: { shid, rid, bcid, bid, book },
-      });
-    } else {
-      let [ book ] = await BookService.addBooksToShelf([{...inputs, shid, rid, bcid}])
-      navigate(utilPath(path, 'book', book.id))
-      console.log('one')
-      dispatch({
-        type: ADD_BOOK,
-        payload: { shid, rid, bcid, setCurrShelf, book },
-      });
+    try {
+      // loading(`.sh-b`, false, 'thumb')
+      if (bid) {
+        let book = await BookService.updateBookForShelf(inputs, bid)
+        console.log(book)
+        dispatch({
+          type: UPDATE_BOOK,
+          payload: { shid, rid, bcid, bid, book },
+        });
+      } else {
+        let [ book ] = await BookService.addBooksToShelf([{...inputs, shid, rid, bcid}])
+        navigate(utilPath(path, 'book', book.id))
+        console.log('one')
+        dispatch({
+          type: ADD_BOOK,
+          payload: { shid, rid, bcid, setCurrShelf, book },
+        });
+      }
+      // clearLoading()
+      if (e?.target?.value) // to determine whether they clicked a button or pressed Enter
+        navigate(utilPath(path, 'shelf', shid))
+    } catch(err) {
+      console.log(err)
+      alert(err.response?.data?.error)
     }
-    // clearLoading()
-    if (e?.target?.value) // to determine whether they clicked a button or pressed Enter
-      navigate(utilPath(path, 'shelf', shid))
   }
 
   const removeBook = async () => {

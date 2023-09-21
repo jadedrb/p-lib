@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from 'react'
 import { utilitySelector, utilPath } from "../services/utility";
 
 import BookService from "../services/BookService"
-import RoomService from "../services/RoomService"
+// import RoomService from "../services/RoomService"
 import BookcaseService from "../services/BookcaseService"
 
-import { ADD_BULK, REMOVE_BOOK, TOGGLE_BKCASE_SELECT, TOGGLE_SELECT, UPDATE_BOOKCASE, UPDATE_ROOM } from '../context';
+import { ADD_BULK, REMOVE_BOOK, TOGGLE_BKCASE_SELECT, TOGGLE_SELECT, UPDATE_BOOKCASE, ADD_BOOK } from '../context';
 import { useLibContext } from "../context"
 
 function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
@@ -114,55 +114,35 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
 
     const confirmBut = () => selRoom === "select" || selBkcase === "select" || selShelf === "select" ? true : false
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault()
         console.log('handleSubmit')
-  
+
         if (action === 'Copy') {
             if (from === 'book') {
-                await handleCopy([book])
+                handleCopy([book])
             } else {
                 if (selBulk === "selected") {
                     console.log('selected')
-                    await handleCopy(currShelf.filter(b => selected.highlight.includes(b.id + "")))
+                    handleCopy(currShelf.filter(b => selected.highlight.includes(b.id + "")))
                 } else {
-                    await handleCopy(currShelf)
+                    handleCopy(currShelf)
                 }
             }
         } else {
-
+            if (from === "book") {
+                    handleMove([{ ...book, id: bid }])
+            } else {
+                if (selBulk === "selected") {
+                    let filter = currShelf.filter(b => selected.highlight.includes(b.id + ""))
+                    handleMove(filter)
+                } else {
+                    handleMove(currShelf)
+                }
+                // let payload = await RoomService.getRoomOfId(selRoom)
+                // dispatch({ type: UPDATE_ROOM, payload });
+            }
         }
-        // if (action === "Copy") {
-        //     if (from === "book") {
-        //         await handleCopy([book])
-        //     }
-        //     else {
-        //         if (selBulk === "selected") {
-        //             await handleCopy(currShelf.filter(b => selected.highlight.includes(b.id + "")))
-        //         } else {
-        //             await handleCopy(currShelf)
-        //         }
-        //         let payload = await RoomService.getRoomOfId(selRoom)
-        //         dispatch({ type: UPDATE_ROOM, payload });
-        //     }
-        //     // navigate(utilPath(path, 'shelf', selShelf))
-        // } else {
-        //     if (from === "book") {
-        //         await handleCopy([book])
-        //         await handleMove(bid)
-        //     } else {
-        //         if (selBulk === "selected") {
-        //             let filter = currShelf.filter(b => selected.highlight.includes(b.id + ""))
-        //             await handleCopy(filter)
-        //             await handleMove(filter)
-        //         } else {
-        //             await handleCopy(currShelf)
-        //             await handleMove(currShelf)
-        //         }
-        //         let payload = await RoomService.getRoomOfId(selRoom)
-        //         dispatch({ type: UPDATE_ROOM, payload });
-        //     }
-        // }
         navigate(utilPath({ room: selRoom, bookcase: selBkcase, shelf: selShelf }, "coord"))
         setTimeout(() => alert(`${action === 'Copy' ? 'Copied' : 'Moved'} all book(s)`), 100)
     }
@@ -210,17 +190,30 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room }) {
     }
 
     const handleMove = async (bks) => {
-        // for (let i = 0; i < bks.length; i++) {
-        //     try {
-        //         await BookService.removeBookFrom(from === "book" ? bid : bks[i].id)
-        //         dispatch({
-        //             type: REMOVE_BOOK,
-        //             payload: { bcid, rid, shid, bid: from === "book" ? bid : bks[i].id }
-        //         })
-        //     } catch(e) {
-        //         console.log(e)
-        //     }
-        // }
+        for (let bk of bks) {
+            try {
+                bk = {
+                    ...bk,
+                    room_id: selRoom, 
+                    bookcase_id: selBkcase, 
+                    shelf_id: selShelf 
+                }
+                const updatedBook = await BookService.updateBookForShelf(bk, bk.id)
+                console.log('after: ', updatedBook)
+                // await BookService.removeBookFrom(from === "book" ? bid : bks[i].id)
+                dispatch({
+                    type: REMOVE_BOOK,
+                    payload: { bcid, rid, shid, bid: bk.id }
+                })
+                dispatch({
+                    type: ADD_BOOK,
+                    payload: { shid: selShelf, rid: selRoom, bcid: selBkcase, setCurrShelf, book: updatedBook },
+                });
+            } catch(e) {
+                console.log(e)
+                alert(e.response?.data?.error)
+            }
+        }
     }
 
     return ( 
