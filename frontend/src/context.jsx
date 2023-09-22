@@ -91,7 +91,7 @@ function reducer(state, action) {
         case UPDATE_SHELF: {
             let { bcid, rid, shid, sh } = action.payload
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms)
-            rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex] = sh
+            rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].organize = sh.organize
             return { ...state, rooms }
         }
 

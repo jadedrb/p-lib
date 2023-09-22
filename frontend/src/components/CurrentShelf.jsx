@@ -61,9 +61,15 @@ function CurrentShelf() {
 
     const handleShelfUpdate = async (e) => {
         e.preventDefault()
-        let updatedShelf = await Shelves.updateShelfOfId({ organize: order }, shid)
-        dispatch({ type: UPDATE_SHELF, payload: { bcid, rid, shid, sh: updatedShelf } })
-        setEdit(false)
+        try {
+            let updatedShelf = await Shelves.updateShelfOfId({ organize: order }, shid)
+            console.log(updatedShelf)
+            dispatch({ type: UPDATE_SHELF, payload: { bcid, rid, shid, sh: updatedShelf } })
+            setEdit(false)
+        } catch(err) {
+            console.log(err)
+            alert(err.response?.data?.error)
+        }
     }
 
     const swapem = () => shelfPos.top > shelfPos.bot ? "bottom" : "top"

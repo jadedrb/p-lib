@@ -8,10 +8,6 @@ class ShelfService {
         return d.data
     }
 
-    getShelvesForBookcase(bookcase) {
-        return authAxios().get(`/shelves/${bookcase}`).then(r => this.format(r))
-    }
-
     addShelfForBookcase(shelf, bookcase) {
         loading(".new-bookcase")
         return authAxios().post(`/shelves/${bookcase}`, shelf).then(r => this.format(r))

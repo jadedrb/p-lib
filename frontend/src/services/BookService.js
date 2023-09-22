@@ -8,10 +8,6 @@ class BookService {
         return d.data
     }
 
-    getBooksForShelf(shelf) {
-        return authAxios().get(`/books/${shelf}`).then(r => this.format(r))
-    }
-
     addBooksToShelf(book) {
         loading(".booklist-r")
         return authAxios().post(`/books`, book).then(r => this.format(r))

@@ -3,10 +3,9 @@ import { REMOVE_BOOK } from '../context';
 import BookService from '../services/BookService';
 import { utilPath, loading } from "../services/utility";
 import Markers from './Markers'
-import MoveFromHub from './MoveFromHub';
 import Move from './Move'
 
-function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms, params }) {
+function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms, params, settings }) {
 
     const [selectedMarker, setSelectedMarker] = useState('favorited')
     const [markedBooks, setMarkedBooks] = useState([])
@@ -84,7 +83,7 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms, par
         for (let i = 0; i < markedBooks.length; i++) {
             try {
                 let coord = await BookService.getBookCoordinates(markedBooks[i].id)
-                await BookService.removeBookFrom(coord.book)
+                await BookService.removeBookFromShelf(coord.book)
                 dispatch({ type: REMOVE_BOOK, payload: { bcid: coord.bookcase, rid: coord.room, shid: coord.shelf, bid: coord.book }})
             } catch (e) {
                 alert('Something went wrong. Try again later.')
@@ -114,15 +113,6 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms, par
                             navigate={navigate} 
                             setShowMarkers={setShowMarkers}
                         /> 
-                // return <MoveFromHub 
-                //             rooms={rooms} 
-                //             selected={markedBooks} 
-                //             navigate={navigate} 
-                //             path={path} 
-                //             dispatch={dispatch} 
-                //             user={user} 
-                //             setShowMarkers={setShowMarkers}
-                //         />
             }
         }
         if (markedBooks.length) {
@@ -147,7 +137,7 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms, par
                     <div onClick={() => enableMarkers && setSelectedMarker('selected')} style={selectedStyleSel}>Selected</div>
                     <div onClick={() => enableMarkers && setSelectedMarker('missing')} style={selectedStyleMis}>Missing</div>
                 </div>
-                {selectedMarker === 'selected' && markedBooks.length ? <div className='m-hub-opt' onClick={() => setShowMoveStuff(!showMoveStuff)}><span>~</span><span onClick={handleDelete}>-</span></div> : null}
+                {selectedMarker === 'selected' && markedBooks.length && settings.temp === 'Read/Write' ? <div className='m-hub-opt' onClick={() => setShowMoveStuff(!showMoveStuff)}><span>~</span><span onClick={handleDelete}>-</span></div> : null}
                 <div className='m-hub-body'>
                     {renderMarkerSpace()}
                 </div>

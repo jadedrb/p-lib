@@ -359,6 +359,7 @@ const Rooms = () => {
                     dispatch={dispatch}
                     path={path}
                     params={params}
+                    settings={settings}
                 />
             </GeneralModal>
             }
