@@ -52,11 +52,15 @@ function CurrentShelf() {
     }, [shid, rid, bcid, rooms])
 
     const removeShelf = async () => {
-        let confirm = window.confirm(utilMsg({ type: 'shelf', details: { shelf: currShelf } }))
-        if (!confirm) return
-        await Shelves.removeShelfFromBookcase(shid, bcid)
-        dispatch({ type: REMOVE_SHELF, payload: { shid, bcid, rid } })
-        navigate(utilPath(path, 'bookcase', bcid))
+        try {
+            let confirm = window.confirm(utilMsg({ type: 'shelf', details: { shelf: currShelf } }))
+            if (!confirm) return
+            await Shelves.removeShelfAndItsBooks(shid)
+            dispatch({ type: REMOVE_SHELF, payload: { shid, bcid, rid } })
+            navigate(utilPath(path, 'bookcase', bcid))
+        } catch(err) {
+            console.log(err)
+        }
     }
 
     const handleShelfUpdate = async (e) => {

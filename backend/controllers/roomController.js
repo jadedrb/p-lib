@@ -20,7 +20,7 @@ module.exports.index = async (req, res) => {
         }
 
         for (let bookcase of bookcases) {
-            bookcase.shelves = shelves.filter(sh => sh.bookcase_id === bookcase.id)
+            bookcase.shelves = shelves.filter(sh => sh.bookcase_id === bookcase.id).sort((a, b) => Number(a.id) - Number(b.id))
         }
 
         for (let room of rooms) {

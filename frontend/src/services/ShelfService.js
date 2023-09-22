@@ -13,9 +13,9 @@ class ShelfService {
         return authAxios().post(`/shelves/${bookcase}`, shelf).then(r => this.format(r))
     }
     
-    removeShelfFromBookcase(id, bookcase) {
+    removeShelfAndItsBooks(id) {
         loading(".sh-b")
-        return authAxios().delete(`/shelves/${id}/bookcases/${bookcase}`).then(r => this.format(r))
+        return authAxios().delete(`/shelves/${id}`).then(r => this.format(r))
     }
     
     updateShelfOfId(shelf, id) {
