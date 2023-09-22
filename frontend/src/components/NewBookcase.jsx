@@ -43,13 +43,13 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
       let shelvesAdded = Number(shelves) - currentBookcase.shelves.length
       if (shelvesAdded > 0) {
                                             // Convoluted way of making a dummy array of empty objects
-          await Shelves.addShelfForBookcase([...Array(Number(shelvesAdded)).keys()].map(() => { return {} }), bcid)
+          bkcase.shelves = await Shelves.addShelfForBookcase([...Array(Number(shelvesAdded)).keys()].map(() => { return {} }), bcid)
       }
       setEdit(false)
-
-      let nBk = await Bookcases.updateBookcaseForRoom(bkcase, bcid)
+      // come back to this later ...
+      // let nBk = await Bookcases.updateBookcaseForRoom(bkcase, bcid)
   
-      dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: nBk }})
+      dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: bkcase }})
 
       if (color.color !== color.orig)
         navigate(utilPath(path, "room", rid))

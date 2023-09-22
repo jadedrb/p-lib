@@ -33,7 +33,7 @@ function CurrentShelf() {
 
     useEffect(() => {
         let { shelf, bkcase } = utilitySelector(rid, bcid, shid, rooms)
-        
+      
         let top, bot, swap;
         let pos = bkcase?.shelves?.findIndex(sh => sh.id === shid)
      

@@ -69,6 +69,13 @@ function reducer(state, action) {
         case UPDATE_BOOKCASE: {
             let { bcId, rmId, bc } = action.payload
             let { roomIndex, rooms, bkcaseIndex, bkcase } = utilitySelector(rmId, bcId, null, state.rooms)
+            
+            if (bc.shelves) {
+                bkcase.shelves = [...bkcase.shelves, ...bc.shelves]
+                delete bc.shelves
+                console.log({ ...bkcase, ...bc })
+            }
+            
             rooms[roomIndex].bookcases[bkcaseIndex] = { ...bkcase, ...bc }
             return { ...state, rooms }
         }
