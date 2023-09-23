@@ -1,4 +1,5 @@
 const pool = require('../config')
+const { constructUpdateQuery } = require('./utility')
 
 module.exports.show = async (req, res) => {
     try {
@@ -131,24 +132,14 @@ module.exports.update = async (req, res) => {
         // Feels easier than selecting everything else in the SQL query above
         delete oldBook.recorded_on
 
-        // Compare old books columns with new book columns
-        // and reduce it to an array -> [ ['author','new-name'], ['genre', 'new-genre'] ]
-        const updatedColumns = Object.keys(oldBook).reduce((acc, curr) => typeof req.body[curr] !== 'undefined' && oldBook[curr] !== req.body[curr] ? [...acc, [curr, req.body[curr]]] : acc, [])
-
-        // Construct a SET clause with only the updated fields and the id at the end -> 'author = $1, genre = $2 WHERE id = $3'
-        const AFTERSET = updatedColumns.reduce((acc, c, i, arr) => arr.length > (i + 1) ? acc + `${c[0]} = $${i + 1}, ` : acc + `${c[0]} = $${i + 1}, recorded_on = NOW() WHERE id = $${i + 2}`, '')
-
-        // Construct an ARGS array with the updates and the id at the end -> ['Charles Dickens', 'Novel', '3810']
-        const ARGS = updatedColumns.reduce((acc, c, i, arr) => arr.length > i + 1 ? [...acc, c[1]] : [...acc, c[1], req.params.id], [])
+        const [AFTERSET, ARGS] = constructUpdateQuery(oldBook, req.body, req.params.id)
 
         let newBook;
 
         // Check for cases where nothing was updated
         if (AFTERSET && ARGS.length) {
-            await pool.query(`UPDATE books SET ${AFTERSET}`, ARGS)
-            // Get the updates to return to the frontend
-            newBook = await pool.query('SELECT * FROM books WHERE id = $1', [req.params.id])
-            newBook = newBook.rows[0]
+            const bookUpdateResult = await pool.query(`UPDATE books SET ${AFTERSET} RETURNING *`, ARGS)
+            newBook = bookUpdateResult.rows[0]
         } else {
             console.log('Nothing to update')
             newBook = oldBook

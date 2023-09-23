@@ -164,7 +164,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
         ) {
           div.style.backgroundColor = "blue";
         }
-        
+       
         let currentBookcase;
 
         let tiles = bookcases.length
@@ -182,8 +182,10 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
         if (tiles) {
           div.style.backgroundColor = currentBookcase.color;
 
+        if (currentBookcase.location) {
           div.classList.add('bookcase-tag')
           div.setAttribute('data-bk-tag', currentBookcase.location)
+        }
 
           if (currentBookcase.id === bcid) {
             if (reposition.toggle) {
@@ -237,6 +239,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
     }
 
     if (!edit && !reposition.toggle) return
+    // 1ST click when repositioning a bookcase (creates the first blue box)
     if (!bcStart) {
       setBcStart([row, column]);
 
@@ -247,16 +250,17 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
           payload: { toggle: true }
         })
       }
-
+    // 2ND click when repositioning a bookcase (creates the second blue box)
     } else if (bcStart && !bcEnd) {
       setBcEnd([row, column]);
+    // 3RD click when repositioning a bookcase (turns the in-between boxes to blue to fill in space)
     } else {
       let newBc = {
-        rowLow: Math.min(bcStart[0], bcEnd[0]),
-        colLow: Math.min(bcStart[1], bcEnd[1]),
-        rowHigh: Math.max(bcStart[0], bcEnd[0]),
-        colHigh: Math.max(bcStart[1], bcEnd[1]),
-        color: reposition.toggle ? "blue" : rgbToHex(randomNum(), randomNum(), randomNum()),
+        row_low: Math.min(bcStart[0], bcEnd[0]),
+        col_low: Math.min(bcStart[1], bcEnd[1]),
+        row_high: Math.max(bcStart[0], bcEnd[0]),
+        col_high: Math.max(bcStart[1], bcEnd[1]),
+        color: reposition.toggle ? "#2e2af8" : rgbToHex(randomNum(), randomNum(), randomNum()),
         location: "",
         bcWidth: 100,
         shHeight: 30,

@@ -46,8 +46,8 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
           bkcase.shelves = await Shelves.addShelfForBookcase([...Array(Number(shelvesAdded)).keys()].map(() => { return {} }), bcid)
       }
       setEdit(false)
-      // come back to this later ...
-      // let nBk = await Bookcases.updateBookcaseForRoom(bkcase, bcid)
+   
+      let nBk = await Bookcases.updateBookcaseForRoom(bkcase, bcid)
   
       dispatch({ type: UPDATE_BOOKCASE, payload: { rmId: currentRoom.id, bcId: currentBookcase.id, bc: bkcase }})
 
