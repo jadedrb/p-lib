@@ -21,9 +21,9 @@ class BookcaseService {
         return authAxios().post(`/bookcases`, bookcase).then(r => this.format(r))
     }
     
-    removeBookcaseFromRoom(id, room) {
+    removeBookcaseFromRoom(id) {
         loading(".new-bookcase")
-        return authAxios().delete(`/bookcases/${id}/rooms/${room}`).then(r => this.format(r))
+        return authAxios().delete(`/bookcases/${id}`).then(r => this.format(r))
     }
     
     updateBookcaseForRoom(bookcase, id) {

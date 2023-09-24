@@ -63,6 +63,7 @@ function reducer(state, action) {
             let { rid, rm } = action.payload
             let { roomIndex, rooms, room } = utilitySelector(rid, null, null, state.rooms)
 
+            // adds bookcases to a room (acts as ADD_BOOKCASE)
             if (rm.bookcases) {
                 room.bookcases = [...room.bookcases, ...rm.bookcases]
                 delete rm.bookcases
@@ -82,6 +83,7 @@ function reducer(state, action) {
             let { bcId, rmId, bc } = action.payload
             let { roomIndex, rooms, bkcaseIndex, bkcase } = utilitySelector(rmId, bcId, null, state.rooms)
             
+            // adds shelves to a bookcase (acts as ADD_SHELF)
             if (bc.shelves) {
                 bkcase.shelves = [...bkcase.shelves, ...bc.shelves]
                 delete bc.shelves

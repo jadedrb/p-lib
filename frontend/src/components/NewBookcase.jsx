@@ -90,7 +90,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
   const removeBookcase = async () => {
     let confirm = window.confirm(utilMsg({ type: 'bookcase', details: { bookcase: currentBookcase } }))
     if (!confirm) return
-    await Bookcases.removeBookcaseFromRoom(bcid, rid)
+    await Bookcases.removeBookcaseFromRoom(bcid)
     dispatch({ type: REMOVE_BOOKCASE, payload: { bcid, rid }})
     navigate(utilPath(path, 'room', rid))
   }

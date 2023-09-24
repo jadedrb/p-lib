@@ -67,7 +67,7 @@ module.exports.destroy = async (req, res) => {
         const shelfDeleteResult = await pool.query('DELETE FROM shelves WHERE id = $1', [req.params.id])
         console.log('deleted: ' + shelfDeleteResult.rowCount + ' shelf and ' + bookDeleteResult.rowCount + ' books')
        
-        res.status(200).json({ message: 'book deleted successfully' })
+        res.status(200).json({ message: 'shelf deleted successfully' })
     } catch(err) {
         res.status(400).json({ error: err.message })
     }
