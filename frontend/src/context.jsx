@@ -59,11 +59,23 @@ function reducer(state, action) {
         case REMOVE_ROOM: {
             return { ...state, rooms: state.rooms.filter(r => r?.id !== action.payload) }
         }
-        case UPDATE_ROOM:
+        case UPDATE_ROOM: {
+            let { rid, rm } = action.payload
+            let { roomIndex, rooms, room } = utilitySelector(rid, null, null, state.rooms)
+
+            if (room.bookcases) {
+                room.bookcases = [...room.bookcases, ...rm.bookcases]
+                delete rm.bookcases
+                console.log({ ...room, ...rm })
+            }
+
+            rooms[roomIndex] = { ...room, ...rm }
+
             return {
                 ...state,
-                rooms: state.rooms.map(r => r.id === action.payload.id ? action.payload : r)
+                rooms
             }
+        }
 
 
         case UPDATE_BOOKCASE: {

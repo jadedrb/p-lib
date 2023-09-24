@@ -8,17 +8,17 @@ class BookcaseService {
         return d.data
     }
 
-    getRooms(user) {
-        return authAxios().get('/rooms').then(r => this.format(r))
-    }
+    // getRooms(user) {
+    //     return authAxios().get('/rooms').then(r => this.format(r))
+    // }
 
-    getBookcasesForRoom(room) {
-        return authAxios().get(`/bookcases/${room}`).then(r => this.format(r))
-    }
+    // getBookcasesForRoom(room) {
+    //     return authAxios().get(`/bookcases/${room}`).then(r => this.format(r))
+    // }
 
-    addBookcaseForRoom(bookcase, room) {
+    addBookcaseForRoom(bookcase) {
         loading(".newroom")
-        return authAxios().post(`/bookcases/${room}`, bookcase).then(r => this.format(r))
+        return authAxios().post(`/bookcases`, bookcase).then(r => this.format(r))
     }
     
     removeBookcaseFromRoom(id, room) {

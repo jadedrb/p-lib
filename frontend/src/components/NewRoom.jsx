@@ -262,8 +262,8 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
         col_high: Math.max(bcStart[1], bcEnd[1]),
         color: reposition.toggle ? "#2e2af8" : rgbToHex(randomNum(), randomNum(), randomNum()),
         location: "",
-        bcWidth: 100,
-        shHeight: 30,
+        width: 100,
+        height: 30,
       };
 
       if (reposition.toggle) {
@@ -311,19 +311,20 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
     setEdit(false)
 
     if (rid) {
-      let payload = await Rooms.updateRoomOfIdForUser(room, rid, user);
-      dispatch({ type: UPDATE_ROOM, payload });
+      // comeback to this later...
+      // let payload = await Rooms.updateRoomOfIdForUser(room, rid, user);
+      // dispatch({ type: UPDATE_ROOM, payload });
     } else {
       let payload = await Rooms.addRoomForUser(room, user);
       navigate(utilPath(path, "room", payload.id));
       dispatch({ type: ADD_ROOM, payload });
       room = payload.id;
     }
-    let bkcasesAdded = bookcases.filter(bk => !bk.hasOwnProperty("id"))
+    let bkcasesAdded = bookcases.filter(bk => !bk.hasOwnProperty("id")).map(bk => ({ ...bk, room_id: rid }))
     if (bkcasesAdded.length) {
-        await Bookcases.addBookcaseForRoom(bkcasesAdded, rid ? rid : room);
-        let rms = await Rooms.getRoomsForUser(user);
-        dispatch({ type: SET_ROOMS, payload: rms });
+        await Bookcases.addBookcaseForRoom(bkcasesAdded);
+        // let rms = await Rooms.getRoomsForUser(user);
+        dispatch({ type: UPDATE_ROOMS, payload: { rid, rm: room } });
     }
   };
 
