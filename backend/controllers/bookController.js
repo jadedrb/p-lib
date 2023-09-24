@@ -122,17 +122,8 @@ module.exports.count = async (req, res) => {
 
 module.exports.update = async (req, res) => {
     try {
- 
-        const bookResult = await pool.query('SELECT * FROM books WHERE id = $1 AND user_id = $2', [req.params.id, req.id])
-        const oldBook = bookResult.rows[0]
 
-        // Cannot find a book with requested id AND the user id from the token 
-        if (!oldBook) throw new Error('Access denied')
-
-        // Feels easier than selecting everything else in the SQL query above
-        delete oldBook.recorded_on
-
-        const [AFTERSET, ARGS] = constructUpdateQuery(oldBook, req.body, req.params.id)
+        const [AFTERSET, ARGS] = constructUpdateQuery(req.book, req.body, req.params.id)
 
         let newBook;
 
@@ -142,7 +133,7 @@ module.exports.update = async (req, res) => {
             newBook = bookUpdateResult.rows[0]
         } else {
             console.log('Nothing to update')
-            newBook = oldBook
+            newBook = req.book
         }
 
         res.status(200).json(newBook)
@@ -195,10 +186,7 @@ module.exports.destroy = async (req, res) => {
     try {
         let { id } = req.params
 
-        const result = await pool.query('DELETE FROM books WHERE id = $1 AND user_id = $2', [id, req.id])
-        
-        // Unable to find and delete a book that has both the book id (from the parameter) and the user id (from the token) and the  
-        if (!result.rowCount) throw new Error('Access denied') 
+        await pool.query('DELETE FROM books WHERE id = $1', [id])
        
         res.status(200).json({ message: 'book deleted successfully' })
     } catch(err) {

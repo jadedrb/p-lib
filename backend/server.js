@@ -20,8 +20,8 @@ const { authorize, confirmUser } = require('./middleware/authMiddleware')
 
 app.use('/auth', authRoutes)
 app.use('/api/users', authorize, userRoutes)
-app.use('/api/rooms', authorize, roomRoutes)
-app.use('/api/books', authorize, bookRoutes)
+app.use('/api/rooms', authorize, confirmUser, roomRoutes)
+app.use('/api/books', authorize, confirmUser, bookRoutes)
 app.use('/api/shelves', authorize, confirmUser, shelfRoutes)
 app.use('/api/bookcases', authorize, confirmUser, bookcaseRoutes)
 

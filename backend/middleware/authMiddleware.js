@@ -37,17 +37,37 @@ function authorize(req, res, next) {
 async function confirmUser(req, res, next) {
     console.log('confirm user...')
     try {
-        console.log(req.params, req.body, req.url)
+
+        let mainResult;
+
         if (req.originalUrl.includes('books')) {
 
-            const bookResult = await pool.query('SELECT * FROM books WHERE id = $1', [req.url.slice(1)])
-            
-            if (bookResult.rows[0].user_id !== req.id) throw new Error('Access Denied')
+            if (req.method === 'POST') {
+                // make sure all non-book ids provided in the req.body are related 
+                // and that the chain ends with the correct user
+                const shelvesResult = await pool.query('SELECT bookcase_id FROM shelves WHERE id = $1', [req.body[0].shid])
+                if (shelvesResult?.rows?.[0].bookcase_id !== req.body[0].bcid) throw new Error('Access Denied')
+                const bookcaseResult = await pool.query('SELECT room_id FROM bookcases WHERE id = $1', [req.body[0].bcid])
+                if (bookcaseResult?.rows?.[0].room_id !== req.body[0].rid) throw new Error('Access Denied')
+                mainResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [req.body[0].rid])
+
+            } else if (req.method === 'DELETE') {
+                mainResult = await pool.query('SELECT user_id FROM books WHERE id = $1', [req.url.slice(1)])
+
+            } else if (req.method === 'PUT') {
+                mainResult = await pool.query('SELECT * FROM books WHERE id = $1', [req.url.slice(1)])
+                req.book = mainResult?.rows?.[0]
+                delete req.book.recorded_on
+
+            } else {
+                return next()
+            }
+    
         } 
 
         else if (req.originalUrl.includes('shelves')) {
 
-            let shelfResult, bookcaseResult, roomResult;
+            let shelfResult, bookcaseResult;
 
             if (req.method === 'POST') {
                 bookcaseResult = await pool.query('SELECT room_id FROM bookcases WHERE id = $1', [req.url.slice(1)])
@@ -56,35 +76,34 @@ async function confirmUser(req, res, next) {
                 bookcaseResult = await pool.query('SELECT room_id FROM bookcases WHERE id = $1', [shelfResult.rows[0].bookcase_id])
             }
             
-            roomResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [bookcaseResult.rows[0].room_id])
+            mainResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [bookcaseResult.rows[0].room_id])
             
-            if (roomResult.rows[0].user_id !== req.id) throw new Error('Access Denied')
-            console.log('OK. token-user-id: ' + req.id + ', resource-relation-id: ' + roomResult.rows[0].user_id)
         }
 
         else if (req.originalUrl.includes('bookcases')) {
 
-            let bookcaseResult, roomResult;
+            let bookcaseResult;
 
             if (req.method === 'POST') {
                 console.log('req.body: ', req.body)
-                roomResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [req.body[0].room_id])
+                mainResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [req.body[0].room_id])
             } else {
                 bookcaseResult = await pool.query('SELECT * FROM bookcases WHERE id = $1', [req.url.slice(1)])
-                roomResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [bookcaseResult.rows[0].room_id])
+                mainResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [bookcaseResult.rows[0].room_id])
             }
             
-            if (roomResult.rows[0]?.user_id !== req.id) throw new Error('Access Denied')
-            
             req.bookcase = bookcaseResult?.rows[0]
-            console.log('OK. token-user-id: ' + req.id + ', resource-relation-id: ' + roomResult.rows[0].user_id)
         }
 
         else if (req.originalUrl.includes('rooms')) {
-            const roomResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [req.params.id])
+            // const roomResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [req.params.id])
             
-            if (roomResult.rows[0]?.user_id !== req.id) throw new Error('Access Denied')
+            // if (roomResult.rows[0]?.user_id !== req.id) throw new Error('Access Denied')
+            return next()
         }
+
+        if (mainResult.rows?.[0].user_id !== req.id) throw new Error('Access Denied')
+        console.log('OK. token-user-id: ' + req.id + ', resource-relation-id: ' + mainResult.rows[0].user_id)
 
         next()
 
