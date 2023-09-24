@@ -63,7 +63,7 @@ function reducer(state, action) {
             let { rid, rm } = action.payload
             let { roomIndex, rooms, room } = utilitySelector(rid, null, null, state.rooms)
 
-            if (room.bookcases) {
+            if (rm.bookcases) {
                 room.bookcases = [...room.bookcases, ...rm.bookcases]
                 delete rm.bookcases
                 console.log({ ...room, ...rm })

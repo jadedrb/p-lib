@@ -322,9 +322,9 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
     }
     let bkcasesAdded = bookcases.filter(bk => !bk.hasOwnProperty("id")).map(bk => ({ ...bk, room_id: rid }))
     if (bkcasesAdded.length) {
-        await Bookcases.addBookcaseForRoom(bkcasesAdded);
-        // let rms = await Rooms.getRoomsForUser(user);
-        dispatch({ type: UPDATE_ROOMS, payload: { rid, rm: room } });
+        const newBookcases = await Bookcases.addBookcaseForRoom(bkcasesAdded);
+        room.bookcases = newBookcases
+        dispatch({ type: UPDATE_ROOM, payload: { rid, rm: room } });
     }
   };
 
