@@ -16,14 +16,14 @@ const bookRoutes = require('./routes/bookRoutes')
 const shelfRoutes = require('./routes/shelfRoutes')
 const bookcaseRoutes = require('./routes/bookcaseRoutes')
 
-const { authorize } = require('./middleware/authMiddleware')
+const { authorize, confirmUser } = require('./middleware/authMiddleware')
 
 app.use('/auth', authRoutes)
 app.use('/api/users', authorize, userRoutes)
 app.use('/api/rooms', authorize, roomRoutes)
 app.use('/api/books', authorize, bookRoutes)
-app.use('/api/shelves', authorize, shelfRoutes)
-app.use('/api/bookcases', authorize, bookcaseRoutes)
+app.use('/api/shelves', authorize, confirmUser, shelfRoutes)
+app.use('/api/bookcases', authorize, confirmUser, bookcaseRoutes)
 
 app.listen(PORT, () => {
     console.log('Listening on port: ' + PORT)
