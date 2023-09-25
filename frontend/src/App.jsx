@@ -28,54 +28,89 @@ function App() {
 
   useEffect(() => {
     const validate = async () => {
-      let token = localStorage.getItem("token")
-      let time = localStorage.getItem("time")
 
-      if ((new Date() - new Date(time)) > A_WEEKS_TIME) {
-        token = false
-        localStorage.removeItem("token")
-        localStorage.removeItem("time")
-      }
+      try {
 
-      if (token) {
-        
-        let user = await UserService.validateUserToken()
-
-        if (user) {
-
-          dispatch({
-              type: SET_USER,
-              payload: user
-          })
-
-          let payload = await RoomService.getRoomsForUser()
-
-          let currentSettings = await UserService.getUserByName(user)
-
-          if (currentSettings.other) {
-            let other = JSON.parse(currentSettings.other)
-            
-            dispatch({
-              type: UPDATE_SETTINGS,
-              payload: { ...other, temp: other.default === "Read Only" ? "Read Only" : "Read/Write" }
-            })
-          }
-        
-          clearLoading()
-          if (payload.length) {
-            dispatch({ type: SET_ROOMS, payload })
-            dispatch({ type: SETUP_COMPLETE })
-            return
-          }
-        }
-        else { // if user validation failed with current token
+        let token = localStorage.getItem("token")
+        let time = localStorage.getItem("time")
+  
+        if ((new Date() - new Date(time)) > A_WEEKS_TIME) {
+          token = false
           localStorage.removeItem("token")
           localStorage.removeItem("time")
-          dispatch({ type: SETUP_COMPLETE })
-          return
         }
-      } 
-      dispatch({ type: SETUP_COMPLETE })
+  
+        if (token) {
+          
+          let user = await UserService.validateUserToken()
+  
+          if (user) {
+  
+            dispatch({
+                type: SET_USER,
+                payload: user
+            })
+              
+            let currentSettings = await UserService.getUserByName(user)
+  
+            let other, localRooms;
+  
+            if (currentSettings.other) {
+              other = JSON.parse(currentSettings.other)
+              
+              dispatch({
+                type: UPDATE_SETTINGS,
+                payload: { ...other, temp: other.default === "Read Only" ? "Read Only" : "Read/Write" }
+              })
+            }
+
+            // get local rooms if they exist and setting for local is true
+            if (other?.local === 'Yes') {
+              localRooms = localStorage.getItem('rooms')
+              localRooms = localRooms ? JSON.parse(localRooms) : false
+              localRooms = Array.isArray(localRooms) && localRooms.length ? localRooms : false
+            }
+  
+            // if nothing found then fetch as normal
+            if (!localRooms) {
+              console.log('fetching rooms data...')
+              localRooms = await RoomService.getRoomsForUser()
+  
+              // if local is true then set localStorage after fetch
+              if (other?.local === 'Yes') {
+                localStorage.setItem('rooms', JSON.stringify(localRooms))
+              }
+  
+              // otherwise local data was found so use it instead
+            } else 
+              console.log('retrieving local rooms data...')
+            
+            clearLoading()
+            if (localRooms.length) {
+              dispatch({ type: SET_ROOMS, payload: localRooms })
+              dispatch({ type: SETUP_COMPLETE })
+              return
+            }
+          }
+          else { // if user validation failed with current token
+            throw new Error('failed')
+          }
+        } 
+        dispatch({ type: SETUP_COMPLETE })
+
+      } catch(err) {
+
+        if (err.message === 'failed') {
+          localStorage.removeItem("token")
+          localStorage.removeItem("rooms")
+          localStorage.removeItem("time")
+        } else {
+          console.log('offline mode...?')
+        }
+
+        console.log(err.message)
+        dispatch({ type: SETUP_COMPLETE })
+      }
     }
 
     if (!mounted.current) {

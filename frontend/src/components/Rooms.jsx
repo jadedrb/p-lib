@@ -155,6 +155,7 @@ const Rooms = () => {
     const handleLogout = () => {
         localStorage.removeItem("token")
         localStorage.removeItem("time")
+        localStorage.removeItem("rooms")
         dispatch({
             type: SET_USER,
             payload: ""

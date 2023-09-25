@@ -15,7 +15,18 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
 
     const updateOnExit = async () => {
         const changesWereMade = Object.keys(tempSettings).some((prop) => tempSettings[prop] !== settings[prop])
+
         if (changesWereMade) {
+
+            if (tempSettings.local === 'No' && localStorage.getItem('rooms')) {
+                console.log('removing existing local data...')
+                localStorage.removeItem('rooms')
+            }
+            else if (tempSettings.local === 'Yes' && !localStorage.getItem('rooms')) {
+                console.log('storing data locally now...')
+                localStorage.setItem('rooms', JSON.stringify(rooms))
+            }
+
             await UserService.updateUser({ other: JSON.stringify(tempSettings) }, userDetails[user]) 
             dispatch({
                 type: UPDATE_SETTINGS,
@@ -132,6 +143,17 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
 
                                 <p>{!tempSettings.roll || tempSettings.roll === "Dont Roll" ? "Don't roll" : "Roll"} to a random book by default</p>
                                 <button onClick={() => handleUpdateSettings(userDetails[user], { roll: !tempSettings.roll || tempSettings.roll === "Dont Roll" ? "Roll" : "Dont Roll" })}>{!tempSettings.roll || tempSettings.roll === "Dont Roll" ? "Roll" : "Don't Roll"}</button>
+
+                                <p>Data related to books is {!tempSettings.local || tempSettings.local === "No" ? "NOT" : " currently "} stored locally (localStorage)</p>
+                                <button onClick={() => handleUpdateSettings(userDetails[user], { local: !tempSettings.local || tempSettings.local === "No" ? "Yes" : "No" })}>{!tempSettings.local || tempSettings.local === "No" ? "Store" : "Dont Store" }</button>
+
+                                <p>{!tempSettings.offline || tempSettings.offline === "Off" ? "Do NOT use" : "Utilize"} local book data for offline mode</p>
+                                <button 
+                                    disabled={!tempSettings.local || tempSettings.local === "No" ? true : false} 
+                                    onClick={() => handleUpdateSettings(userDetails[user], { offline: !tempSettings.offline || tempSettings.offline === "Off" ? "On" : "Off" })}
+                                >
+                                        {!tempSettings.offline || tempSettings.offline === "Off" ? "Use" : "Dont Use" }
+                                </button>
 
                                 <p>Delete my personal library and account information</p>
                                 <button onClick={() => handleAccountDeletion(userDetails[user])}>Delete</button>
