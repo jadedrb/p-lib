@@ -1,5 +1,3 @@
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
 const pool = require('../config')
 
 module.exports.show = async (req, res) => {
@@ -33,18 +31,26 @@ module.exports.overview = async (req, res) => {
 
         let bookCount = await pool.query('SELECT COUNT(*) FROM books WHERE user_id = $1', [foundUser.id])
         let rooms = await pool.query('SELECT id FROM rooms WHERE user_id = $1', [foundUser.id])
-        let bookcases = await pool.query(`SELECT id FROM bookcases WHERE ${ORCLAUSE(rooms.rows, 'room')}`, ARGS(rooms.rows))
-        let shelfCount = await pool.query(`SELECT COUNT(*) FROM shelves WHERE ${ORCLAUSE(bookcases.rows, 'bookcase')}`, ARGS(bookcases.rows))
+        
+        let bookcases = { rows: [] }
+       
+        if (rooms.rows.length)
+            bookcases = await pool.query(`SELECT id FROM bookcases WHERE ${ORCLAUSE(rooms.rows, 'room')}`, ARGS(rooms.rows))
+  
+        let shelfCount = { rows: [] }  
 
+        if (bookcases.rows.length)
+            shelfCount = await pool.query(`SELECT COUNT(*) FROM shelves WHERE ${ORCLAUSE(bookcases.rows, 'bookcase')}`, ARGS(bookcases.rows))
+  
         const stats = {
             [foundUser.username]: foundUser.id,
             rooms: String(rooms.rows.length),
             bookcases: String(bookcases.rows.length),
-            shelves: shelfCount.rows[0].count,
-            books: bookCount.rows[0].count,
+            shelves: shelfCount.rows[0]?.count || 0,
+            books: bookCount.rows[0]?.count || 0,
             created_on: foundUser.created_on
         }
-
+    
         res.send([foundUser, stats])
 
     } catch(err) {
@@ -60,5 +66,18 @@ module.exports.update = async (req, res) => {
     } catch(err) {
         console.log({ error: err.message })
         res.send({ error: err.message })
+    }
+}
+
+
+module.exports.destroy = async (req, res) => {
+    try {
+
+        // delete user (this assumes rooms have already been deleted)
+        await pool.query('DELETE FROM users WHERE id = $1', [req.id])
+       
+        res.status(200).json({ deleted: true })
+    } catch(err) {
+        res.status(400).json({ deleted: false, error: err.message })
     }
 }

@@ -16,7 +16,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
     tile: 25,
     name: "New Room",
     bookcases: [],
-    perspective: null,
+    perspective: '',
     id: 0,
   };
 

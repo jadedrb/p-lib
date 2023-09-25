@@ -24,21 +24,20 @@ class UserService {
         }
     }
 
-    loginUser(user) {
-        return axios.post(APILite + `/auth/login`, user).then(r => this.format(r))
+    async loginUser(user) {
+        try {
+            const r = await axios.post(APILite + `/auth/login`, user)
+            return this.format(r)
+        } catch(err) {
+            return err
+        }
     }
 
-    getUser(user) {
-        return authAxios().get(`/users/${user}/rooms`).then(r => this.format(r))
-    }
     getUserByName(user) {
         return authAxios().get(`/users/${user}`).then(r => this.format(r))
-    }
-    addUser(user) {
-        return authAxios().post(`/users`, user).then(r => this.format(r))
-    }   
-    removeUser(id) {
-        return authAxios().delete(`/users/${id}`).then(r => this.format(r))
+    } 
+    removeUser() {
+        return authAxios().delete(`/users`).then(r => this.format(r))
     }
     getUserDetails() {
         return authAxios().get(`/users/overview`).then(r => this.format(r))

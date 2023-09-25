@@ -1,5 +1,6 @@
 import { utilTime } from "../services/utility"
 import UserService from '../services/UserService'
+import RoomService from '../services/RoomService'
 import { UPDATE_SETTINGS } from '../context'
 
 import { useRef, useEffect, useState } from 'react'
@@ -52,13 +53,18 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
         }
     }, [tempSettings])
 
-    const handleAccountDeletion = async (id) => {
+    const handleAccountDeletion = async () => {
         const confirm = window.confirm("Are you sure you want to delete your account?")
         if (confirm) {
             let confirmMsg = `Yes, I, ${user}, would like to delete my account`
             const confirmAgain = window.prompt(`One more step. Please confirm by typing: ${confirmMsg}`)
             if (confirmMsg === confirmAgain) {
-                let deletion = await UserService.removeUser(id)
+                // remove rooms first (and any related rows)
+                for (let rm of rooms) {
+                    await RoomService.removeRoomFromUser(rm.id)
+                }
+                // then remove user
+                let deletion = await UserService.removeUser()
                 if (deletion.deleted) {
                     alert('Account deleted.')
                     setShowUserDet(!showUserDet)
