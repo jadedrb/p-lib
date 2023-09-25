@@ -1,5 +1,5 @@
 const pool = require('../config')
-const { constructUpdateQuery } = require('./utility')
+const { constructUpdateQuery, constructColumnsValuesAndArgs } = require('./utility')
 
 module.exports.update = async (req, res) => {
     try {
@@ -32,12 +32,14 @@ module.exports.create = async (req, res) => {
 
         for (let bk of req.body) {
 
+            const { COLUMNS, VALUES, ARGS } = constructColumnsValuesAndArgs(bk)
+
             const bookcaseResult = await pool.query(
                 'INSERT INTO bookcases ' + 
-                `(${Object.keys(bk).join(', ')}) ` + 
-                'VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) ' +
+                `(${COLUMNS}) ` + 
+                `VALUES (${VALUES}) ` +
                 'RETURNING *', 
-            Object.values(bk))
+            ARGS)
 
             const bookcase = bookcaseResult.rows[0]
             bookcase.shelves = []

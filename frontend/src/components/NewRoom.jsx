@@ -311,10 +311,10 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
 
     if (rid) {
       // comeback to this later...
-      // let payload = await Rooms.updateRoomOfIdForUser(room, rid, user);
-      // dispatch({ type: UPDATE_ROOM, payload });
+      let payload = await Rooms.updateRoomOfId(room, rid);
+      dispatch({ type: UPDATE_ROOM, payload: { rid, rm: payload } });
     } else {
-      let payload = await Rooms.addRoomForUser(room, user);
+      let payload = await Rooms.addRoomForUser(room);
       navigate(utilPath(path, "room", payload.id));
       dispatch({ type: ADD_ROOM, payload });
       room = payload.id;
@@ -330,7 +330,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
   const newBlankRoom = async () => {
     let rm = roomConstruct(10, 10, "New Room", 25, [], 'null');
    
-    let payload = await Rooms.addRoomForUser(rm, user);
+    let payload = await Rooms.addRoomForUser(rm);
     navigate(utilPath(path, "room", payload.id));
     dispatch({ type: ADD_ROOM, payload })
   };
@@ -338,7 +338,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
   const removeARoom = async () => {
     let confirm = window.confirm(utilMsg({ type: 'room', details: { room: currentRoom } }))
     if (!confirm) return
-    await Rooms.removeRoomFromUser(rid, user);
+    await Rooms.removeRoomFromUser(rid);
     dispatch({ type: REMOVE_ROOM, payload: rid });
     afterDeletionRef.current = true
     if (rIndex)

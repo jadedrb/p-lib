@@ -8,33 +8,38 @@ class RoomService {
         return d.data
     }
 
-    getRooms() {
-        return authAxios().get('/rooms').then(r => this.format(r))
-    }
-
-    getRoomOfId(id) {
+    async getRoomsForUser() {
         loading(".newroom")
-        return authAxios().get(`/room/${id}`).then(r => this.format(r)).catch(() => { console.log('uhoh'); clearLoading(); return []; })
-    }
-
-    getRoomsForUser() {
-        loading(".newroom")
-        return authAxios().get(`/rooms`).then(r => this.format(r)).catch(() => { console.log('uhoh'); clearLoading(); return []; })
+        try {
+            const r = await authAxios().get(`/rooms`)
+            return this.format(r)
+        } catch {
+            console.log('uhoh'); clearLoading()
+            return []
+        }
     }
     
-    addRoomForUser(room, user) {
+    async addRoomForUser(room) {
         loading(".newroom")
-        return authAxios().post(`/rooms/${user}`, room).then(r => this.format(r)).catch(() => { console.log('uhoh'); clearLoading(); return []; })
+        try {
+            const r = await authAxios().post(`/rooms`, room)
+            return this.format(r)
+        } catch {
+            console.log('uhoh'); clearLoading()
+            return []
+        }
     }
     
-    removeRoomFromUser(id, name) {
+    async removeRoomFromUser(id, name) {
         loading(".newroom")
-        return authAxios().delete(`/rooms/${id}/users/${name}`).then(r => this.format(r))
+        const r = await authAxios().delete(`/rooms/${id}`)
+        return this.format(r)
     }
     
-    updateRoomOfIdForUser(room, id, name) {
+    async updateRoomOfId(room, id) {
         loading(".newroom")
-        return authAxios().put(`/rooms/${id}/users/${name}`, room).then(r => this.format(r))
+        const r = await authAxios().put(`/rooms/${id}`, room)
+        return this.format(r)
     }
 }
 

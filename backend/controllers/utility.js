@@ -13,6 +13,14 @@ function constructUpdateQuery(oldRow, updatesForRow, paramId) {
     return [AFTERSET, ARGS]
 }
 
+function constructColumnsValuesAndArgs(resource) {
+    const COLUMNS = Object.keys(resource).join(', ')
+    const VALUES = Object.values(resource).map((_, i) => `$${i + 1}`).join(', ')
+    const ARGS = Object.values(resource)
+    return { COLUMNS, VALUES, ARGS }
+}
+
 module.exports = {
-    constructUpdateQuery
+    constructUpdateQuery,
+    constructColumnsValuesAndArgs
 }

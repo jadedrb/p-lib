@@ -96,10 +96,13 @@ async function confirmUser(req, res, next) {
         }
 
         else if (req.originalUrl.includes('rooms')) {
-            // const roomResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [req.params.id])
+            if (req.method === 'PUT' || req.method === 'DELETE') {
+                mainResult = await pool.query('SELECT * FROM rooms WHERE id = $1', [req.url.slice(1)])
+            } else {
+                return next()
+            }
             
-            // if (roomResult.rows[0]?.user_id !== req.id) throw new Error('Access Denied')
-            return next()
+            req.room = mainResult?.rows[0]
         }
 
         if (mainResult.rows?.[0].user_id !== req.id) throw new Error('Access Denied')
