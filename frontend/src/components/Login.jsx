@@ -43,9 +43,12 @@ function LoginAndRegister(props) {
         if (!props.which && email.length < 5) {
             alert('Please enter a longer email (more than 5 characters)')
             return false
-        } else {
-            return true
+        } 
+        if (token?.response?.data?.error) {
+            alert(token?.response?.data?.error)
+            return false
         }
+        return true
     }
 
     const handleSubmit = async (e) => {
@@ -89,9 +92,9 @@ function LoginAndRegister(props) {
             // setTimeout(() => navigate(`/room/${payload[initialJumpIndex] ? payload[initialJumpIndex].id : ''}`), 1)
         }
         else {
-            console.log('registering...')
+
             token = await UserService.registerUser({ username, password, email })
-            
+ 
             if (!validate(token)) {
                 clearLoading()
                 return

@@ -15,8 +15,13 @@ class UserService {
         return authAxiosLite().get('/api/users/test').then(r => this.format(r)).catch(() => console.log('oops'))
     }
 
-    registerUser(user) {
-        return axios.post(APILite + `/auth/register`, user).then(r => this.format(r))
+    async registerUser(user) {
+        try {
+            const r = await axios.post(APILite + `/auth/register`, user)
+            return this.format(r)
+        } catch(err) {
+            return err
+        }
     }
 
     loginUser(user) {

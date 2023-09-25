@@ -5,5 +5,6 @@ const authCtrl = require('../controllers/authController')
 
 router.get('/awaken', authCtrl.awake)
 router.post('/login', authCtrl.login)
+router.post('/register', authCtrl.register)
 
 module.exports = router
