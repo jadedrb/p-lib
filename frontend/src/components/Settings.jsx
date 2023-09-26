@@ -147,13 +147,13 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
                                 <p>Data related to books is {!tempSettings.local || tempSettings.local === "No" ? "NOT" : " currently "} stored locally (localStorage)</p>
                                 <button onClick={() => handleUpdateSettings(userDetails[user], { local: !tempSettings.local || tempSettings.local === "No" ? "Yes" : "No" })}>{!tempSettings.local || tempSettings.local === "No" ? "Store" : "Dont Store" }</button>
 
-                                <p>{!tempSettings.offline || tempSettings.offline === "Off" ? "Do NOT use" : "Utilize"} local book data for offline mode</p>
+                                {/* <p>{!tempSettings.offline || tempSettings.offline === "Off" ? "Do NOT use" : "Utilize"} local book data for offline mode</p>
                                 <button 
                                     disabled={!tempSettings.local || tempSettings.local === "No" ? true : false} 
                                     onClick={() => handleUpdateSettings(userDetails[user], { offline: !tempSettings.offline || tempSettings.offline === "Off" ? "On" : "Off" })}
                                 >
                                         {!tempSettings.offline || tempSettings.offline === "Off" ? "Use" : "Dont Use" }
-                                </button>
+                                </button> */}
 
                                 <p>Delete my personal library and account information</p>
                                 <button onClick={() => handleAccountDeletion(userDetails[user])}>Delete</button>

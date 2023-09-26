@@ -11,6 +11,7 @@ import Settings from "./Settings"
 import BookService from "../services/BookService"
 import MarkersHub from "./MarkersHub"
 import GeneralModal from "./GeneralModal"
+import { getAllBooksFromRooms } from "../services/offlineMode"
 
 const Rooms = () => {
 
@@ -73,9 +74,15 @@ const Rooms = () => {
     }, [showRooms])
 
     const determineSearchArea = (search) => {
+
+        const OFFLINE = user === 'to offline mode' && settings.temp === 'Read Only' && Object.values(settings).length === 1
     
-        if (searchIn === 'results') {
-            
+        if ((searchIn === 'results') || OFFLINE) {
+            console.log('same logic for search results...')
+
+            if (OFFLINE && searchIn !== 'results')
+                results = getAllBooksFromRooms(rooms)
+
             if (searchType === "title" || searchType === "genre" || searchType === "color" || searchType === "author" || searchType === "more") 
                 return results.filter((b) => b[searchType].toLowerCase().includes(search.toLowerCase()))
             if (searchType === "language")

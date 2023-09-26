@@ -119,7 +119,7 @@ function App() {
               type: UPDATE_SETTINGS,
               payload: { temp: 'Read Only' }
             })
-            setTimeout(() => clearLoading(), 300)
+            setTimeout(() => clearLoading(), 201)
           }
         }
 
