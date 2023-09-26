@@ -38,3 +38,15 @@ export function getAllBooksFromRooms(data) {
     }
     return []
 }
+
+export function getRandomBook(data) {
+    let books = getAllBooksFromRooms(data)
+    let random = Math.floor(Math.random() * books.length)
+    let book = books[random]
+    return {
+        book: book.id,
+        shelf: book.shelf_id,
+        bookcase: book.bookcase_id,
+        room: book.room_id
+    }
+}

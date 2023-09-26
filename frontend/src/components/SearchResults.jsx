@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { utilPath, utilOrder } from '../services/utility';
 import Books from '../services/BookService';
 
-const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, setShowResults }) => {
+const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, setShowResults, settings }) => {
 
     let [order, setOrder] = useState("")
     let [recordedSearch, setRecordedSearch] = useState([])
@@ -52,14 +52,25 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
         setHeight(height)
     }, [books])
 
-    const whereIsThisBook = async (id) => {
-        console.log('er')
-        if (bid === id) return
-        console.log('he')
-        let coord = await Books.getBookCoordinates(id)
+    const whereIsThisBook = async (b) => {
+   
+        let coord;
+
+        if (bid === b.id) return
+        if (settings.offline)
+            coord = {
+                book: b.id,
+                shelf: b.shelf_id,
+                bookcase: b.bookcase_id,
+                room: b.room_id
+            }
+        // is this endpoint even needed?
+        // else
+        //     coord = await Books.getBookCoordinates(b.id)
+
         console.log(coord)
         navigate(utilPath(coord, "coord"))
-        // prevCoord.current = id
+
     }
 
     const closeSearchResults = () => {
@@ -83,7 +94,7 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
             <tr 
                 className='table-head'
                 key={i} 
-                onClick={() => whereIsThisBook(b.id)} 
+                onClick={() => whereIsThisBook(b)} 
                 onDoubleClick={closeSearchResults}
                 style={{ outline: bid === b.id ? '2px solid black' : 'none' }}
             >

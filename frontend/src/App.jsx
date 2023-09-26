@@ -117,7 +117,7 @@ function App() {
             dispatch({ type: SETUP_COMPLETE })
             dispatch({
               type: UPDATE_SETTINGS,
-              payload: { temp: 'Read Only' }
+              payload: { temp: 'Read Only', offline: true }
             })
             setTimeout(() => clearLoading(), 201)
           }

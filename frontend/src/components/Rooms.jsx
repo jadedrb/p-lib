@@ -11,7 +11,7 @@ import Settings from "./Settings"
 import BookService from "../services/BookService"
 import MarkersHub from "./MarkersHub"
 import GeneralModal from "./GeneralModal"
-import { getAllBooksFromRooms } from "../services/offlineMode"
+import { getAllBooksFromRooms, getRandomBook } from "../services/offlineMode"
 
 const Rooms = () => {
 
@@ -75,12 +75,10 @@ const Rooms = () => {
 
     const determineSearchArea = (search) => {
 
-        const OFFLINE = user === 'to offline mode' && settings.temp === 'Read Only' && Object.values(settings).length === 1
-    
-        if ((searchIn === 'results') || OFFLINE) {
+        if ((searchIn === 'results') || settings.offline) {
             console.log('same logic for search results...')
 
-            if (OFFLINE && searchIn !== 'results')
+            if (settings.offline && searchIn !== 'results')
                 results = getAllBooksFromRooms(rooms)
 
             if (searchType === "title" || searchType === "genre" || searchType === "color" || searchType === "author" || searchType === "more") 
@@ -113,7 +111,12 @@ const Rooms = () => {
     }
 
     const rollRandomBook = async () => {
-        let coord = await BookService.getBookCoordinates('random')
+        let coord;
+        if (settings.offline) 
+            coord = getRandomBook(rooms)
+        else 
+            coord = await BookService.getBookCoordinates('random')
+        
         navigate(utilPath(coord, "coord"))
     }
 
@@ -187,6 +190,7 @@ const Rooms = () => {
         <div className="rooms">
             {(search && !typing && showResults) || results?.length || (!results?.length && searchIn === 'results') ? 
                 <SearchResults 
+                    settings={settings}
                     search={search} 
                     searchType={searchType} 
                     books={results} bid={Number(bid)} 
