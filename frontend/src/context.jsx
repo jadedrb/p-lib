@@ -47,7 +47,7 @@ let initialState = {
 
 function reducer(state, action) {
 
-    let invalidateCache = (state.settings.local) && (action.type.includes('ADD') || action.type.includes('UPDATE') || action.type.includes('REMOVE'))
+    let invalidateCache = (state.settings.local === 'Yes') && (action.type.includes('ADD') || action.type.includes('UPDATE') || action.type.includes('REMOVE'))
 
     if (invalidateCache) {
         console.log('removing invalid local data because: ' + action.type)

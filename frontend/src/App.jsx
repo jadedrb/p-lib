@@ -29,10 +29,10 @@ function App() {
   useEffect(() => {
     const validate = async () => {
 
-      try {
+      let token = localStorage.getItem("token")
+      let time = localStorage.getItem("time")
 
-        let token = localStorage.getItem("token")
-        let time = localStorage.getItem("time")
+      try {
   
         if ((new Date() - new Date(time)) > A_WEEKS_TIME) {
           token = false
@@ -104,8 +104,23 @@ function App() {
           localStorage.removeItem("token")
           localStorage.removeItem("rooms")
           localStorage.removeItem("time")
+          console.log('failed')
         } else {
-          console.log('offline mode...?')
+  
+          let localData = localStorage.getItem('rooms')
+
+          // should be a valid token and rooms in local storage for offline mode
+          if (token && localData && typeof localData === 'string') {
+            console.log('offline mode...')
+            dispatch({ type: SET_USER, payload: 'to offline mode' })
+            dispatch({ type: SET_ROOMS, payload: JSON.parse(localData) })
+            dispatch({ type: SETUP_COMPLETE })
+            dispatch({
+              type: UPDATE_SETTINGS,
+              payload: { temp: 'Read Only' }
+            })
+            setTimeout(() => clearLoading(), 300)
+          }
         }
 
         console.log(err.message)
@@ -138,6 +153,10 @@ function App() {
             setTimeout(() => clearLoading(), 200)
           }
         })
+        .catch(_ => {
+          console.log('server may be down...')
+          setTimeout(() => clearLoading(), 200)
+        }) 
         
     }
 

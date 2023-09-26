@@ -11,8 +11,13 @@ class UserService {
         return axios.get(APILite + `/auth/awaken`)
     }
 
-    validateUserToken() {
-        return authAxiosLite().get('/api/users/test').then(r => this.format(r)).catch(() => console.log('oops'))
+    async validateUserToken() {
+        try {
+            const r = await authAxiosLite().get('/api/users/test')
+            return this.format(r)
+        } catch(err) {
+            throw new Error(err)
+        }
     }
 
     async registerUser(user) {
