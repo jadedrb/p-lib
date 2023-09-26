@@ -4,6 +4,7 @@ import BookService from '../services/BookService';
 import { utilPath, loading } from "../services/utility";
 import Markers from './Markers'
 import Move from './Move'
+import { getMarkers } from '../services/offlineMode';
 
 function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms, params, settings }) {
 
@@ -29,7 +30,11 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms, par
 
         async function getMakers() {
             try {
-                const markers = await BookService.getThisInThat({ search: selectedMarker, searchType: 'markers' })
+                let markers;
+                if (settings.offline) 
+                    markers = getMarkers(rooms, selectedMarker)
+                else
+                    markers = await BookService.getThisInThat({ search: selectedMarker, searchType: 'markers' })
                 setMarkedBooks(markers)
                 setIsLoading(false)
             } catch(err) {

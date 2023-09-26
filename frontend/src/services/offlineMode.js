@@ -50,3 +50,8 @@ export function getRandomBook(data) {
         room: book.room_id
     }
 }
+
+export function getMarkers(data, marker) {
+    let books = getAllBooksFromRooms(data)
+    return books.filter(book => book.markers?.includes(marker))
+}
