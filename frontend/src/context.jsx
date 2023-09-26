@@ -46,8 +46,15 @@ let initialState = {
 }
 
 function reducer(state, action) {
-    switch(action.type) {
 
+    let invalidateCache = (state.settings.local) && (action.type.includes('ADD') || action.type.includes('UPDATE') || action.type.includes('REMOVE'))
+
+    if (invalidateCache) {
+        console.log('removing invalid local data because: ' + action.type)
+        localStorage.removeItem('rooms')
+    }
+
+    switch(action.type) {
         case SET_ROOMS: {
             return { ...state, rooms: action.payload }
         }
