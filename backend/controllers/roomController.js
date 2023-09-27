@@ -6,16 +6,16 @@ module.exports.index = async (req, res) => {
         // get all rooms for user
         const roomResults = await pool.query('SELECT * FROM rooms WHERE user_id = $1', [req.id])
         const rooms = roomResults.rows
-console.log(1, rooms.length, rooms[0])
+
         let bkResults = await Promise.all(rooms.map(room => pool.query('SELECT * FROM bookcases WHERE room_id = $1', [room.id])))
         let bookcases = bkResults.map(bk => bk.rows).flat()
-console.log(2, bookcases.length, bookcases[0])
+
         let shlvResults = await Promise.all(bookcases.map(bookcase => pool.query('SELECT * FROM shelves WHERE bookcase_id = $1', [bookcase.id])))
         let shelves = shlvResults.map(shlv => shlv.rows).flat()
-console.log(3, shelves.length, shelves[0])
+
         let bookResults = await Promise.all(shelves.map(shelf => pool.query('SELECT * FROM books WHERE shelf_id = $1', [shelf.id])))
         let books = bookResults.map(book => book.rows).flat()
-console.log(4, books.length, books[0])
+
         for (let shelf of shelves) {
             shelf.books = books.filter(b => b.shelf_id == shelf.id)
         }
@@ -27,7 +27,7 @@ console.log(4, books.length, books[0])
         for (let room of rooms) {
             room.bookcases = bookcases.filter(bk => bk.room_id == room.id)
         }
-console.log(5, rooms[0], room.bookcases.length)
+
         res.status(200).json(rooms)
     } catch(err) {
         console.log(err.message)
