@@ -17,18 +17,15 @@ console.log(3, shelves.length, shelves[0])
         let books = bookResults.map(book => book.rows).flat()
 console.log(4, books.length, books[0])
         for (let shelf of shelves) {
-            shelf.books = books.filter(b => b.shelf_id === shelf.id)
+            shelf.books = books.filter(b => b.shelf_id == shelf.id)
         }
 
         for (let bookcase of bookcases) {
-            bookcase.shelves = shelves.filter(sh => {
-                console.log('in: ', sh.bookcase_id, bookcase.id, typeof sh.bookcase_id, typeof bookcase.id)
-                return sh.bookcase_id === bookcase.id
-            }).sort((a, b) => Number(a.id) - Number(b.id))
+            bookcase.shelves = shelves.filter(sh => sh.bookcase_id == bookcase.id).sort((a, b) => Number(a.id) - Number(b.id))
         }
 
         for (let room of rooms) {
-            room.bookcases = bookcases.filter(bk => bk.room_id === room.id)
+            room.bookcases = bookcases.filter(bk => bk.room_id == room.id)
         }
 console.log(5, rooms[0], room.bookcases.length)
         res.status(200).json(rooms)
