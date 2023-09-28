@@ -35,7 +35,7 @@ function CurrentShelf() {
         let { shelf, bkcase } = utilitySelector(rid, bcid, shid, rooms)
       
         let top, bot, swap;
-        let pos = bkcase?.shelves?.findIndex(sh => sh.id === shid)
+        let pos = bkcase?.shelves?.findIndex(sh => sh.id == shid)
      
         if (typeof pos === "number") {
             bot = bkcase.shelves.length - pos
@@ -81,7 +81,7 @@ function CurrentShelf() {
     wrapper.current = { swapem }
 
     let tob = shelfPos.swap === "top" ? shelfPos.top : shelfPos.bot
-    let position = tob === 1 ? "1st" : tob === 2 ? "2nd" : tob === 3 ? "3rd" : tob + "th"
+    let position = tob == 1 ? "1st" : tob == 2 ? "2nd" : tob == 3 ? "3rd" : tob + "th"
 
     return ( 
         <div className='sh-b'>

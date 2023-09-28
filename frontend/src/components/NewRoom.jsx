@@ -187,7 +187,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
           div.setAttribute('data-bk-tag', currentBookcase.location)
         }
 
-          if (currentBookcase.id === bcid) {
+          if (currentBookcase.id == bcid) {
             if (reposition.toggle) {
               div.style.opacity = ".3"
               div.style.outline = "3px solid white"

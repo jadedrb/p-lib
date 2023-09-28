@@ -62,21 +62,21 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
         <p 
           key={i} 
           className="shelf" 
-          style={{ height: `${shelfHeight}px`, outline: `${sh.id === shid ? '3px solid black' : 'none'}`, opacity: currentBookcase.shelves.length ? '10' : '.1' }}
+          style={{ height: `${shelfHeight}px`, outline: `${sh.id == shid ? '3px solid black' : 'none'}`, opacity: currentBookcase.shelves.length ? '10' : '.1' }}
           onClick={() => {
-            if (!shid || !(shid === sh.id)) {
+            if (!shid || !(shid == sh.id)) {
               if (sh.id)
                 navigate(utilPath(path, 'shelf', sh.id))
             }
           }}
         >
-          {shid === sh.id && sh.books?.length ? 
+          {shid == sh.id && sh.books?.length ? 
           utilOrder(sh.books, sh.organize ? sh.organize : "lastname asc")
             .map((b,i) => 
               <span 
                 key={i} 
                 onClick={() => navigate(utilPath(path, 'book', b.id)) }
-                style={{ backgroundColor: bid === b?.id && b.color ? b.color : bid === b?.id && !b.color ? 'lightgrey' : bid !== b.id && currentBook?.color === "white" && bid ? 'lightgrey' : "white" }}
+                style={{ backgroundColor: bid == b?.id && b.color ? b.color : bid == b?.id && !b.color ? 'lightgrey' : bid != b.id && currentBook?.color === "white" && bid ? 'lightgrey' : "white" }}
               >
               </span>
             ) : 

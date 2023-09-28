@@ -130,7 +130,7 @@ function reducer(state, action) {
             let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
             
             // for those strange edge cases where state somehow ends up with duplicate book objects
-            let checkDuplicate = shelf.books.some(b => b.id === book.id)
+            let checkDuplicate = shelf.books.some(b => b.id == book.id)
 
             if (checkDuplicate)
                 return state
@@ -150,7 +150,7 @@ function reducer(state, action) {
             let { bcid, rid, shid, book, bid } = action.payload
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms, bid)
             let shelf = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex]
-            shelf.books = shelf.books.map(b => b.id === bid ? book : b)
+            shelf.books = shelf.books.map(b => b.id == bid ? book : b)
             return { ...state, rooms }
         }
         case REMOVE_BOOK: {

@@ -56,7 +56,7 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
    
         let coord;
 
-        if (bid === b.id) return
+        if (bid == b.id) return
         if (settings.offline)
             coord = {
                 book: b.id,
@@ -96,7 +96,7 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
                 key={i} 
                 onClick={() => whereIsThisBook(b)} 
                 onDoubleClick={closeSearchResults}
-                style={{ outline: bid === b.id ? '2px solid black' : 'none' }}
+                style={{ outline: bid == b.id ? '2px solid black' : 'none' }}
             >
                 <td>{b.title}</td>
                 <td>{b.author}</td>

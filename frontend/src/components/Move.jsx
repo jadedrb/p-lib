@@ -270,7 +270,7 @@ function Move({ book, params, navigate, path, from, selected, bkcase, room, setS
                 <p>Shelf:</p>
                 <select name="shelf" value={selShelf} onChange={handleChange}>
                 <option value="select" disabled>Select</option>
-                    {bkcaseInfo?.shelves?.map((sh,i) => <option value={sh.id} key={sh.id} disabled={sh.id === shid && from !== 'hub' ? true : false}>{i + 1 === 1 ? "1st" : i + 1 === 2 ? "2nd" : i + 1 === 3 ? "3rd" : i + 1 + "th"} from the top (id: {sh.id})</option>)}
+                    {bkcaseInfo?.shelves?.map((sh,i) => <option value={sh.id} key={sh.id} disabled={sh.id == shid && from !== 'hub' ? true : false}>{i + 1 === 1 ? "1st" : i + 1 === 2 ? "2nd" : i + 1 === 3 ? "3rd" : i + 1 + "th"} from the top (id: {sh.id})</option>)}
                 </select>
                 <br /><br /><br />
                 <input disabled={confirmBut()} type="button" onClick={handleSubmit} value={action.toUpperCase()}/>  

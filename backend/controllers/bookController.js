@@ -130,6 +130,7 @@ module.exports.update = async (req, res) => {
         // Check for cases where nothing was updated
         if (AFTERSET && ARGS.length) {
             const bookUpdateResult = await pool.query(`UPDATE books SET ${AFTERSET} RETURNING *`, ARGS)
+            console.log(`UPDATE books SET ${AFTERSET} RETURNING *`, ARGS)
             newBook = bookUpdateResult.rows[0]
         } else {
             console.log('Nothing to update')
