@@ -9,7 +9,7 @@ module.exports.update = async (req, res) => {
         const roomResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [bookcaseResult.rows[0].room_id])
 
         // Check if resource leads to a user id that matches the token id
-        if (roomResult.rows[0]?.user_id !== req.id) throw new Error('Access denied')
+        if (roomResult.rows[0]?.user_id != req.id) throw new Error('Access denied')
 
         const updateShelfResult = await pool.query(`UPDATE shelves SET organize = $1 WHERE id = $2 RETURNING *`, [req.body.organize, req.params.id])
 
@@ -49,7 +49,7 @@ module.exports.destroy = async (req, res) => {
         const roomResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [bookcaseResult.rows[0].room_id])
 
         // Check if resource leads to a user id that matches the token id
-        if (roomResult.rows[0]?.user_id !== req.id) throw new Error('Access denied')
+        if (roomResult.rows[0]?.user_id != req.id) throw new Error('Access denied')
 
         // Remove the shelf then the books related to it
         const bookDeleteResult = await pool.query('DELETE FROM books WHERE shelf_id = $1', [req.params.id])
