@@ -64,7 +64,7 @@ function reducer(state, action) {
             return newState
         }
         case REMOVE_ROOM: {
-            return { ...state, rooms: state.rooms.filter(r => r?.id !== action.payload) }
+            return { ...state, rooms: state.rooms.filter(r => r?.id != action.payload) }
         }
         case UPDATE_ROOM: {
             let { rid, rm } = action.payload
@@ -103,7 +103,7 @@ function reducer(state, action) {
         case REMOVE_BOOKCASE: {
             let { bcid, rid } = action.payload
             let { roomIndex, rooms } = utilitySelector(rid, bcid, null, state.rooms)
-            let newBookcases = rooms[roomIndex].bookcases.filter(bk => bk.id !== bcid)
+            let newBookcases = rooms[roomIndex].bookcases.filter(bk => bk.id != bcid)
             rooms[roomIndex].bookcases = newBookcases
             return { ...state, rooms }
         }
@@ -112,7 +112,7 @@ function reducer(state, action) {
         case REMOVE_SHELF: {
             let { bcid, rid, shid } = action.payload
             let { roomIndex, rooms, bkcaseIndex } = utilitySelector(rid, bcid, shid, state.rooms)
-            let newShelves = rooms[roomIndex].bookcases[bkcaseIndex].shelves.filter(sh => sh.id !== shid)
+            let newShelves = rooms[roomIndex].bookcases[bkcaseIndex].shelves.filter(sh => sh.id != shid)
             rooms[roomIndex].bookcases[bkcaseIndex].shelves = newShelves
             return { ...state, rooms }
         }
@@ -156,7 +156,7 @@ function reducer(state, action) {
         case REMOVE_BOOK: {
             let { bcid, rid, shid, bid } = action.payload
             let { roomIndex, rooms, bkcaseIndex, shelfIndex } = utilitySelector(rid, bcid, shid, state.rooms, bid)
-            let newBooks = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books.filter(b => b.id !== bid)
+            let newBooks = rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books.filter(b => b.id != bid)
             rooms[roomIndex].bookcases[bkcaseIndex].shelves[shelfIndex].books = newBooks
             return { ...state, rooms }
         }
@@ -168,7 +168,7 @@ function reducer(state, action) {
             if (typeof action.payload === "object")
                 return { ...state, selected: { toggle: false, highlight: [] } }
             else if (state.selected.highlight.includes(action.payload))
-                return { ...state, selected: { toggle: true, highlight: state.selected.highlight.filter(b => action.payload !== b) } }
+                return { ...state, selected: { toggle: true, highlight: state.selected.highlight.filter(b => action.payload != b) } }
             else 
                 return { ...state, selected: { toggle: true, highlight: [...state.selected.highlight, action.payload] } }             
         }
