@@ -46,9 +46,9 @@ async function confirmUser(req, res, next) {
                 // make sure all non-book ids provided in the req.body are related 
                 // and that the chain ends with the correct user
                 const shelvesResult = await pool.query('SELECT bookcase_id FROM shelves WHERE id = $1', [req.body[0].shid])
-                if (shelvesResult?.rows?.[0].bookcase_id !== req.body[0].bcid) throw new Error('Access Denied')
+                if (shelvesResult?.rows?.[0].bookcase_id != req.body[0].bcid) throw new Error('Access Denied')
                 const bookcaseResult = await pool.query('SELECT room_id FROM bookcases WHERE id = $1', [req.body[0].bcid])
-                if (bookcaseResult?.rows?.[0].room_id !== req.body[0].rid) throw new Error('Access Denied')
+                if (bookcaseResult?.rows?.[0].room_id != req.body[0].rid) throw new Error('Access Denied')
                 mainResult = await pool.query('SELECT user_id FROM rooms WHERE id = $1', [req.body[0].rid])
 
             } else if (req.method === 'DELETE') {
@@ -105,7 +105,7 @@ async function confirmUser(req, res, next) {
             req.room = mainResult?.rows[0]
         }
 
-        if (mainResult.rows?.[0].user_id !== req.id) throw new Error('Access Denied')
+        if (mainResult.rows?.[0].user_id != req.id) throw new Error('Access Denied')
         console.log('OK. token-user-id: ' + req.id + ', resource-relation-id: ' + mainResult.rows[0].user_id)
 
         next()
