@@ -38,6 +38,7 @@ class RoomService {
     
     async updateRoomOfId(room, id) {
         loading(".newroom")
+        console.log('here: ', room, id)
         const r = await authAxios().put(`/rooms/${id}`, room)
         return this.format(r)
     }

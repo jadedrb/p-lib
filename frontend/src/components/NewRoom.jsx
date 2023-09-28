@@ -311,6 +311,7 @@ const NewRoom = ({ rooms, dispatch, bcid, rid, user, reposition, navigate, path,
 
     if (rid) {
       // comeback to this later...
+      delete room.bookcases
       let payload = await Rooms.updateRoomOfId(room, rid);
       dispatch({ type: UPDATE_ROOM, payload: { rid, rm: payload } });
     } else {

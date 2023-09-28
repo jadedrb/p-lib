@@ -38,7 +38,7 @@ const Rooms = () => {
     let [userDetails, setUserDetails] = useState({})
     let [categoryDetails, setCategoryDetails] = useState(null)
     let [searchGroup, setSearchGroup] = useState("category")
-console.log(rooms)
+
     useEffect(() => {
         let delay;
         setTyping(true)
