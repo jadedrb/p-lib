@@ -53,17 +53,15 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
     }, [books])
 
     const whereIsThisBook = async (b) => {
-   
-        let coord;
 
         if (bid == b.id) return
-        if (settings.offline)
-            coord = {
-                book: b.id,
-                shelf: b.shelf_id,
-                bookcase: b.bookcase_id,
-                room: b.room_id
-            }
+  
+        let coord = {
+            book: b.id,
+            shelf: b.shelf_id,
+            bookcase: b.bookcase_id,
+            room: b.room_id
+        }
         // is this endpoint even needed?
         // else
         //     coord = await Books.getBookCoordinates(b.id)

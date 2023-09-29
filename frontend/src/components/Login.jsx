@@ -84,7 +84,14 @@ function LoginAndRegister(props) {
                   type: UPDATE_SETTINGS,
                   payload: { ...other, temp: other.default === "Read Only" ? "Read Only" : "Read/Write" }
                 })
-              }
+
+                // if local is true then set localStorage after fetch
+                if (other.local === 'Yes') {
+                    localStorage.setItem('rooms', JSON.stringify(payload))
+                    console.log('setting up local data after login...')
+                }
+            }
+
 
             if (payload)
                 dispatch({ type: SET_ROOMS, payload })

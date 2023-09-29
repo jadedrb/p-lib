@@ -47,7 +47,6 @@ const Rooms = () => {
         if (search) {
             delay = setTimeout(async () => {
                 let res = await wrapperRef.current.determineSearchArea(search)
-                console.log(res)
                 if (res.error) {
                     alert(res.error)
                     return
@@ -76,7 +75,7 @@ const Rooms = () => {
     const determineSearchArea = (search) => {
 
         if ((searchIn === 'results') || settings.offline) {
-            console.log('same logic for search results...')
+            console.log('same logic for search results...', settings.offline)
 
             if (settings.offline && searchIn !== 'results')
                 results = getAllBooksFromRooms(rooms)
@@ -174,15 +173,14 @@ const Rooms = () => {
     }
 
     const handleShowDetails = async () => {
-        if (!showUserDet) {
+        if (!showUserDet && user !== '______' && user !== 'to offline mode') {
             // setTimeout(() => loading(".u-modal"), 1)
             let usr = await UserService.getUserDetails()
-            console.log(usr)
             setShowUserDet(!showUserDet)
             setUserDetails(usr.filter(ud => ud.hasOwnProperty(user))[0])
             // clearLoading()
         } else {
-            setShowUserDet(!showUserDet)
+            setShowUserDet(false)
         }
     }
 

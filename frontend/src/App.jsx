@@ -14,7 +14,7 @@ import Home from './components/Home';
 import UserService from './services/UserService';
 import RoomService from './services/RoomService';
 
-import { loading, clearLoading, A_WEEKS_TIME } from './services/utility'
+import { loading, clearLoading, THREE_MONTHS_TIME } from './services/utility'
 
 function App() {
 
@@ -31,17 +31,33 @@ function App() {
 
       let token = localStorage.getItem("token")
       let time = localStorage.getItem("time")
+      let localRooms = localStorage.getItem('rooms')
 
       try {
   
-        if ((new Date() - new Date(time)) > A_WEEKS_TIME) {
+        if ((new Date() - new Date(time)) > THREE_MONTHS_TIME) {
           token = false
           localStorage.removeItem("token")
           localStorage.removeItem("time")
+          localStorage.removeItem("rooms")
         }
-  
+
+        // validate local rooms as having the right structure
+        if (localRooms && token) {
+          localRooms = localRooms ? JSON.parse(localRooms) : false
+          localRooms = Array.isArray(localRooms) && localRooms.length ? localRooms : false
+
+          if (localRooms) {
+            dispatch({ type: SET_ROOMS, payload: localRooms })
+            dispatch({ type: SET_USER, payload: `______` })
+            dispatch({ type: SETUP_COMPLETE })
+            setTimeout(clearLoading, 200)
+            console.log('retrieving local room data for now...')
+          }
+        }
+
         if (token) {
-          
+
           let user = await UserService.validateUserToken()
   
           if (user) {
@@ -53,7 +69,7 @@ function App() {
               
             let currentSettings = await UserService.getUserByName(user)
   
-            let other, localRooms;
+            let other;
   
             if (currentSettings.other) {
               other = JSON.parse(currentSettings.other)
@@ -64,12 +80,6 @@ function App() {
               })
             }
 
-            // get local rooms if they exist and setting for local is true
-            if (other?.local === 'Yes') {
-              localRooms = localStorage.getItem('rooms')
-              localRooms = localRooms ? JSON.parse(localRooms) : false
-              localRooms = Array.isArray(localRooms) && localRooms.length ? localRooms : false
-            }
   
             // if nothing found then fetch as normal
             if (!localRooms) {
@@ -80,22 +90,23 @@ function App() {
               if (other?.local === 'Yes') {
                 localStorage.setItem('rooms', JSON.stringify(localRooms))
               }
+
+              clearLoading()
+              if (localRooms.length) {
+                dispatch({ type: SET_ROOMS, payload: localRooms })
+                dispatch({ type: SETUP_COMPLETE })
+                return
+              }
   
               // otherwise local data was found so use it instead
-            } else 
-              console.log('retrieving local rooms data...')
+            } 
             
-            clearLoading()
-            if (localRooms.length) {
-              dispatch({ type: SET_ROOMS, payload: localRooms })
-              dispatch({ type: SETUP_COMPLETE })
-              return
-            }
           }
           else { // if user validation failed with current token
             throw new Error('failed')
           }
         } 
+
         dispatch({ type: SETUP_COMPLETE })
 
       } catch(err) {
@@ -132,7 +143,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.78')
+      console.log('v1.79')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))
