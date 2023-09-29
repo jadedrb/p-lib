@@ -60,64 +60,69 @@ function LoginAndRegister(props) {
 
         loading('.home', 'maybe')
 
-        if (props.which) {
-            console.log('logging in...')
-            
-            token = await UserService.loginUser({ username, password })
-   
-            if (!validate(token)) {
-                clearLoading()
-                return
-            }
-
-            localStorage.setItem("token", token)
-            localStorage.setItem("time", new Date())
-
-            let payload = await RoomService.getRoomsForUser(username)
-
-            let currentSettings = await UserService.getUserByName(username)
-
-            if (currentSettings.other) {
-                let other = JSON.parse(currentSettings.other)
-
-                dispatch({
-                  type: UPDATE_SETTINGS,
-                  payload: { ...other, temp: other.default === "Read Only" ? "Read Only" : "Read/Write" }
-                })
-
-                // if local is true then set localStorage after fetch
-                if (other.local === 'Yes') {
-                    localStorage.setItem('rooms', JSON.stringify(payload))
-                    console.log('setting up local data after login...')
+        try {
+            if (props.which) {
+                console.log('logging in...')
+                
+                token = await UserService.loginUser({ username, password })
+       
+                if (!validate(token)) {
+                    clearLoading()
+                    return
                 }
+    
+                localStorage.setItem("token", token)
+                localStorage.setItem("time", new Date())
+    
+                let payload = await RoomService.getRoomsForUser(username)
+    
+                let currentSettings = await UserService.getUserByName(username)
+    
+                if (currentSettings.other) {
+                    let other = JSON.parse(currentSettings.other)
+    
+                    dispatch({
+                      type: UPDATE_SETTINGS,
+                      payload: { ...other, temp: other.default === "Read Only" ? "Read Only" : "Read/Write" }
+                    })
+    
+                    // if local is true then set localStorage after fetch
+                    if (other.local === 'Yes') {
+                        localStorage.setItem('rooms', JSON.stringify(payload))
+                        console.log('setting up local data after login...')
+                    }
+                }
+    
+    
+                if (payload)
+                    dispatch({ type: SET_ROOMS, payload })
+            
+                // setTimeout(() => navigate(`/room/${payload[initialJumpIndex] ? payload[initialJumpIndex].id : ''}`), 1)
             }
-
-
-            if (payload)
-                dispatch({ type: SET_ROOMS, payload })
-        
-            // setTimeout(() => navigate(`/room/${payload[initialJumpIndex] ? payload[initialJumpIndex].id : ''}`), 1)
-        }
-        else {
-
-            token = await UserService.registerUser({ username, password, email })
- 
-            if (!validate(token)) {
-                clearLoading()
-                return
+            else {
+    
+                token = await UserService.registerUser({ username, password, email })
+     
+                if (!validate(token)) {
+                    clearLoading()
+                    return
+                }
+    
+                localStorage.setItem("token", token)
+                localStorage.setItem("time", new Date())
+                navigate("/room")
             }
-
-            localStorage.setItem("token", token)
-            localStorage.setItem("time", new Date())
-            navigate("/room")
+    
+            clearLoading()
+    
+            dispatch({
+                type: SET_USER,
+                payload: username
+            })
+        } catch(err) {
+            console.log(err.message)
+            clearLoading()
         }
-
-        clearLoading()
-
-        dispatch({
-            type: SET_USER,
-            payload: username
-        })
     }
 
     return ( 

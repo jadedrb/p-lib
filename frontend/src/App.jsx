@@ -37,9 +37,7 @@ function App() {
   
         if ((new Date() - new Date(time)) > THREE_MONTHS_TIME) {
           token = false
-          localStorage.removeItem("token")
-          localStorage.removeItem("time")
-          localStorage.removeItem("rooms")
+          localStorage.clear()
         }
 
         // validate local rooms as having the right structure
@@ -112,9 +110,7 @@ function App() {
       } catch(err) {
 
         if (err.message === 'failed') {
-          localStorage.removeItem("token")
-          localStorage.removeItem("rooms")
-          localStorage.removeItem("time")
+          localStorage.clear()
           console.log('failed')
         } else {
   
@@ -130,7 +126,7 @@ function App() {
               type: UPDATE_SETTINGS,
               payload: { temp: 'Read Only', offline: true }
             })
-            setTimeout(() => clearLoading(), 201)
+            setTimeout(() => clearLoading(), 220)
           }
         }
 

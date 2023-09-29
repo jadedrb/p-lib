@@ -162,9 +162,7 @@ const Rooms = () => {
     wrapperRef.current = { determineSearchArea } 
 
     const handleLogout = () => {
-        localStorage.removeItem("token")
-        localStorage.removeItem("time")
-        localStorage.removeItem("rooms")
+        localStorage.clear()
         dispatch({
             type: SET_USER,
             payload: ""
