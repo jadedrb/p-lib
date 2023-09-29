@@ -25,13 +25,14 @@ By simply searching for a book and clicking on the right result, you'll see the 
 
 ### Backend
 
-* Spring Boot
+* Express
 * Postgres
 
 ### Services
 
-* Heroku
-* Vercel
+* [Supabase](https://supabase.com/)
+* [Vercel](https://vercel.com/)
+* [Render](https://render.com/)
 
 ## Author
 
