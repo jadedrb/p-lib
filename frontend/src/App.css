@@ -1296,7 +1296,8 @@ tr td:nth-child(8) {
         justify-content: center;
     }
     .search-lib input {
-        margin-left: 10px;
+        margin-left: 20px;
+        margin-right: 20px;
         width: 120px;
     }
     td {
@@ -1340,4 +1341,23 @@ tr td:nth-child(8) {
     }
 }
 
+@media (prefers-color-scheme: dark) {
+    .box.bookcase-tag {
+        background-color: rgb(192, 192, 255) !important;
+    }
+    .shelf.shelf-tag {
+        outline: rgb(192, 192, 255) solid 3px !important;
+    }
+    .bk {
+        outline: rgb(192, 192, 255) solid 1px !important;
+        opacity: .3;
+    }
+    .bk.bk-tag {
+        opacity: 1;
+        outline: rgb(192, 192, 255) solid 2px !important;
+    }
+  }
 
+.search-lib select {
+    background-color: transparent;
+}

@@ -61,7 +61,7 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
       return arr.map((sh,i) => 
         <p 
           key={i} 
-          className="shelf" 
+          className={`shelf${sh.id == shid ? ' shelf-tag' : ''}`} 
           style={{ height: `${shelfHeight}px`, outline: `${sh.id == shid ? '3px solid black' : 'none'}`, opacity: currentBookcase.shelves.length ? '10' : '.1' }}
           onClick={() => {
             if (!shid || !(shid == sh.id)) {
@@ -75,8 +75,9 @@ const NewBookcase = ({ dispatch, currentRoom, currentBookcase, navigate, path, s
             .map((b,i) => 
               <span 
                 key={i} 
+                className={`bk${b?.id == bid ? ' bk-tag' : ''}`}
                 onClick={() => navigate(utilPath(path, 'book', b.id)) }
-                style={{ backgroundColor: bid == b?.id && b.color ? b.color : bid == b?.id && !b.color ? 'lightgrey' : bid != b.id && currentBook?.color === "white" && bid ? 'lightgrey' : "white" }}
+                style={{backgroundColor: bid == b?.id && b.color ? b.color : bid == b?.id && !b.color ? 'lightgrey' : bid != b.id && currentBook?.color === "white" && bid ? 'lightgrey' : "white" }}
               >
               </span>
             ) : 
