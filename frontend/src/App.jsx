@@ -55,7 +55,7 @@ function App() {
         }
 
         if (token) {
-
+          await new Promise((res, rej) => setTimeout(() => {  res('woohoo'); console.log('resolved') }, 10000))
           let user = await UserService.validateUserToken()
   
           if (user) {

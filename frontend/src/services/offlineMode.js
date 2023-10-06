@@ -28,6 +28,7 @@
 // }
 
 export function getAllBooksFromRooms(data) {
+
     let bookcases = data.reduce((acc, curr) => [...acc, ...curr.bookcases], [])
     if (bookcases?.length) {
         let shelves = bookcases.reduce((acc, curr) => [...acc, ...curr.shelves], [])    

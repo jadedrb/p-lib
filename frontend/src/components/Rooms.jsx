@@ -56,7 +56,7 @@ const Rooms = () => {
             }, 1000)
         }
         return () => clearTimeout(delay)
-    }, [search, user])
+    }, [search])
 
     useEffect(() => {
         setSearchIn("library")
@@ -74,10 +74,12 @@ const Rooms = () => {
 
     const determineSearchArea = (search) => {
 
-        if ((searchIn === 'results') || settings.offline) {
+        const OFFLINE = (settings.offline || (user === '______' && rooms.length > 0))
+
+        if ((searchIn === 'results') || OFFLINE) {
             console.log('same logic for search results...', settings.offline)
 
-            if (settings.offline && searchIn !== 'results')
+            if (OFFLINE && searchIn !== 'results')
                 results = getAllBooksFromRooms(rooms)
 
             if (searchType === "title" || searchType === "genre" || searchType === "color" || searchType === "author" || searchType === "more") 
@@ -94,7 +96,7 @@ const Rooms = () => {
                     return results.filter((b) => b.pages > greater && b.pages < lesser)
             }
         } else {
-
+console.log('doing regular...')
             let searchId = searchIn === 'room' ? rid : searchIn === 'bookcase' ? bcid : searchIn === 'shelf' ? shid : ''
             searchIn = searchIn === 'library' || searchIn === 'results' ? '' : searchIn
             searchType = searchType === 'language' ? searchType = 'lang' : searchType === 'published' ? 'pdate' : searchType
