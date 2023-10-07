@@ -302,3 +302,25 @@ export const parsePagesAndDate = (search, searchType) => {
 
     return { greater: Number(greater), lesser: Number(lesser) }
 }
+
+
+
+export function highlightText(text, snippet) {
+
+    if (!text) return text
+
+    let exp = snippet.toLowerCase()
+    let regEx = new RegExp(exp);
+    let match = text.toLowerCase().match(regEx)
+
+    if (!match) return text
+
+    let start = match.index
+    let end = match.index + match[0].length
+ 
+    const firstPart = text.slice(0, start)
+    const sectionOfInterest = text.slice(start, end)
+    const lastPart = text.slice(end, text.length)
+
+    return `${firstPart}|||${sectionOfInterest}|||${lastPart}`
+}

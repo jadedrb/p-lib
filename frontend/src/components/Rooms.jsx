@@ -11,7 +11,7 @@ import Settings from "./Settings"
 import BookService from "../services/BookService"
 import MarkersHub from "./MarkersHub"
 import GeneralModal from "./GeneralModal"
-import { getAllBooksFromRooms, getRandomBook } from "../services/offlineMode"
+import { getAllBooksFromRooms, getRandomBook, searchLocalData } from "../services/offlineMode"
 
 const Rooms = () => {
 
@@ -77,26 +77,14 @@ const Rooms = () => {
         const OFFLINE = (settings.offline || (user === '______' && rooms.length > 0))
 
         if ((searchIn === 'results') || OFFLINE) {
-            console.log('same logic for search results...', settings.offline)
+            console.log('same logic for search results...')
 
             if (OFFLINE && searchIn !== 'results')
                 results = getAllBooksFromRooms(rooms)
 
-            if (searchType === "title" || searchType === "genre" || searchType === "color" || searchType === "author" || searchType === "more") 
-                return results.filter((b) => b[searchType].toLowerCase().includes(search.toLowerCase()))
-            if (searchType === "language")
-                return results.filter((b) => b["lang"].toLowerCase().includes(search.toLowerCase()))
-            if (searchType === "all") 
-                return results.filter((b) => b.title.toLowerCase().includes(search.toLowerCase()) || b.author.toLowerCase().includes(search.toLowerCase()) || b.genre.toLowerCase().includes(search.toLowerCase()) || b.more.toLowerCase().includes(search.toLowerCase()) || b.color.toLowerCase().includes(search.toLowerCase()))
-            if (searchType === "published" || searchType === "pages") {
-                let { greater, lesser } = parsePagesAndDate(search, searchType)
-                if (searchType === "published")
-                    return results.filter((b) => b.pdate > greater && b.pdate < lesser)
-                else
-                    return results.filter((b) => b.pages > greater && b.pages < lesser)
-            }
+            return searchLocalData(searchType, search, results)
         } else {
-console.log('doing regular...')
+
             let searchId = searchIn === 'room' ? rid : searchIn === 'bookcase' ? bcid : searchIn === 'shelf' ? shid : ''
             searchIn = searchIn === 'library' || searchIn === 'results' ? '' : searchIn
             searchType = searchType === 'language' ? searchType = 'lang' : searchType === 'published' ? 'pdate' : searchType

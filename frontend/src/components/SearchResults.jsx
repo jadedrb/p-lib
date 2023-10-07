@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { utilPath, utilOrder } from '../services/utility';
-import Books from '../services/BookService';
+import { useMemo } from 'react';
 
 const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, setShowResults, settings }) => {
 
@@ -83,6 +83,26 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
             setOrder(o)
     }
 
+    function highlightText(text, snippet) {
+
+        if (!text) return text
+    
+        let exp = snippet.toLowerCase()
+        let regEx = new RegExp(exp);
+        let match = text.toLowerCase().match(regEx)
+    
+        if (!match) return text
+    
+        let start = match.index
+        let end = match.index + match[0].length
+     
+        const firstPart = text.slice(0, start)
+        const sectionOfInterest = text.slice(start, end)
+        const lastPart = text.slice(end, text.length)
+    
+        return <>{firstPart}<b>{sectionOfInterest}</b>{lastPart}</>
+    }
+
     let renderedBooks = utilOrder(books, order, ascDesc)
 
     renderedBooks = renderedBooks?.slice(startResult, endResult)
@@ -91,19 +111,19 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
         return (
             <tr 
                 className='table-head'
-                key={i} 
+                key={b.id} 
                 onClick={() => whereIsThisBook(b)} 
                 onDoubleClick={closeSearchResults}
                 style={{ outline: bid == b.id ? '2px solid black' : 'none' }}
             >
-                <td>{b.title}</td>
-                <td>{b.author}</td>
-                <td>{b.color}</td>
-                <td>{b.genre}</td>
-                <td>{b.lang}</td>
+                <td>{searchType === 'title' || searchType === 'all' ? highlightText(b.title, search) : b.title}</td>
+                <td>{searchType === 'author' || searchType === 'all'  ? highlightText(b.author, search) : b.author}</td>
+                <td>{searchType === 'color' || searchType === 'all'  ? highlightText(b.color, search) : b.color}</td>
+                <td>{searchType === 'genre' || searchType === 'all'  ? highlightText(b.genre, search) : b.genre}</td>
+                <td>{searchType === 'language' || searchType === 'all'  ? highlightText(b.lang, search) : b.lang}</td>
                 <td>{b.pdate}</td>
                 <td>{b.pages}</td>
-                <td className='bk-more'>{b.more}</td>
+                <td className='bk-more'>{searchType === 'more' || searchType === 'all' ? highlightText(b.more, search) : b.more}</td>
             </tr>
         )
     })

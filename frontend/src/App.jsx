@@ -55,7 +55,7 @@ function App() {
         }
 
         if (token) {
-          await new Promise((res, rej) => setTimeout(() => {  res('woohoo'); console.log('resolved') }, 10000))
+          // await new Promise((res, rej) => setTimeout(() => {  res('woohoo'); console.log('resolved') }, 10000))
           let user = await UserService.validateUserToken()
   
           if (user) {
@@ -139,7 +139,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.80')
+      console.log('v1.81')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))

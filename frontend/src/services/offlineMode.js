@@ -1,31 +1,20 @@
-// export function searchLocalData(query, data) {
+import { parsePagesAndDate } from './utility'
 
-//     let { searchIn, search, searchType, searchId, lesser, greater } = query
-
-//     let books = getAllBooksFromRooms(data)
-
-//     if (searchType !== 'pages' && searchType !== 'pdate' && searchType !== 'all')
-//         books = books.filter(book => book[searchType].toLowerCase().includes(search.toLowerCase()))
-//     else if (searchType === 'all') {
-//         books = books.filter(book => {
-//             if (book['title'].toLowerCase().includes(search.toLowerCase()))
-//                 return true 
-//             if (book['more'].toLowerCase().includes(search.toLowerCase())) 
-//                 return true
-//             if (book['author'].toLowerCase().includes(search.toLowerCase()))
-//                 return true
-//             return false
-//         })
-//     } else {
-//         console.log(lesser, greater)
-//         books = books.filter(book => book)
-//     }
-
-//     if (searchIn) 
-//         books = books.filter(book => book[`${searchIn}_id`] === searchId)
-//     console.log(query)
-//     return books
-// }
+export function searchLocalData(query, value, data) {
+    if (query === "title" || query === "genre" || query === "color" || query === "author" || query === "more") 
+        return data.filter((b) => b[query].toLowerCase().includes(value.toLowerCase()))
+    if (query === "language")
+        return data.filter((b) => b["lang"].toLowerCase().includes(value.toLowerCase()))
+    if (query === "all") 
+        return data.filter((b) => b.title.toLowerCase().includes(value.toLowerCase()) || b.author.toLowerCase().includes(value.toLowerCase()) || b.genre.toLowerCase().includes(value.toLowerCase()) || b.more.toLowerCase().includes(value.toLowerCase()) || b.color.toLowerCase().includes(value.toLowerCase()))
+    if (query === "published" || query === "pages") {
+        let { greater, lesser } = parsePagesAndDate(value, query)
+        if (query === "published")
+            return data.filter((b) => b.pdate > greater && b.pdate < lesser)
+        else
+            return data.filter((b) => b.pages > greater && b.pages < lesser)
+    }
+}
 
 export function getAllBooksFromRooms(data) {
 
