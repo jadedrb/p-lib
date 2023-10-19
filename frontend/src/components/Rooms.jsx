@@ -127,6 +127,9 @@ const Rooms = () => {
         } else if (value === "#roll") {
             setSearch("")
             rollRandomBook() 
+        } else if (value.length === 9 && value.slice(0,7) === "?latest" && !Number.isNaN(Number(value.slice(-2)))) {
+            BookService.getLatest(value.slice(-2)).then(d => setResults(d))
+            setSearch("")
         } else if (value === "?genres" || value === "?authors" || value === "?colors" || value === "?languages") {
             BookService.getUserCategoryCount(user, value.slice(1)).then(details => setCategoryDetails(details))
             setSearchType(value.slice(1, value.length - 1))

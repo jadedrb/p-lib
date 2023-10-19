@@ -194,3 +194,17 @@ module.exports.destroy = async (req, res) => {
         res.status(400).json({ error: err.message })
     }
 }
+
+module.exports.latest = async (req, res) => {
+    try {
+        let { limit } = req.params
+
+        const result = await pool.query('SELECT * FROM books ORDER BY books.recorded_on DESC LIMIT $1', [limit])
+
+        console.log(result.rows)
+
+        res.status(200).json(result.rows)
+    } catch(err) {
+        res.status(400).json({ error: err.message })
+    }
+}

@@ -86,7 +86,11 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
     function highlightText(text, snippet) {
 
         if (!text) return text
-    
+
+        if (snippet[0] === '?') {
+            return text
+        }
+
         let exp = snippet.toLowerCase()
         let regEx = new RegExp(exp);
         let match = text.toLowerCase().match(regEx)
@@ -133,7 +137,7 @@ const SearchResults = ({ searchIn, searchType, search, books, bid, setResults, s
         <div style={{ height }} className={`table-contain search-c ${!renderedBooks?.length && 'table-cc'}`} onScroll={(e) => setRight(e.target.scrollLeft)}>
             <div className='x-results-wrapper' style={{ height: resultRef?.current?.offsetHeight ? `${resultRef.current.offsetHeight}px` : '100px', right: `-${Math.floor(right)}px` }}><div className="pm-r min-room x-results" onClick={closeSearchResults}>X</div></div>
             {renderedBooks?.length ? <h5 className='res-top'>results: {books?.length}</h5> : null}
-            <h6>{recordedSearch.map((rec, i, arr) => <span key={i}>{`"${rec}" in ${recordedSearchType[i]}`}{arr?.length > 1 && i !== arr?.length -1 ? ' & ' : ''}</span>)}{recordedSearchIn ? ` from ${recordedSearchIn}` : ''}</h6>
+            <h6>{recordedSearch.map((rec, i, arr) => <span key={i}>{rec ? `"${rec}" in ${recordedSearchType[i]}` : 'most recently updated books'}{arr?.length > 1 && i !== arr?.length -1 ? ' & ' : ''}</span>)}{recordedSearchIn ? ` from ${recordedSearchIn}` : ''}</h6>
             {renderedBooks?.length ? 
                 <table className='booklist' ref={resultRef}>
                     <thead>

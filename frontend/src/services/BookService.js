@@ -33,6 +33,10 @@ class BookService {
         return authAxios().get(`/books/${category}/count`).then(r => this.format(r)) 
     }
 
+    getLatest(limit) {
+        return authAxios().get(`/books/${limit}/latest`).then(r => this.format(r))
+    }
+
     getThisInThat(query) {
         loading(".search-c")
 
