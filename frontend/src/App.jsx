@@ -13,6 +13,7 @@ import Home from './components/Home';
 
 import UserService from './services/UserService';
 import RoomService from './services/RoomService';
+import BookService from './services/BookService';
 
 import { loading, clearLoading, THREE_MONTHS_TIME } from './services/utility'
 
@@ -32,6 +33,7 @@ function App() {
       let token = localStorage.getItem("token")
       let time = localStorage.getItem("time")
       let localRooms = localStorage.getItem('rooms')
+      let lastUpdatedBookFromLocal = localStorage.getItem('updated')
 
       try {
   
@@ -78,6 +80,16 @@ function App() {
               })
             }
 
+            if (localRooms) {
+              const [ lastUpdatedBookFromDb ] = await BookService.getLatest(1)
+              if (lastUpdatedBookFromDb?.recorded_on !== lastUpdatedBookFromLocal) {
+                alert(`Book data was updated on ${lastUpdatedBookFromDb?.recorded_on.slice(0,10)}. Refreshing local data now.`)
+                console.log('refreshing local data...')
+                localRooms = null
+                localStorage.removeItem('rooms')
+                localStorage.setItem('updated', lastUpdatedBookFromDb?.recorded_on)
+              }
+            }
   
             // if nothing found then fetch as normal
             if (!localRooms) {
@@ -87,6 +99,12 @@ function App() {
               // if local is true then set localStorage after fetch
               if (other?.local === 'Yes') {
                 localStorage.setItem('rooms', JSON.stringify(localRooms))
+
+                const [ lastUpdatedBookFromDb ] = await BookService.getLatest(1)
+
+                if (lastUpdatedBookFromDb)
+                  localStorage.setItem('updated', lastUpdatedBookFromDb?.recorded_on)
+
               }
 
               clearLoading()
@@ -139,7 +157,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.83')
+      console.log('v1.84')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))

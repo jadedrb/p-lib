@@ -57,8 +57,6 @@ async function confirmUser(req, res, next) {
             } else if (req.method === 'PUT') {
                 mainResult = await pool.query('SELECT * FROM books WHERE id = $1', [req.url.slice(1)])
                 req.book = mainResult?.rows?.[0]
-                delete req.book.recorded_on
-
             } else {
                 return next()
             }
