@@ -172,6 +172,7 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
                                         <li>When entering new book information, you can use the <i>tilde</i> key ({'~'}) to copy the current text in the input field. Press it again on an empty version of the same input field of a future book entry to paste what you copied.</li>
                                         <li>You can mark a book by locating it in the <i>Shelf</i> view and clicking on the title. Depending on the popularity of the book, it may also show a picture of its cover.</li>
                                         <li>You can mark a book as <i>Favorited</i> (dark blue), <i>Selected</i> (light blue), and/or <i>Missing</i> (yellow). Use the <i>Selected</i> marker to easily copy, move, or delete multiple books in different locations - ideal for moments where you need to reorganize your library.</li>
+                                        <li>Check for any recently updated books with <i>?latest05</i> to get the last five updated books or change the two digit number to your liking</li>
                                     </ol>
                                 </details>
 

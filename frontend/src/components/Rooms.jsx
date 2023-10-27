@@ -100,8 +100,9 @@ const Rooms = () => {
     }
 
     const rollRandomBook = async () => {
+        const OFFLINE = (settings.offline || (user === '______' && rooms.length > 0))
         let coord;
-        if (settings.offline) 
+        if (OFFLINE) 
             coord = getRandomBook(rooms)
         else 
             coord = await BookService.getBookCoordinates('random')
