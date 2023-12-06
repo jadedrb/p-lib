@@ -75,8 +75,15 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms, par
         cursor: enableMarkers  ? 'pointer' : selectedMarker !== 'missing' ? 'default' : 'pointer'
     }
 // && selectedMarker !== 'missing'
-    const redirectToBook = async (book) => {
-        let coord = await BookService.getBookCoordinates(book.id)
+    const redirectToBook = async (b) => {
+        console.log(b)
+        let coord = {
+            book: b.id,
+            shelf: b.shelf_id,
+            bookcase: b.bookcase_id,
+            room: b.room_id
+        }
+        // let coord = await BookService.getBookCoordinates(book.id)
         setShowMarkers(false)
         navigate(utilPath(coord, "coord"))
     }
