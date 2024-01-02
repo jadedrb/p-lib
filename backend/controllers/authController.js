@@ -6,7 +6,7 @@ const { constructColumnsValuesAndArgs } = require('./utility')
 
 function generateToken(user) {
     const payload = { id: user.id, username: user.username }
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '90d' })
+    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '180d' })
     return token
 }
 

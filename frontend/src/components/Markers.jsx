@@ -23,19 +23,24 @@ function Markers({ modalPic, selectedBook, setEnableMarkers, closeOption }) {
 
     const updateOnExit = async (markers) => {
 
-        let mString = JSON.stringify(markers)
+        try {
+            let mString = JSON.stringify(markers)
 
-        // markers in database starts as "null", so check for those cases too
-        // also mSring.length is 2 (ex: '[]') when it's an empty stringified array (meaning no updates)
-        if ((mString === selectedBook.markers) || (!selectedBook.markers && mString.length <= 2)) return
+            // markers in database starts as "null", so check for those cases too
+            // also mSring.length is 2 (ex: '[]') when it's an empty stringified array (meaning no updates)
+            if ((mString === selectedBook.markers) || (!selectedBook.markers && mString.length <= 2)) return
 
-        let coord = await BookService.getBookCoordinates(selectedBook.id)
-        let book = await BookService.updateBookForShelf({ ...selectedBook, markers: mString }, coord.book)
-    
-        dispatch({
-            type: UPDATE_BOOK,
-            payload: { shid: coord.shelf, rid: coord.room, bcid: coord.bookcase, bid: coord.book, book },
-        });
+            let coord = await BookService.getBookCoordinates(selectedBook.id)
+            console.log({ ...selectedBook, markers: mString }, coord.book)
+            let book = await BookService.updateBookForShelf({ ...selectedBook, markers: mString }, coord.book)
+        
+            dispatch({
+                type: UPDATE_BOOK,
+                payload: { shid: coord.shelf, rid: coord.room, bcid: coord.bookcase, bid: coord.book, book },
+            });
+        } catch(err) {
+            alert("Can't update book entry because: " + err.message)
+        }
     }
 
     wrapperRef.current = { mount: false, updateOnExit, updateOnEntry }

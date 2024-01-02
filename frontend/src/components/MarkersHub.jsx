@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { REMOVE_BOOK } from '../context';
 import BookService from '../services/BookService';
-import { utilPath, loading } from "../services/utility";
+import { utilPath } from "../services/utility";
 import Markers from './Markers'
 import Move from './Move'
 import { getMarkers } from '../services/offlineMode';
@@ -25,13 +25,15 @@ function MarkersHub({ user, navigate, setShowMarkers, dispatch, path, rooms, par
     }, [])
 
     useEffect(() => {
-        // loading('.m-hub-body')
+
+        const OFFLINE = (settings.offline || (user === '______' && rooms.length > 0))
+
         setIsLoading(true)
 
         async function getMakers() {
             try {
                 let markers;
-                if (settings.offline) 
+                if (OFFLINE)
                     markers = getMarkers(rooms, selectedMarker)
                 else
                     markers = await BookService.getThisInThat({ search: selectedMarker, searchType: 'markers' })

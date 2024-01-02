@@ -15,7 +15,7 @@ import UserService from './services/UserService';
 import RoomService from './services/RoomService';
 import BookService from './services/BookService';
 
-import { loading, clearLoading, THREE_MONTHS_TIME } from './services/utility'
+import { loading, clearLoading, SIX_MONTHS_TIME} from './services/utility'
 
 function App() {
 
@@ -37,7 +37,7 @@ function App() {
 
       try {
   
-        if ((new Date() - new Date(time)) > THREE_MONTHS_TIME) {
+        if ((new Date() - new Date(time)) > SIX_MONTHS_TIME) {
           token = false
           localStorage.clear()
         }
@@ -157,7 +157,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.86')
+      console.log('v1.87')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))
