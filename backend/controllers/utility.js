@@ -7,7 +7,9 @@ function constructUpdateQuery(oldRow, updatesForRow, paramId) {
     const updatedColumns = Object.keys(oldRow).reduce((acc, curr) => typeof updatesForRow[curr] !== 'undefined' && oldRow[curr] !== updatesForRow[curr] ? [...acc, [curr, updatesForRow[curr]]] : acc, [])
 
     // Construct a SET clause with only the updated fields and the id at the end -> 'author = $1, genre = $2 WHERE id = $3'
-    const AFTERSET = updatedColumns.reduce((acc, c, i, arr) => arr.length > (i + 1) ? acc + `${c[0]} = $${i + 1}, ` : acc + `${c[0]} = $${i + 1}, recorded_on = NOW() WHERE id = $${i + 2}`, '')
+    const AFTERSET = updatedColumns.reduce((acc, c, i, arr) => {
+        return arr.length > (i + 1) ? acc + `${c[0]} = $${i + 1}, ` : acc + `${c[0]} = $${i + 1}${oldRow.author ? ', recorded_on = NOW()' : ''} WHERE id = $${i + 2}`
+    }, '')
 
     // Construct an ARGS array with the updates and the id at the end -> ['Charles Dickens', 'Novel', '3810']
     const ARGS = updatedColumns.reduce((acc, c, i, arr) => arr.length > i + 1 ? [...acc, c[1]] : [...acc, c[1], paramId], [])
