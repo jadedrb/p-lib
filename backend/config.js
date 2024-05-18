@@ -10,6 +10,14 @@ const pool = new Pool({
     database: process.env.DB_NAME
 })
 
+pool.on('connect', (client) => {
+    console.log('Connected to PG...')
+})
+
+pool.on('error', (error, client) => {
+    console.log('ERROR: ', error)
+})
+
 module.exports = pool
 
 
