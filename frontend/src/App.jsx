@@ -31,16 +31,16 @@ function App() {
     const validate = async () => {
 
       let token = localStorage.getItem("token")
-      let time = localStorage.getItem("time")
+      // let time = localStorage.getItem("time")
       let localRooms = localStorage.getItem('rooms')
       let lastUpdatedBookFromLocal = localStorage.getItem('updated')
 
       try {
   
-        if ((new Date() - new Date(time)) > SIX_MONTHS_TIME) {
-          token = false
-          localStorage.clear()
-        }
+        // if ((new Date() - new Date(time)) > SIX_MONTHS_TIME) {
+        //   token = false
+        //   localStorage.clear()
+        // }
 
         // validate local rooms as having the right structure
         if (localRooms && token) {
@@ -95,19 +95,15 @@ function App() {
             if (!localRooms) {
               console.log('fetching rooms data...')
               localRooms = await RoomService.getRoomsForUser()
-  
               // if local is true then set localStorage after fetch
               if (other?.local === 'Yes') {
                 localStorage.setItem('rooms', JSON.stringify(localRooms))
-
                 const [ lastUpdatedBookFromDb ] = await BookService.getLatest(1)
-
                 if (lastUpdatedBookFromDb)
                   localStorage.setItem('updated', lastUpdatedBookFromDb?.recorded_on)
 
               }
-
-              clearLoading()
+              setTimeout(() => clearLoading(), 101)
               if (localRooms.length) {
                 dispatch({ type: SET_ROOMS, payload: localRooms })
                 dispatch({ type: SETUP_COMPLETE })
@@ -157,7 +153,7 @@ function App() {
       console.time('time')
       validate()
       mounted.current = true
-      console.log('v1.88')
+      console.log('v1.89')
 
       setTimeout(() => {
         if (document.querySelector('.rooms'))

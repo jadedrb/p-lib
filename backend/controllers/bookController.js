@@ -203,6 +203,7 @@ module.exports.latest = async (req, res) => {
 
         res.status(200).json(result.rows)
     } catch(err) {
+        console.log(err.message)
         res.status(400).json({ error: err.message })
     }
 }

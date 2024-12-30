@@ -143,6 +143,7 @@ export function loading(where, initial, extra) {
 export function clearLoading() {
 
         let loading = document.querySelector(".loading")
+
         if (!loading) return
 // console.trace()
         let parentClass = loading.classList[1]

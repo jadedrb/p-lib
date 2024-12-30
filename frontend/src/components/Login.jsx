@@ -72,7 +72,7 @@ function LoginAndRegister(props) {
                 }
     
                 localStorage.setItem("token", token)
-                localStorage.setItem("time", new Date())
+                // localStorage.setItem("time", new Date())
     
                 let payload = await RoomService.getRoomsForUser(username)
     
@@ -90,6 +90,9 @@ function LoginAndRegister(props) {
                     if (other.local === 'Yes') {
                         localStorage.setItem('rooms', JSON.stringify(payload))
                         console.log('setting up local data after login...')
+                        //
+                        //
+                        //
                     }
                 }
     
@@ -109,7 +112,7 @@ function LoginAndRegister(props) {
                 }
     
                 localStorage.setItem("token", token)
-                localStorage.setItem("time", new Date())
+                // localStorage.setItem("time", new Date())
                 navigate("/room")
             }
     

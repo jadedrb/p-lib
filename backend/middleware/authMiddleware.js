@@ -4,6 +4,7 @@ const pool = require('../config')
 // check the token for authorization
 function authorize(req, res, next) {
     console.log(req.method + ' ' + req.originalUrl)
+    // console.log(token)
     try {
 
         let token = req.header("Authorization")
@@ -11,7 +12,7 @@ function authorize(req, res, next) {
         if (!token) {
             return res.status(403).json({ error: 'No token provided'})
         }
-
+        
         token = token.replace("Bearer ", "")
 
         const payload = jwt.verify(token, process.env.JWT_SECRET)
@@ -28,7 +29,7 @@ function authorize(req, res, next) {
     } catch(err) {
 
         console.log(err.message)
-        res.status(403).json({ error: err.message })
+        res.status(403).json({ error: err })
 
     }
 }
@@ -96,7 +97,10 @@ async function confirmUser(req, res, next) {
         else if (req.originalUrl.includes('rooms')) {
             if (req.method === 'PUT' || req.method === 'DELETE') {
                 mainResult = await pool.query('SELECT * FROM rooms WHERE id = $1', [req.url.slice(1)])
+    
             } else {
+                console.log('here:')
+                console.log(mainResult)
                 return next()
             }
             
@@ -105,7 +109,7 @@ async function confirmUser(req, res, next) {
 
         if (mainResult.rows?.[0].user_id != req.id) throw new Error('Access Denied')
         console.log('OK. token-user-id: ' + req.id + ', resource-relation-id: ' + mainResult.rows[0].user_id)
-
+        
         next()
 
     } catch(err) {

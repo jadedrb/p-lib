@@ -6,7 +6,7 @@ const { constructColumnsValuesAndArgs } = require('./utility')
 
 function generateToken(user) {
     const payload = { id: user.id, username: user.username }
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '180d' })
+    const token = jwt.sign(payload, process.env.JWT_SECRET) // , { expiresIn: '180d' }
     return token
 }
 
@@ -26,7 +26,7 @@ module.exports.login = async (req, res) => {
         }
 
         const validPass = await bcrypt.compare(req.body.password, foundUser.password)
-
+    
         if (!validPass) {
             return res.status(400).json({ error: 'Invalid credentials' })
         }
@@ -34,7 +34,7 @@ module.exports.login = async (req, res) => {
         const token = generateToken(foundUser)
 
         res.status(200).json(token)
-
+        
     } catch(err) {
 
         console.log(err.message)

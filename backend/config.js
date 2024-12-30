@@ -2,6 +2,11 @@ require('dotenv').config()
 
 const Pool = require('pg').Pool
 
+let initialConnection = {
+    connected: false,
+    connections: 0
+}
+
 const pool = new Pool({
     user: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
@@ -10,8 +15,12 @@ const pool = new Pool({
     database: process.env.DB_NAME
 })
 
-pool.on('connect', (client) => {
-    console.log('Connected to PG...')
+pool.on('connect', () => {
+    if (!initialConnection.connected) {
+        initialConnection.connected = true
+        setTimeout(() => console.log(initialConnection), 1000)
+    }
+    initialConnection.connections++
 })
 
 pool.on('error', (error, client) => {
