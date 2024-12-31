@@ -165,7 +165,7 @@ const Rooms = () => {
     }
 
     const handleShowDetails = async () => {
-        if (!showUserDet && user !== '______' && user !== 'to offline mode') {
+        if (!showUserDet && user !== '______' && !user.includes(' mode')) {
             // setTimeout(() => loading(".u-modal"), 1)
             let usr = await UserService.getUserDetails()
             setShowUserDet(!showUserDet)

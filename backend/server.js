@@ -27,5 +27,5 @@ app.use('/api/bookcases', authorize, confirmUser, bookcaseRoutes)
 
 app.listen(PORT, () => {
     console.log('Listening on port: ' + PORT)
-    console.log('v1.04')
+    console.log('v1.05')
 })

@@ -5,6 +5,7 @@ const pool = require('../config')
 function authorize(req, res, next) {
     console.log(req.method + ' ' + req.originalUrl)
     // console.log(token)
+    
     try {
 
         let token = req.header("Authorization")
@@ -100,7 +101,6 @@ async function confirmUser(req, res, next) {
     
             } else {
                 console.log('here:')
-                console.log(mainResult)
                 return next()
             }
             

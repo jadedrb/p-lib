@@ -4,8 +4,15 @@ const { constructColumnsValuesAndArgs, constructUpdateQuery } = require('./utili
 module.exports.index = async (req, res) => {
     try {
         // get all rooms for user
-        const roomResults = await pool.query('SELECT * FROM rooms WHERE user_id = $1', [req.id])
-        const rooms = roomResults.rows
+        let roomResults; 
+
+        // for username "testing"
+        if (req.username === 'testing')
+            roomResults = await pool.query('SELECT * FROM rooms WHERE user_id = $1', ['1'])
+        else 
+            roomResults = await pool.query('SELECT * FROM rooms WHERE user_id = $1', [req.id])
+        
+        let rooms = roomResults.rows
 
         let bkResults = await Promise.all(rooms.map(room => pool.query('SELECT * FROM bookcases WHERE room_id = $1', [room.id])))
         let bookcases = bkResults.map(bk => bk.rows).flat()
@@ -26,6 +33,16 @@ module.exports.index = async (req, res) => {
 
         for (let room of rooms) {
             room.bookcases = bookcases.filter(bk => bk.room_id == room.id)
+        }
+
+        // limit to one room for guest/testing user
+        if (req.username === 'testing') {
+            rooms = rooms[3]
+            rooms.bookcases.forEach(bk => {
+                bk.shelves.forEach(sh => {
+                sh.books = sh.books.slice(0, 5)
+                })
+            })
         }
 
         res.status(200).json(rooms)

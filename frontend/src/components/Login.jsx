@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 
 import UserService from '../services/UserService'
 import RoomService from "../services/RoomService"
+import BookService from "../services/BookService"
 
 import React, { useState } from 'react'
 import { loading, clearLoading } from "../services/utility"
@@ -54,6 +55,26 @@ function LoginAndRegister(props) {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
+        // for test or guest users
+        if (username === 'testing') {
+            console.log('test user detected...')
+            let token = await UserService.loginUser({ username })
+            localStorage.setItem("token", token)
+            let room = await RoomService.getRoomsForUser('testing')
+            console.log(room)
+            dispatch({ type: SET_ROOMS, payload: [room] })
+            dispatch({
+                type: UPDATE_SETTINGS,
+                payload: { temp: "Read Only", offline: true }
+            })
+            dispatch({
+                type: SET_USER,
+                payload: 'to testing mode'
+            })
+            localStorage.removeItem("token")
+            return
+        }
+
         if (!validate()) return
 
         let token;
@@ -65,12 +86,12 @@ function LoginAndRegister(props) {
                 console.log('logging in...')
                 
                 token = await UserService.loginUser({ username, password })
-       
+  
                 if (!validate(token)) {
                     clearLoading()
                     return
                 }
-    
+  
                 localStorage.setItem("token", token)
                 // localStorage.setItem("time", new Date())
     
@@ -90,9 +111,9 @@ function LoginAndRegister(props) {
                     if (other.local === 'Yes') {
                         localStorage.setItem('rooms', JSON.stringify(payload))
                         console.log('setting up local data after login...')
-                        //
-                        //
-                        //
+                        const [ lastUpdatedBookFromDb ] = await BookService.getLatest(1)
+                        if (lastUpdatedBookFromDb)
+                            localStorage.setItem('updated', lastUpdatedBookFromDb?.recorded_on)
                     }
                 }
     
@@ -137,17 +158,30 @@ function LoginAndRegister(props) {
                     value={username} 
                     onChange={(e) => setUsername(e.target.value)} 
                     spellCheck={false}
+                    autoComplete='username'
                 />
             </div>
             <div>
                 <label htmlFor="pw-login">Password</label>
-                <input type="password" id='pw-login' value={password} onChange={(e) => setPassword(e.target.value)} />
+                <input 
+                    type="password" 
+                    id='pw-login' 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    autoComplete='current-password'
+                />
             </div>
             {!props.which && 
             <>
                 <div>
                     <label htmlFor="em-register">Email</label>
-                    <input type="email" id='em-register' value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input 
+                        type="email" 
+                        id='em-register' 
+                        value={email} 
+                        onChange={(e) => setEmail(e.target.value)} 
+                        autoComplete='email'
+                    />
                 </div>
             </>}
             <button>{props.which ? "LOGIN" : "REGISTER"}</button>
