@@ -57,6 +57,7 @@ function LoginAndRegister(props) {
 
         // for test or guest users
         if (username === 'testing') {
+            loading('.home', 'maybe')
             console.log('test user detected...')
             let token = await UserService.loginUser({ username })
             localStorage.setItem("token", token)
@@ -72,6 +73,7 @@ function LoginAndRegister(props) {
                 payload: 'to testing mode'
             })
             localStorage.removeItem("token")
+            setTimeout(() => alert('Welcome to testing mode! This is a preview, so features are limited here - but feel free to explore.'), 1000)
             return
         }
 

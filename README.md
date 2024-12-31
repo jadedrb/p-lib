@@ -41,5 +41,5 @@ By simply searching for a book and clicking on the right result, you'll see the 
 
 ## Deployed Link 
 
-Check out [p-lib](https://p-lib.vercel.app/)! (to preview, login as "testing" with no password)
+Check out [p-lib](https://p-lib.vercel.app/)! (login as "testing" to preview - no password)
 
