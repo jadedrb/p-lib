@@ -5,7 +5,7 @@ import { UPDATE_SETTINGS } from '../context'
 
 import { useRef, useEffect, useState } from 'react'
 
-function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUserDet, handleLogout, handleShowDetails, settings }) {
+function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUserDet, handleLogout, settings }) {
 
     const [responsiveHeight, setResponsiveHeight] = useState(window.innerHeight)
     const [tempSettings, setTempSettings] = useState({ ...settings })
@@ -93,8 +93,6 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
         setTempSettings(alteredSettings)
     }
 
-    const handleCreationTime = (ud) => utilTime(Object.keys(ud).filter(udp => /[0-9]/.test(udp))[0])
-
      const readWrite = tempSettings.default === 'Read Only'
 
     let responsiveHeightObj = (hubRef.current?.offsetHeight + 100) > responsiveHeight ? {
@@ -108,7 +106,7 @@ function Settings({ rooms, user, userDetails, dispatch, setShowUserDet, showUser
                     <div className="u-modal" style={responsiveHeightObj} ref={hubRef}>
                         <div>
                             <h3><span>{user}</span> <span>library</span> <span>settings</span></h3>
-                            <h6>Account created on: {handleCreationTime(userDetails)}</h6>
+                            <h6>Account created on: {utilTime(userDetails.created_on)}</h6>
                             <ul>
                                 <li>Your library has:</li>
                                 <li>{userDetails.rooms} rooms</li>
